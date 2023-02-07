@@ -5,7 +5,7 @@
 ClassImp (RndmPick)
 
   RndmPick::RndmPick(): TRandom3(),
-  Rseed(123.),
+  Rseed(123),
   RvertixSize(0),
   Rvertix(NULL)
   {
