@@ -49,7 +49,7 @@ ClassImp (RndmPick)
   //implementazione member functions-------------------------------------
 
   double RndmPick::RndmGaus(double mean, double sigma){
-    gRandom->SetSeed(Rseed);
+    //gRandom->SetSeed(Rseed);
     double *gausPtr;
     gausPtr=gRandom->Gaus(mean,sigma)//da intendersi in cm
     double gausN=*gausPtr;
@@ -74,6 +74,55 @@ ClassImp (RndmPick)
     else{
       cout<<"Nessun vertice trovato"<<endl;
     }
+  }
+
+ 
+    
+  double RndmPick::CheckRndm(double rndmN, int numcoord){//numcoord è un numero (1, 2 o 3) che indica per quale coordinata si sta eseguendo il controllo del numero casuale
+  //controlli per avere numeri compatibili con geometria del rivelatore-----------------
+    if (numcoord<1){
+      cout<<"Invalid set-up for function CheckRndm"<<endl;
+    }
+    else if(numcoord=1){ //check per coordinate x e y: vertice non deve superare il raggio del rivelatore
+      if(rndmN>=3.08){
+        rndmN=RndmGaus(0,0.1);
+        cout<<"New coordinate set: "<<rndmN<<endl;
+        cout<<"checking again..."<<endl;
+        CheckRndm(rndmN,numcoord);
+      }
+      else{
+        cout<<"Check ok";
+        double cX=rndmN;
+        return cX;
+      }
+    }
+    else if(numcoord=2){ //check per coordinate x e y: vertice non deve superare il raggio del rivelatore
+      if(rndmN>=3.08){
+        rndmN=RndmGaus(0,0.1);
+        cout<<"New coordinate set: "<<rndmN<<endl;
+        cout<<"checking again..."<<endl;
+        CheckRndm(rndmN,numcoord);
+      }
+      else{
+        cout<<"Check ok";
+        double cY=rndmN;
+        return cY;
+      }
+    }  
+    else if(numcoord=3){ //check per la coordinata z: non deve superare la lunghezza del rivelatore
+      if(rndmN>=13.5){
+        rndmN=RndmGaus(0,5.3);
+        cout<<"New coordinate set: "<<rndmN<<endl;
+        cout<<"checking again..."<<endl;
+        CheckRndm(rndmN,numcoord);
+      }
+      else{
+        cout<<"Check ok";
+        double cZ=rndmN;
+        return cZ;
+        }
+    }
+    else{cout<<"Invalid set-up for function CheckRndm"<<endl;}  
   }
 
   
