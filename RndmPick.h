@@ -22,6 +22,7 @@ class RndmPick : public TRandom3{
     void CheckRndm (double rndmN); //funzione che controlla che il numero estratto rispetti delle condizioni
     void PrintCoordinates () const; //funzione che stampa le coordinate del punto estratto
     void SetVertix (double *coord, int size);
+    double GetVertix(int i) const;
 
   private:
     unsigned int Rseed;
