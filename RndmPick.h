@@ -11,7 +11,7 @@ class RndmPick : public TRandom3{
     RndmPick(const RndmPick& source); //copy constructor (necessario perchè un data member (vertix) alloca memoria)
     virtual ~RndmPick();//distruttore di default
 
-    void ChangeSeed(unsigned int newseed){Rseed=newseed};
+    void ChangeSeed(unsigned int newseed){Rseed=newseed;};
 
     //funzioni che estraggono secondo diverse distribuzioni//
 
