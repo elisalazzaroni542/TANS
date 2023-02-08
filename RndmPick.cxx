@@ -105,7 +105,7 @@ ClassImp (RndmPick)
         CheckRndm(numcoord);
       }
       else{
-        cout<<"Check ok";
+        cout<<"Check ok"<<endl;
         return rndmN;
         cout<<"Numero selezionato: "<<rndmN<<endl;
         //coord.push_back(cX);
@@ -119,7 +119,7 @@ ClassImp (RndmPick)
         CheckRndm(numcoord);
       }
       else{
-        cout<<"Check ok";
+        cout<<"Check ok"<<endl;
         return rndmN;
         cout<<"Numero selezionato: "<<rndmN<<endl;
         //coord.push_back(cY);
@@ -133,7 +133,7 @@ ClassImp (RndmPick)
         CheckRndm(numcoord);
       }
       else{
-        cout<<"Check ok";
+        cout<<"Check ok"<<endl;
         return rndmN;
         cout<<"Numero selezionato: "<<rndmN<<endl;
         //coord.push_back(cZ);
