@@ -19,9 +19,9 @@ class RndmPick : public TRandom3{
 
     //funzioni di manipolazione risultati//
 
-    double CheckRndm (double &rndmN,int numcoord); //funzione che controlla che il numero estratto rispetti delle condizioni
+    double CheckRndm (int numcoord); //funzione che controlla che il numero estratto rispetti delle condizioni
     void PrintCoordinates () const; //funzione che stampa le coordinate del punto estratto
-    void SetVertix (vector <double> &coord, int size);
+    void SetVertix (int size);
     double GetVertix(int i) const;
 
   private:
