@@ -52,7 +52,7 @@ ClassImp (RndmPick)
   double RndmPick::RndmGaus(double mean, double sigma){
     //gRandom->SetSeed(Rseed);
     //double *gausPtr;
-    double gausN=gRandom->Gaus(mean,sigma)//da intendersi in cm
+    double gausN=gRandom->Gaus(mean,sigma);//da intendersi in cm
    // double gausN=*gausPtr;
     return gausN;
     cout<<"Numero estratto: "<<gausN<<endl;
