@@ -51,21 +51,21 @@ ClassImp (RndmPick)
 
   double RndmPick::RndmGaus(double mean, double sigma){
     //gRandom->SetSeed(Rseed);
-    double *gausPtr;
-    gausPtr=gRandom->Gaus(mean,sigma)//da intendersi in cm
-    double gausN=*gausPtr;
+    //double *gausPtr;
+    double gausN=gRandom->Gaus(mean,sigma)//da intendersi in cm
+   // double gausN=*gausPtr;
     return gausN;
     cout<<"Numero estratto: "<<gausN<<endl;
   }
 
-  void RndmPick::SetVertix(vector <double> &coord, double size ){
+  void RndmPick::SetVertix(vector <double> &coord, int size ){
     if (RvertixSize>0) delete []Rvertix;
     Rvertix=new double[size];
     RvertixSize=size;
     for(int i=0;i<RvertixSize;i++) Rvertix[i]=coord[i];
   }
 
-  double RndmPick::GetVertix(int i){//restituisce la coordinata selezionata dalla i
+  double RndmPick::GetVertix(int i) const{//restituisce la coordinata selezionata dalla i
     if(i>=0&&i<RvertixSize){
       return Rvertix[i];
       cout<<"coordinata "<<i<<" del vertice: "<<Rvertix[i]<<endl;
@@ -95,7 +95,7 @@ ClassImp (RndmPick)
     if (numcoord<1){
       cout<<"Invalid set-up for function CheckRndm"<<endl;
     }
-    else if(numcoord=1){ //check per coordinate x e y: vertice non deve superare il raggio del rivelatore
+    else if(numcoord==1){ //check per coordinate x e y: vertice non deve superare il raggio del rivelatore
       if(rndmN>=3.08&&rndmN<=-3.08){
         rndmN=RndmGaus(0,0.1);//media e sigma per le coordinate x e y
         cout<<"New coordinate set: "<<rndmN<<endl;
@@ -106,10 +106,10 @@ ClassImp (RndmPick)
         cout<<"Check ok";
         double cX=rndmN;
         return cX;
-        coord.pusk_back(cX);
+        coord.push_back(cX);
       }
     }
-    else if(numcoord=2){ //check per coordinate x e y: vertice non deve superare il raggio del rivelatore
+    else if(numcoord==2){ //check per coordinate x e y: vertice non deve superare il raggio del rivelatore
       if(rndmN>=3.08&&rndmN<=-3.08){
         rndmN=RndmGaus(0,0.1);//media e sigma per le coordinate x e y
         cout<<"New coordinate set: "<<rndmN<<endl;
@@ -123,7 +123,7 @@ ClassImp (RndmPick)
         coord.push_back(cY);
       }
     }  
-    else if(numcoord=3){ //check per la coordinata z: non deve superare la lunghezza del rivelatore
+    else if(numcoord==3){ //check per la coordinata z: non deve superare la lunghezza del rivelatore
       if(rndmN>=13.5&&rndmN<=-13.5){// check solo su metà lunghezza perchè parte da zero
         rndmN=RndmGaus(0,5.3);//media e sigma per la coordinata z
         cout<<"New coordinate set: "<<rndmN<<endl;
@@ -134,7 +134,7 @@ ClassImp (RndmPick)
         cout<<"Check ok";
         double cZ=rndmN;
         return cZ;
-        coord.pusk_back(cZ);
+        coord.push_back(cZ);
         }
     }
     else{cout<<"Invalid set-up for function CheckRndm"<<endl;}  
