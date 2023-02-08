@@ -70,7 +70,9 @@ ClassImp (RndmPick)
       return Rvertix[i];
       cout<<"coordinata "<<i<<" del vertice: "<<Rvertix[i]<<endl;
     }
-    else{cout<<"invalid input"<<endl;}
+    else{cout<<"invalid input"<<endl;
+        return 0;
+        }
   }
 
   void RndmPick::PrintCoordinates()const{
@@ -137,7 +139,9 @@ ClassImp (RndmPick)
         //coord.push_back(cZ);
         }
     }
-    else{cout<<"Invalid set-up for function CheckRndm"<<endl;}  
+    else{cout<<"Invalid set-up for function CheckRndm"<<endl;
+        return 0;
+        }  
   }
 
   
