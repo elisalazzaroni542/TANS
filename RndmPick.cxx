@@ -1,6 +1,7 @@
 #include <Riostream.h>
 #include "RndmPick.h"
 #include <TRandom3.h>
+#include <vector>
 
 ClassImp (RndmPick)
 
@@ -13,7 +14,7 @@ ClassImp (RndmPick)
       cout<<"DEFAULT CONSTR-THIS= "<<this<<endl;
   }
 
-  RndmPick::RndmPick(unsigned int seed):TRandom3(),
+  RndmPick::RndmPick(unsigned int seed):TRandom3(seed),
   Rseed(seed),
   RvertixSize(0),
   Rvertix(NULL)
@@ -54,9 +55,10 @@ ClassImp (RndmPick)
     gausPtr=gRandom->Gaus(mean,sigma)//da intendersi in cm
     double gausN=*gausPtr;
     return gausN;
+    cout<<"Numero estratto: "<<gausN<<endl;
   }
 
-  void RndmPick::SetVertix(double *coord, double size ){
+  void RndmPick::SetVertix(vector <double> &coord, double size ){
     if (RvertixSize>0) delete []Rvertix;
     Rvertix=new double[size];
     RvertixSize=size;
@@ -66,6 +68,7 @@ ClassImp (RndmPick)
   double RndmPick::GetVertix(int i){//restituisce la coordinata selezionata dalla i
     if(i>=0&&i<RvertixSize){
       return Rvertix[i];
+      cout<<"coordinata "<<i<<" del vertice: "<<Rvertix[i]<<endl;
     }
     else{cout<<"invalid input"<<endl;}
   }
@@ -87,6 +90,8 @@ ClassImp (RndmPick)
     
   double RndmPick::CheckRndm(double &rndmN, int numcoord){//numcoord è un numero (1, 2 o 3) che indica per quale coordinata si sta eseguendo il controllo del numero casuale
   //controlli per avere numeri compatibili con geometria del rivelatore-----------------
+    vector <double> coord;
+    coord.reserve(3);
     if (numcoord<1){
       cout<<"Invalid set-up for function CheckRndm"<<endl;
     }
@@ -101,6 +106,7 @@ ClassImp (RndmPick)
         cout<<"Check ok";
         double cX=rndmN;
         return cX;
+        coord.pusk_back(cX);
       }
     }
     else if(numcoord=2){ //check per coordinate x e y: vertice non deve superare il raggio del rivelatore
@@ -114,6 +120,7 @@ ClassImp (RndmPick)
         cout<<"Check ok";
         double cY=rndmN;
         return cY;
+        coord.push_back(cY);
       }
     }  
     else if(numcoord=3){ //check per la coordinata z: non deve superare la lunghezza del rivelatore
@@ -127,6 +134,7 @@ ClassImp (RndmPick)
         cout<<"Check ok";
         double cZ=rndmN;
         return cZ;
+        coord.pusk_back(cZ);
         }
     }
     else{cout<<"Invalid set-up for function CheckRndm"<<endl;}  
