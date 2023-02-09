@@ -142,7 +142,7 @@ ClassImp (RndmPick)
     else{cout<<"Invalid set-up for function CheckRndm"<<endl;
         return 0;
         }
-  retrun 0;  
+  return 0;  
   }
 
   
