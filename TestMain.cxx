@@ -12,7 +12,7 @@ void TestVertDistr (unsigned int seed){
     TH1F* cY=new TH1F("cY","Distribuzione coordinata Y",100,-1,1);
     TH1F* cZ=new TH1F("cZ","Distribuzione coordinata Z",100,-10,10);
     for(int i=0;i<100;i++){
-        RndmPick(seed) v;
+        RndmPick v(seed);
         v.SetVertix(3);
         cX->Fill(v.GetVertix(1));
         cY->Fill(v.GetVertix(2));
