@@ -99,7 +99,7 @@ ClassImp (RndmPick)
     }
     else if(numcoord==1){ //check per coordinate x e y: vertice non deve superare il raggio del rivelatore
       double rndmN=RndmGaus(0,0.1);//estrazione del numero
-      if(rndmN>=3.08&&rndmN<=-3.08){
+      if(rndmN>=3.08||rndmN<=-3.08){
         cout<<"coordinate "<<rndmN<<" out of bound"<<endl;
         cout<<"checking again..."<<endl;
         CheckRndm(numcoord);
@@ -113,7 +113,7 @@ ClassImp (RndmPick)
     }
     else if(numcoord==2){ //check per coordinate x e y: vertice non deve superare il raggio del rivelatore
       double rndmN=RndmGaus(0,0.1);
-      if(rndmN>=3.08&&rndmN<=-3.08){
+      if(rndmN>=3.08||rndmN<=-3.08){
         cout<<"coordinate "<<rndmN<<" out of bound"<<endl;
         cout<<"checking again..."<<endl;
         CheckRndm(numcoord);
@@ -127,7 +127,7 @@ ClassImp (RndmPick)
     }  
     else if(numcoord==3){ //check per la coordinata z: non deve superare la lunghezza del rivelatore
       double rndmN=RndmGaus(0,5.3);
-      if(rndmN>=13.5&&rndmN<=-13.5){// check solo su metà lunghezza perchè parte da zero
+      if(rndmN>=13.5||rndmN<=-13.5){// check solo su metà lunghezza perchè parte da zero
         cout<<"coordinate "<<rndmN<<" out of bound"<<endl;
         cout<<"checking again..."<<endl;
         CheckRndm(numcoord);
