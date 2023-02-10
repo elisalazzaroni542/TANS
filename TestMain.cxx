@@ -28,12 +28,4 @@ void TestVertDistr (unsigned int seed){
     cY->Draw();
     cv3->cd();
     cZ->Draw();
-
-
-
-        
-    
-
-
-
 }
