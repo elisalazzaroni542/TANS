@@ -67,7 +67,7 @@ ClassImp (RndmPick)
 
   double RndmPick::GetVertix(int i) const{//restituisce la coordinata selezionata dalla i
     if(i>0&&i<=RvertixSize){
-      return Rvertix[i];
+      return Rvertix[i-1];
       cout<<"coordinata "<<i<<" del vertice: "<<Rvertix[i-1]<<endl;
     }
     else{cout<<"invalid input"<<endl;
