@@ -8,8 +8,8 @@
 
 void TestVertDistr (unsigned int seed){
     gRandom->SetSeed(seed);
-    TH1F* cX=new TH1F("cX","Distribuzione coordinata X",100,-5,5);
-    TH1F* cY=new TH1F("cY","Distribuzione coordinata Y",100,-5,5);
+    TH1F* cX=new TH1F("cX","Distribuzione coordinata X",100,-1,1);
+    TH1F* cY=new TH1F("cY","Distribuzione coordinata Y",100,-1,1);
     TH1F* cZ=new TH1F("cZ","Distribuzione coordinata Z",100,-10,10);
     for(int i=0;i<100;i++){
         RndmPick v;
