@@ -67,7 +67,7 @@ ClassImp (Event)
   
   double Event::RndmCustom(){
     TFile f("kinem.root");
-    TH1F *h=(TH1F*)f.Get("hist");
+    TH1F *h=(TH1F*)f.Get("hm");
     double custN=h->GetRandom();
     cout<<"Numero estratto: "<<custN<<endl;
     return custN;
