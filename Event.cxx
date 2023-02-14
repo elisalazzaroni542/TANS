@@ -64,23 +64,58 @@ ClassImp (Event)
     cout<<"Numero estratto: "<<uniN<<endl;
     return uniN;
   }
-  /*
-  double Event::RndmCustom(string NameFile, string "nomeIsto"){
-    TFile f("NameFile");
-    TH1F *h=(TH1F*)f.Get("nomeIsto");
-    double custN=h->GetRandom();//da intendersi in cm
+  
+  double Event::RndmCustom(){
+    TFile f("kinem.root");
+    TH1F *h=(TH1F*)f.Get("hist");
+    double custN=h->GetRandom();
     cout<<"Numero estratto: "<<custN<<endl;
     return custN;
   }
-*/
+
 
   //funzioni di manipolazione
   void Event::SetVertix(int size){
     if (EvertixSize>0) delete []Evertix;
     Evertix=new double[size];
     EvertixSize=size;
-    for(int i=0;i<EvertixSize;i++) Evertix[i]=PickNCheckRndm(i+1);
+    for(int i=0;i<EvertixSize;i++) Evertix[i]=PickNCheckVertRndm(i+1);
   }
+
+  void Event::SetMultiplicity(int distrSelection){
+    if(distrSelection==0){//distribuzione gaussiana di molteplicità
+    double mean,sigma;
+    cout<<"Please insert mean and standard deviation for the gaussian disribution: "<<endl;
+    cout<<"mean: ";
+    cin>>mean;
+    cout<<endl<<"std dev: ";
+    cin>>sigma;
+     do{
+      Emult=RndmGaus(mean,sigma);
+     }
+    while(Emult<=0)
+    }
+    else if(distrSelection==1){//distribuzione uniforme tra min e max
+    double min,max;
+    cout<<"Please insert range for the uniform disribution: "<<endl;
+    cout<<"minimum: ";
+    cin>>min;
+    cout<<endl<<"maximum: ";
+    cin>>max;
+     do{
+      Emult=RndmUni(min,max);
+     }
+     while(Emult<=0)
+
+    }
+    else if(distrSelection==2){//distribuzione letta da file
+    
+     do{
+      Emult=RndmCustom();
+     }
+     while(Emult<=0)
+    }
+  }  
 
   double Event::GetVertix(int i) const{//restituisce la coordinata selezionata dalla i
     if(i>0&&i<=EvertixSize){
@@ -107,7 +142,7 @@ ClassImp (Event)
   }
 
     
-  double Event::PickNCheckRndm(int numcoord){//numcoord è un numero (1, 2 o 3) che indica per quale coordinata si sta eseguendo il controllo del numero casuale
+  double Event::PickNCheckVertRndm(int numcoord){//numcoord è un numero (1, 2 o 3) che indica per quale coordinata si sta eseguendo il controllo del numero casuale
   //selezione del vertice e controlli per avere numeri compatibili con geometria del rivelatore-----------------
   
     if(numcoord==1||numcoord==2){
