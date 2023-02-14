@@ -1,7 +1,7 @@
 #include <Riostream.h>
 #include "RndmPick.h"
 #include <TRandom3.h>
-#include <vector>
+
 
 ClassImp (RndmPick)
 
@@ -97,16 +97,16 @@ ClassImp (RndmPick)
     if(numcoord==1||numcoord==2){
       do {
         double rndmN=RndmGaus(0,0.1);
+        cout<<"Numero selezionato: "<<rndmN<<endl;
       }
-      while (rndmN>=3.08||rndmN<=-3.08)
-     cout<<"Numero selezionato: "<<rndmN<<endl; 
+      while (rndmN>=3.08||rndmN<=-3.08) 
     }
     else{
       do {
         double rndmN=RndmGaus(0,5.3);
+        cout<<"Numero selezionato: "<<rndmN<<endl;
       }
       while (rndmN>=13.5||rndmN<=-13.5)
-     cout<<"Numero selezionato: "<<rndmN<<endl;
     } 
     return rndmN;  
   }
