@@ -8,24 +8,24 @@ class Event : public TRandom3{
   //classe che avrà il compito di generare l'evento
   public:
     Event(); //costruttore di default
-    Event(usigned int seed); //costruttore standard
+    Event(unsigned int seed); //costruttore standard
     Event(const Event& source); //copy constructor (necessario perchè un data member (vertix) alloca memoria)
     virtual ~Event();//distruttore di default
 
-    void ChangeSeed(unsigned int newseed){Rseed=newseed;};
+    void ChangeSeed(unsigned int newseed){Eseed=newseed;};
 
     //funzioni che estraggono secondo diverse distribuzioni//
 
     double RndmGaus(double mean, double sigma); //funzione che estrae un numero a caso da una distribuzione gaussiana
     double RndmUni(double min, double max);//funzione che estrae un numero secondo una distribuzione uniforme tra min e max
-    //double RndmCustom(string NameFile );//funzione che estrae un numero da una distribuzione qualsiasi selezionata dall'utente tramite importazione di un istogramma
+    double RndmCustom();//funzione che estrae un numero da una distribuzione qualsiasi selezionata dall'utente tramite importazione di un istogramma
 
     //funzioni di manipolazione risultati//
 
     double PickNCheckVertRndm (int numcoord); //funzione che estrae e controlla che il numero estratto rispetti delle condizioni
     void SetVertix (int size);
     double GetVertix(int i) const;
-    double GetMultiplicity() const{return EMult;}
+    double GetMultiplicity() const{return Emult;}
     void CheckMultiplicity (); //funzione che controlla che la molteplicità sia accettabile
     void PrintEvent () const; //funzione che stampa le coordinate del vertice e la sua molteplicità
     void SetMultiplicity (int distrSelection);//funzione che inizializza la molteplicità dell'evento
