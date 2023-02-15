@@ -13,7 +13,7 @@ ClassImp (Event)
   Evertix(NULL)
   {
     //default constructor
-      cout<<"DEFAULT CONSTR-THIS= "<<this<<endl;
+      //cout<<"DEFAULT CONSTR-THIS= "<<this<<endl;
   }
 
   Event::Event(unsigned int seed):TRandom3(seed),
