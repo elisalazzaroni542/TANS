@@ -13,7 +13,7 @@ ClassImp (Event)
   Evertix(NULL)
   {
     //default constructor
-      //cout<<"DEFAULT CONSTR-THIS= "<<this<<endl;
+      cout<<"DEFAULT CONSTR-THIS= "<<this<<endl;
   }
 
   Event::Event(unsigned int seed):TRandom3(seed),
@@ -106,13 +106,12 @@ ClassImp (Event)
        Emult=RndmUni(min,max);
         }
       while(Emult<0);
-
     }
     else if(distrSelection==2){//distribuzione letta da file
     
-      do{
-        Emult=RndmCustom();
-        }
+     do{
+       Emult=RndmCustom();
+       }
       while(Emult<0);
     }
   }  
@@ -144,7 +143,7 @@ ClassImp (Event)
     
   double Event::PickNCheckVertRndm(int numcoord){//numcoord è un numero (1, 2 o 3) che indica per quale coordinata si sta eseguendo il controllo del numero casuale
   //selezione del vertice e controlli per avere numeri compatibili con geometria del rivelatore-----------------
-    double rndmN;
+   double rndmN;
     if(numcoord==1||numcoord==2){
       do {
         rndmN=RndmGaus(0,0.1);
@@ -163,4 +162,3 @@ ClassImp (Event)
   }
 
   
-
