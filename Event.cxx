@@ -84,36 +84,36 @@ ClassImp (Event)
 
   void Event::SetMultiplicity(int distrSelection=2){
     if(distrSelection==0){//distribuzione gaussiana di molteplicità
-    double mean,sigma;
-    cout<<"Please insert mean and standard deviation for the gaussian disribution: "<<endl;
-    cout<<"mean: ";
-    cin>>mean;
-    cout<<endl<<"std dev: ";
-    cin>>sigma;
-     do{
-      Emult=RndmGaus(mean,sigma);
-     }
-    while(Emult<0);
+     double mean,sigma;
+     cout<<"Please insert mean and standard deviation for the gaussian disribution: "<<endl;
+     cout<<"mean: ";
+     cin>>mean;
+     cout<<endl<<"std dev: ";
+     cin>>sigma;
+      do{
+       Emult=RndmGaus(mean,sigma);
+        }
+      while(Emult<0);
     }
     else if(distrSelection==1){//distribuzione uniforme tra min e max
-    double min,max;
-    cout<<"Please insert range for the uniform disribution: "<<endl;
-    cout<<"minimum: ";
-    cin>>min;
-    cout<<endl<<"maximum: ";
-    cin>>max;
-     do{
-      Emult=RndmUni(min,max);
-     }
-     while(Emult<0);
+     double min,max;
+     cout<<"Please insert range for the uniform disribution: "<<endl;
+     cout<<"minimum: ";
+     cin>>min;
+     cout<<endl<<"maximum: ";
+     cin>>max;
+      do{
+       Emult=RndmUni(min,max);
+        }
+      while(Emult<0);
 
     }
     else if(distrSelection==2){//distribuzione letta da file
     
-     do{
-      Emult=RndmCustom();
-     }
-     while(Emult<0);
+      do{
+        Emult=RndmCustom();
+        }
+      while(Emult<0);
     }
   }  
 
