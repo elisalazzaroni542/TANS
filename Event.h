@@ -23,12 +23,12 @@ class Event : public TRandom3{
     //funzioni di manipolazione risultati//
 
     double PickNCheckVertRndm (int numcoord); //funzione che estrae e controlla che il numero estratto rispetti delle condizioni
-    void SetVertix (int size);
+    void SetVertix (int size=3);
     double GetVertix(int i) const;
     double GetMultiplicity() const{return Emult;}
     void CheckMultiplicity (); //funzione che controlla che la molteplicità sia accettabile
     void PrintEvent () const; //funzione che stampa le coordinate del vertice e la sua molteplicità
-    void SetMultiplicity (int distrSelection);//funzione che inizializza la molteplicità dell'evento
+    void SetMultiplicity (int distrSelection=2);//funzione che inizializza la molteplicità dell'evento
     //double GetEvent(RndmPick vertix, double mult) const;
 
   private:

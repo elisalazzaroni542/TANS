@@ -13,7 +13,7 @@ ClassImp (Event)
   Evertix(NULL)
   {
     //default constructor
-      cout<<"DEFAULT CONSTR-THIS= "<<this<<endl;
+      //cout<<"DEFAULT CONSTR-THIS= "<<this<<endl;
   }
 
   Event::Event(unsigned int seed):TRandom3(seed),
@@ -23,7 +23,7 @@ ClassImp (Event)
   Evertix(NULL)
   {
     //standard constructor
-     cout<<"std constr-this= "<<this<<endl;
+     //cout<<"std constr-this= "<<this<<endl;
   }
   
   Event::Event (const Event &source):
@@ -31,7 +31,7 @@ ClassImp (Event)
    Eseed(source.Eseed),
    EvertixSize(source.EvertixSize)
   {//copy constructor
-    cout<<"copy constructor-this= "<<this<<endl;
+    //cout<<"copy constructor-this= "<<this<<endl;
     if (EvertixSize>0){
       Evertix=new double[EvertixSize];
       for(int i=0;i<EvertixSize;i++){
@@ -46,7 +46,7 @@ ClassImp (Event)
 
   Event::~Event(){
     //default destructor
-    cout<<"destructor-this= "<<this<<endl;
+    //cout<<"destructor-this= "<<this<<endl;
     if (EvertixSize>0) delete []Evertix;
   }
 
@@ -55,13 +55,13 @@ ClassImp (Event)
 
   double Event::RndmGaus(double mean, double sigma){
     double gausN=gRandom->Gaus(mean,sigma);//da intendersi in cm
-    cout<<"Numero estratto: "<<gausN<<endl;
+    //cout<<"Numero estratto: "<<gausN<<endl;
     return gausN;
   }
 
   double Event::RndmUni(double min=1, double max=5){//genera numero distribuito uniformemente tra min e max
     double uniN=gRandom->Uniform(min,max);
-    cout<<"Numero estratto: "<<uniN<<endl;
+    //cout<<"Numero estratto: "<<uniN<<endl;
     return uniN;
   }
   
@@ -69,13 +69,13 @@ ClassImp (Event)
     TFile f("kinem.root");
     TH1F *h=(TH1F*)f.Get("hm");
     double custN=h->GetRandom();
-    cout<<"Numero estratto: "<<custN<<endl;
+    //cout<<"Numero estratto: "<<custN<<endl;
     return custN;
   }
 
 
   //funzioni di manipolazione
-  void Event::SetVertix(int size){
+  void Event::SetVertix(int size=3){
     if (EvertixSize>0) delete []Evertix;
     Evertix=new double[size];
     EvertixSize=size;
@@ -93,7 +93,7 @@ ClassImp (Event)
      do{
       Emult=RndmGaus(mean,sigma);
      }
-    while(Emult<=0);
+    while(Emult<0);
     }
     else if(distrSelection==1){//distribuzione uniforme tra min e max
     double min,max;
@@ -105,7 +105,7 @@ ClassImp (Event)
      do{
       Emult=RndmUni(min,max);
      }
-     while(Emult<=0);
+     while(Emult<0);
 
     }
     else if(distrSelection==2){//distribuzione letta da file
@@ -113,13 +113,13 @@ ClassImp (Event)
      do{
       Emult=RndmCustom();
      }
-     while(Emult<=0);
+     while(Emult<0);
     }
   }  
 
   double Event::GetVertix(int i) const{//restituisce la coordinata selezionata dalla i
     if(i>0&&i<=EvertixSize){
-      cout<<"coordinata "<<i<<" del vertice: "<<Evertix[i-1]<<endl;
+      //cout<<"coordinata "<<i<<" del vertice: "<<Evertix[i-1]<<endl;
       return Evertix[i-1];
     }
     else{cout<<"invalid input"<<endl;
@@ -148,14 +148,14 @@ ClassImp (Event)
     if(numcoord==1||numcoord==2){
       do {
         rndmN=RndmGaus(0,0.1);
-        cout<<"Numero selezionato: "<<rndmN<<endl;
+        //cout<<"Numero selezionato: "<<rndmN<<endl;
       }
       while (rndmN>=3.08||rndmN<=-3.08); 
     }
     else{
       do {
         rndmN=RndmGaus(0,5.3);
-        cout<<"Numero selezionato: "<<rndmN<<endl;
+        //cout<<"Numero selezionato: "<<rndmN<<endl;
       }
       while (rndmN>=13.5||rndmN<=-13.5);
     } 
