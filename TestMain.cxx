@@ -5,9 +5,12 @@
 #include <TCanvas.h>
 #include <math.h>
 #include <TFile.h>
+#include <TStopwatch.h>
 
 
 void TestVertDistr (unsigned int seed){
+    TStopwatch timer;
+    timer.Start();
     gRandom->SetSeed(seed);
     TH1F* cX=new TH1F("cX","Distribuzione coordinata X",100,-1,1);
     TH1F* cY=new TH1F("cY","Distribuzione coordinata Y",100,-1,1);
@@ -30,9 +33,14 @@ void TestVertDistr (unsigned int seed){
     cv3->cd();
     cZ->Draw();
 
+    timer.Stop();
+    timer.Print();
+
 }
 
 void TestSetMult(unsigned int seed){
+    TStopwatch timer;
+    timer.Start();
     gRandom->SetSeed(seed);
     TH1F* h1=new TH1F("h1","DIstribuzione molteplicita' da file",100,0,70);
     TH1F* h2=new TH1F("h2","Distribuzione molteplicita' da file",100,0,70);
@@ -60,7 +68,10 @@ void TestSetMult(unsigned int seed){
     cv2->cd();
     h2->Draw();
     cv3->cd();
-    rif->DrawCopy();//usare DrawCopy quando si vuole disegnare qualcosa che proviene da fuori lo scope della funzione. 
+    rif->DrawCopy();//usare DrawCopy quando si vuole disegnare qualcosa che proviene da fuori lo scope della funzione.
+
+    timer.Stop();
+    timer.Print(); 
 
 
 }
