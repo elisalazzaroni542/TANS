@@ -74,7 +74,7 @@ ClassImp (Event)
   }
 
 
-  //funzioni di manipolazione
+  //funzioni di manipolazione--------------------------------------------------------------
   void Event::SetVertix(int size=3){
     if (EvertixSize>0) delete []Evertix;
     Evertix=new double[size];
