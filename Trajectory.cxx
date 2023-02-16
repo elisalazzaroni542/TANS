@@ -60,7 +60,7 @@ ClassImp (Trajectory)
 
   double Event::RndmCustom(){//reimplementata da Event cambiando il nome del file da leggere
     TFile f("kinem.root");
-    TH1F *h=(TH1F*)f.Get("heta2");//quello che viene letta in realtà è una distribuizione di rapidità. Bisogna poi trasformarlo in theta
+    TH1F *h=(TH1F*)f.Get("heta2");//quello che viene letta in realtà è una distribuizione di pseudorapidità. Bisogna poi trasformarlo in theta
     double custN=h->GetRandom();
     //cout<<"Numero estratto: "<<custN<<endl;
     return custN;
@@ -121,6 +121,19 @@ ClassImp (Trajectory)
     else cout<<"invalid t: restart event"<<endl;
   }
 */
+double Trajectory:: SetImpactCoord(double Rcil){
+    if (HimpCoordSize>0) delete []HimpCoord;
+    TparC=new double[size];
+    TparCSize=size;
+    SetThetaNPhi();
+    TparC[1]=Sin(GetTheta())*Cos(GetPhi());
+    TparC[2]=Sin(GetTheta())*Sin(GetPhi())
+    TparC[3]=Cos(GetTheta());
+    cout<<"c1= "<<TparC[1]<<"c2= "<<TparC[2]<<"c3= "<<TparC[3]<<endl;
+  }
+
+
+
 
 
 
