@@ -61,7 +61,7 @@ ClassImp (Event)
 
   double Event::RndmUni(double min=1, double max=5){//genera numero distribuito uniformemente tra min e max
     double uniN=gRandom->Uniform(min,max);
-    //cout<<"Numero estratto: "<<uniN<<endl;
+    cout<<"Numero estratto: "<<uniN<<endl;
     return uniN;
   }
   

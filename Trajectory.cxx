@@ -98,18 +98,33 @@ ClassImp (Trajectory)
 
 //in alternativa queste due funzioni possono essere implementate direttamente nel main
   double Trajectory::CalculateDelta(double Rcil){
-    double Delta=Power(Evertix[1]*Tc1+Evertix[2]*Tc2,2)-(Power(Tc1,2)+Power(Tc2,2))*(Power(Evertix[1],2)+Power(Evertix[2],2)-Power(Rcil,2));
+    double Delta=Power(Evertix[1]*TparC[1]+Evertix[2]*TparC[2],2)-(Power(TparC[1],2)+Power(TparC[2],2))*(Power(Evertix[1],2)+Power(Evertix[2],2)-Power(Rcil,2));
     return Delta;
   }
 
   double Trajectory::CalculateParT(double Rcil){
-    double parTp=(-(Evertix[1]*Tc1+Evertix[2]*Tc2)+Sqrt(CalculateDelta(Rcil)))/(Power(Tc1,2)+Power(Tc2,2));
-    double parTm=(-(Evertix[1]*Tc1+Evertix[2]*Tc2)-Sqrt(CalculateDelta(Rcil)))/(Power(Tc1,2)+Power(Tc2,2));
+    double parTp=(-(Evertix[1]*TparC[1]+Evertix[2]*TparC[2])+Sqrt(CalculateDelta(Rcil)))/(Power(TparC[1],2)+Power(TparC[2],2));
+    double parTm=(-(Evertix[1]*TparC[1]+Evertix[2]*TparC[2])-Sqrt(CalculateDelta(Rcil)))/(Power(TparC[1],2)+Power(TparC[2],2));
     if(parTp>=0) return parTp;
     else if (parTm>=0) return parTm;
     else {cout<<"t always negative"<<endl;
          return 0;
     } 
+  }
+
+  void Trajectory::PrintTrajectory()const{
+    cout<<"Coordinata Theta della traiettoria: "<<Ttheta<<endl;
+    cout<<"Coordinata Phi della traiettoria: "<<Tphi<<endl;
+    cout<<"Parametri della traiettoria (c1,c2,c3)= "<<endl;
+    if (TparCSize>0){
+      for(int i=0;i<TparCSize;i++){
+        cout<<TparC[i]<<" ,";
+      }
+      cout<<endl;
+    }
+    else{
+      cout<<"Nessun parametro trovato"<<endl;
+    }
   }
 //-----------ATTENZIONE----------
 //questa funzione probabilmente è da implementare nel main
@@ -121,16 +136,6 @@ ClassImp (Trajectory)
     else cout<<"invalid t: restart event"<<endl;
   }
 */
-double HitPoint:: SetImpactCoord(double Rcil){
-    if (HimpCoordSize>0) delete []HimpCoord;
-    TparC=new double[size];
-    TparCSize=size;
-    SetThetaNPhi();
-    TparC[1]=Sin(GetTheta())*Cos(GetPhi());
-    TparC[2]=Sin(GetTheta())*Sin(GetPhi())
-    TparC[3]=Cos(GetTheta());
-    cout<<"c1= "<<TparC[1]<<"c2= "<<TparC[2]<<"c3= "<<TparC[3]<<endl;
-  }
 
 
 

@@ -75,3 +75,21 @@ void TestSetMult(unsigned int seed){
 
 
 }
+
+void TestRndmUni(unsigned int seed){
+    TStopwatch timer;
+    timer.Start();
+    gRandom->SetSeed(seed);
+    TH1F* h1=new TH1F("h1","DIstribuzione numeri estratti con RndmUni",100,0,6);
+    for(int i=0;i<100;i++){
+        Event e1(seed);
+        h1->Fill(e1.RndmUni());
+
+    }
+    TCanvas* cv1=new TCanvas();
+    cv1->cd();
+    h1->Draw();
+    
+    timer.Stop();
+    timer.Print();
+}    
