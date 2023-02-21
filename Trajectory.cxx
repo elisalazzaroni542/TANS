@@ -80,7 +80,7 @@ ClassImp (Trajectory)
     TparCSize=size;
     SetThetaNPhi();
     TparC[1]=(double)sin(GetTheta())*cos(GetPhi());
-    TparC[2]=(double)sin(GetTheta())*sin(GetPhi())
+    TparC[2]=(double)sin(GetTheta())*sin(GetPhi());
     TparC[3]=(double)cos(GetTheta());
     cout<<"GetParC[1]= "<<TparC[1]<<"GetParC[2]= "<<TparC[2]<<"c3= "<<TparC[3]<<endl;
   }
