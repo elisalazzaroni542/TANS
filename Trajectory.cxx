@@ -79,9 +79,9 @@ ClassImp (Trajectory)
     TparC=new double[size];
     TparCSize=size;
     SetThetaNPhi();
-    TparC[1]=sin(GetTheta())*cos(GetPhi());
-    TparC[2]=sin(GetTheta())*sin(GetPhi())
-    TparC[3]=cos(GetTheta());
+    TparC[1]=(double)sin(GetTheta())*cos(GetPhi());
+    TparC[2]=(double)sin(GetTheta())*sin(GetPhi())
+    TparC[3]=(double)cos(GetTheta());
     cout<<"c1= "<<TparC[1]<<"c2= "<<TparC[2]<<"c3= "<<TparC[3]<<endl;
   }
 
@@ -98,13 +98,23 @@ ClassImp (Trajectory)
 
 //in alternativa queste due funzioni possono essere implementate direttamente nel main
   double Trajectory::CalculateDelta(double Rcil){
-    double Delta=pow(GetVertix[1]*GetParC[1]+GetVertix[2]*GetParC[2],2)-(pow(GetParC[1],2)+pow(GetParC[2],2))*(pow(GetVertix[1],2)+pow(GetVertix[2],2)-pow(Rcil,2));
+    double v1,v2,c1,c2;
+    v1=GetVertix[1];
+    v2=GetVertix[2];
+    c1=GetParC[1];
+    c2=GetParC[2];
+    double Delta=pow(v1*c1+v2*c2,2)-(pow(c1,2)+pow(c2,2))*(pow(v1,2)+pow(v2,2)-pow(Rcil,2));
     return Delta;
   }
 
   double Trajectory::CalculateParT(double Rcil){
-    double parTp=(-(GetVertix[1]*GetParC[1]+GetVertix[2]*GetParC[2])+sqrt(CalculateDelta(Rcil)))/(pow(GetParC[1],2)+pow(GetParC[2],2));
-    double parTm=(-(GetVertix[1]*GetParC[1]+GetVertix[2]*GetParC[2])-sqrt(CalculateDelta(Rcil)))/(pow(GetParC[1],2)+pow(GetParC[2],2));
+    double v1,v2,c1,c2;
+    v1=GetVertix[1];
+    v2=GetVertix[2];
+    c1=GetParC[1];
+    c2=GetParC[2];
+    double parTp=(-(v1*c1+v2*c2)+sqrt(CalculateDelta(Rcil)))/(pow(c1,2)+pow(c2,2));
+    double parTm=(-(v1*c1+v2*c2)-sqrt(CalculateDelta(Rcil)))/(pow(c1,2)+pow(c2,2));
     if(parTp>=0) return parTp;
     else if (parTm>=0) return parTm;
     else {cout<<"t always negative"<<endl;

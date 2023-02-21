@@ -15,8 +15,8 @@ class Trajectory : public Event{
      double RndmCustom();//reimplementato da Event
      
      void SetThetaNPhi();//estrae theta e phi di una traiettoria
-     double GetTheta(){return Ttheta;};
-     void GetPhi(){return Tphi;};
+     float GetTheta(){return Ttheta;};
+     float GetPhi(){return Tphi;};
      void SetParC(int size=3);//inizializza i parametri c1,2,3 dell'equazione con le Theta e Phi estratte
      double GetParC(int i) const;//restituisce il parametro identificato dalla i
      double CalculateDelta(double Rcil);// calcola il discriminante dell'equazione. Rcil è il raggio del cilindro con cui si vuole calcolare l'intersezione
@@ -25,8 +25,8 @@ class Trajectory : public Event{
      //double SetImpactCoord(double Rcil);//calcola le coordinate di impatto sul cilindro di raggio Rcil
    
    private:
-     double Ttheta;//coord. theta estratta
-     double Tphi;//coord. phi estratta
+     float Ttheta;//coord. theta estratta
+     float Tphi;//coord. phi estratta
      double TparCSize;//dimensione del vettore parC
      double *TparC;//vettore che contiene i 3 parametri della retta c1,2,3
 
