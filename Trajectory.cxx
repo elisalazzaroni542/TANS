@@ -121,7 +121,7 @@ ClassImp (Trajectory)
     else cout<<"invalid t: restart event"<<endl;
   }
 */
-double Trajectory:: SetImpactCoord(double Rcil){
+double HitPoint:: SetImpactCoord(double Rcil){
     if (HimpCoordSize>0) delete []HimpCoord;
     TparC=new double[size];
     TparCSize=size;
