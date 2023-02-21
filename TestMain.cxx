@@ -80,16 +80,23 @@ void TestRndmUni(unsigned int seed){
     TStopwatch timer;
     timer.Start();
     gRandom->SetSeed(seed);
-    TH1F* h1=new TH1F("h1","DIstribuzione numeri estratti con RndmUni",100,0,6);
-    for(int i=0;i<100;i++){
+    TH1F* h1=new TH1F("h1","DIstribuzione numeri estratti con RndmUni event",100,-1,7);
+    TH1F* h2=new TH1F("h2","DIstribuzione numeri estratti con RndmUni trajectory",100,-1,7);
+    for(int i=0;i<10000;i++){
         Event e1(seed);
-        h1->Fill(e1.RndmUni());
+        Trajectory t1(seed);
+        h1->Fill(e1.RndmUni(0,2*M_PI));
+        h2->Fill(t1.RndmUni(0,2*M_PI));
 
     }
+    
     TCanvas* cv1=new TCanvas();
+    TCanvas* cv2=new TCanvas();
     cv1->cd();
     h1->Draw();
-
+    cv2->cd();
+    h2->Draw();
+    
     timer.Stop();
     timer.Print();
-}    
+}        
