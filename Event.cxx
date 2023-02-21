@@ -2,6 +2,7 @@
 #include "Event.h"
 #include <TRandom3.h>
 #include <TFile.h>
+#include <math.h>
 
 
 ClassImp (Event)

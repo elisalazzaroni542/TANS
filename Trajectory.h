@@ -14,13 +14,14 @@ class Trajectory : public Event{
 
      double RndmCustom();//reimplementato da Event
      
-     double SetThetaNPhi();//estrae theta e phi di una traiettoria
+     void SetThetaNPhi();//estrae theta e phi di una traiettoria
      double GetTheta(){return Ttheta;};
      void GetPhi(){return Tphi;};
-     void SetParC();//inizializza i parametri c1,2,3 dell'equazione con le Theta e Phi estratte
+     void SetParC(int size=3);//inizializza i parametri c1,2,3 dell'equazione con le Theta e Phi estratte
+     double GetParC(int i) const;//restituisce il parametro identificato dalla i
      double CalculateDelta(double Rcil);// calcola il discriminante dell'equazione. Rcil è il raggio del cilindro con cui si vuole calcolare l'intersezione
      double CalculateParT(double Rcil);//calcola il parametro t per trovare l'equazione della retta in 3D
-     void PrintTrajectory();//stampa le informazioni relative a una traiettoria
+     void PrintTrajectory() const;//stampa le informazioni relative a una traiettoria
      //double SetImpactCoord(double Rcil);//calcola le coordinate di impatto sul cilindro di raggio Rcil
    
    private:

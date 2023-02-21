@@ -3,7 +3,7 @@
 #include "Event.h"
 #include <TRandom3.h>
 #include <TFile.h>
-#include <TMath.h>
+#include <math.h>
 
 
 
@@ -70,8 +70,8 @@ ClassImp (Trajectory)
 
   void Trajectory::SetThetaNPhi(){
     double Heta=RndmCustom();//si estrae prima la rapidità Heta e poi si trasforma in theta
-    Etheta=2*ATan(Exp(-Heta));
-    Ephi=RndmUni(0,2*Pi());
+    Ttheta=2*atan(exp(-Heta));
+    Tphi=RndmUni(0,2*M_PI);
   }
 
   void Trajectory::SetParC(int size=3){
@@ -79,9 +79,9 @@ ClassImp (Trajectory)
     TparC=new double[size];
     TparCSize=size;
     SetThetaNPhi();
-    TparC[1]=Sin(GetTheta())*Cos(GetPhi());
-    TparC[2]=Sin(GetTheta())*Sin(GetPhi())
-    TparC[3]=Cos(GetTheta());
+    TparC[1]=sin(GetTheta())*cos(GetPhi());
+    TparC[2]=sin(GetTheta())*sin(GetPhi())
+    TparC[3]=cos(GetTheta());
     cout<<"c1= "<<TparC[1]<<"c2= "<<TparC[2]<<"c3= "<<TparC[3]<<endl;
   }
 
@@ -98,13 +98,13 @@ ClassImp (Trajectory)
 
 //in alternativa queste due funzioni possono essere implementate direttamente nel main
   double Trajectory::CalculateDelta(double Rcil){
-    double Delta=Power(Evertix[1]*TparC[1]+Evertix[2]*TparC[2],2)-(Power(TparC[1],2)+Power(TparC[2],2))*(Power(Evertix[1],2)+Power(Evertix[2],2)-Power(Rcil,2));
+    double Delta=pow(GetVertix[1]*GetParC[1]+GetVertix[2]*GetParC[2],2)-(pow(GetParC[1],2)+pow(GetParC[2],2))*(pow(GetVertix[1],2)+pow(GetVertix[2],2)-pow(Rcil,2));
     return Delta;
   }
 
   double Trajectory::CalculateParT(double Rcil){
-    double parTp=(-(Evertix[1]*TparC[1]+Evertix[2]*TparC[2])+Sqrt(CalculateDelta(Rcil)))/(Power(TparC[1],2)+Power(TparC[2],2));
-    double parTm=(-(Evertix[1]*TparC[1]+Evertix[2]*TparC[2])-Sqrt(CalculateDelta(Rcil)))/(Power(TparC[1],2)+Power(TparC[2],2));
+    double parTp=(-(GetVertix[1]*GetParC[1]+GetVertix[2]*GetParC[2])+sqrt(CalculateDelta(Rcil)))/(pow(GetParC[1],2)+pow(GetParC[2],2));
+    double parTm=(-(GetVertix[1]*GetParC[1]+GetVertix[2]*GetParC[2])-sqrt(CalculateDelta(Rcil)))/(pow(GetParC[1],2)+pow(GetParC[2],2));
     if(parTp>=0) return parTp;
     else if (parTm>=0) return parTm;
     else {cout<<"t always negative"<<endl;
@@ -131,7 +131,7 @@ ClassImp (Trajectory)
 /*
   double CheckParT(){
     double t=CalculateParT(double Rcil);
-    double test=Evertix[3]+TparC[3]*t;
+    double test=GetVertix[3]+TparC[3]*t;
     if(test>=-13.5&&test<=13.5) cout<<"t valid"<<endl;
     else cout<<"invalid t: restart event"<<endl;
   }

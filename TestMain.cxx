@@ -89,7 +89,7 @@ void TestRndmUni(unsigned int seed){
     TCanvas* cv1=new TCanvas();
     cv1->cd();
     h1->Draw();
-    
+
     timer.Stop();
     timer.Print();
 }    
