@@ -97,12 +97,15 @@ ClassImp (Event)
       while(Emult<0);
     }
     else if(distrSelection==1){//distribuzione uniforme tra min e max
-     double min,max;
+     double min=1;
+     double max=5;
+     /*
      cout<<"Please insert range for the uniform disribution: "<<endl;
      cout<<"minimum: ";
      cin>>min;
      cout<<endl<<"maximum: ";
      cin>>max;
+     */
       do{
        Emult=RndmUni(min,max);
         }

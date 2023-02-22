@@ -6,6 +6,7 @@
 #include <math.h>
 #include <TFile.h>
 #include <TStopwatch.h>
+#include <vector>
 
 
 void TestVertDistr (unsigned int seed){
@@ -99,4 +100,66 @@ void TestRndmUni(unsigned int seed){
     
     timer.Stop();
     timer.Print();
-}        
+} 
+
+//-------------------------------------------------------------------------MAIN------------------------------------------------------
+
+
+
+  double CalculateDelta(Event &e, Trajectory &t, double Rcil){
+    double Delta=pow(e.GetVertix[1]*t.GetParC[1]+e.GetVertix[2]*t.GetParC[2],2)-(pow(t.GetParC[1],2)+pow(t.GetParC[2],2))*(pow(e.GetVertix[1],2)+pow(e.GetVertix[2],2)-pow(Rcil,2));
+    cout<<"Delta= "<<Delta<<endl;
+    return Delta;
+  }
+
+  double CalculateParT(Event &e, Trajectory &t, double Rcil){
+    double parTp=(-(e.GetVertix[1]*t.GetParC[1]+e.GetVertix[2]*t.GetParC[2])+sqrt(CalculateDelta(e,t,Rcil)))/(pow(t.GetParC[1],2)+pow(t.GetParC[2],2));
+    double parTm=(-(e.GetVertix[1]*t.GetParC[1]+e.GetVertix[2]*t.GetParC[2])-sqrt(CalculateDelta(e,t,Rcil)))/(pow(t.GetParC[1],2)+pow(t.GetParC[2],2));
+    if(parTp>=0){
+        cout<<"parTp= "<<parTp<<endl;
+        return parTp;} 
+    else if (parTm>=0) {
+        cout<<"parTm= "<<parTm<<endl;
+        return parTm;}
+    else {cout<<"t always negative"<<endl;
+         return 0;
+    } 
+  }
+
+int main(){
+    //creiamo un evento:
+    unsigned int seed=123;
+    gRandom->SetSeed(seed);
+    Event e(seed);
+    e.SetVertix();
+    e.SetMultiplicity(1);
+    e.PrintEvent();
+    //associamo al vertice le sue traiettorie
+    vector <Trajectory> Trajs;
+    Trajs.reserve(5);
+    for(int i=0;i<e.GetMultiplicity();i++){
+        Trajectory t(seed);
+        t.SetThetaNPhi();
+        t.SetParC();
+        t.PrintTrajectory();
+        Trajs.push_back(t);
+    }
+    //stampiamo le verie traiettorie salvate nel vector
+    for(int j=0;j<Trajs.size();j++){
+        Trajs[j].PrintTrajectory();
+
+    }
+    //calcoliamo Delta e t per ogni traiettoria
+    for(int k=0;k<Trajs.size();k++){
+        //raggio del berillio
+        double Rcil=3.08;
+        CalculateDelta(e,Trajs[k],Rcil);
+        CalculateParT(e,Trajs[k],Rcil);
+
+    }
+    delete Trajs;
+    return 0;
+
+
+}
+
