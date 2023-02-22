@@ -107,14 +107,14 @@ void TestRndmUni(unsigned int seed){
 
 
   double CalculateDelta(Event &e, Trajectory &t, double Rcil){
-    double Delta=pow(Event::e.GetVertix[1]*Trajectory::t.GetParC[1]+Event::e.GetVertix[2]*Trajectory::t.GetParC[2],2)-(pow(Trajectory::t.GetParC[1],2)+pow(Trajectory::t.GetParC[2],2))*(pow(Event::e.GetVertix[1],2)+pow(Event::e.GetVertix[2],2)-pow(Rcil,2));
+    double Delta=pow(Event::GetVertix[1]*Trajectory::GetParC[1]+Event::GetVertix[2]*Trajectory::GetParC[2],2)-(pow(Trajectory::GetParC[1],2)+pow(Trajectory::GetParC[2],2))*(pow(Event::GetVertix[1],2)+pow(Event::GetVertix[2],2)-pow(Rcil,2));
     cout<<"Delta= "<<Delta<<endl;
     return Delta;
   }
 
   double CalculateParT(Event &e, Trajectory &t, double Rcil){
-    double parTp=(-(Event::e.GetVertix[1]*Trajectory::t.GetParC[1]+Event::e.GetVertix[2]*Trajectory::t.GetParC[2])+sqrt(CalculateDelta(e,t,Rcil)))/(pow(Trajectory::t.GetParC[1],2)+pow(Trajectory::t.GetParC[2],2));
-    double parTm=(-(Event::e.GetVertix[1]*Trajectory::t.GetParC[1]+Event::e.GetVertix[2]*Trajectory::t.GetParC[2])-sqrt(CalculateDelta(e,t,Rcil)))/(pow(Trajectory::t.GetParC[1],2)+pow(Trajectory::t.GetParC[2],2));
+    double parTp=(-(Event::GetVertix[1]*Trajectory::GetParC[1]+Event::GetVertix[2]*Trajectory::GetParC[2])+sqrt(CalculateDelta(e,t,Rcil)))/(pow(Trajectory::GetParC[1],2)+pow(Trajectory::GetParC[2],2));
+    double parTm=(-(Event::GetVertix[1]*Trajectory::GetParC[1]+Event::GetVertix[2]*Trajectory::GetParC[2])-sqrt(CalculateDelta(e,t,Rcil)))/(pow(Trajectory::GetParC[1],2)+pow(Trajectory::GetParC[2],2));
     if(parTp>=0){
         cout<<"parTp= "<<parTp<<endl;
         return parTp;} 
