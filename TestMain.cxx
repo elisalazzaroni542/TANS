@@ -104,7 +104,7 @@ void TestRndmUni(unsigned int seed){
 
 //-------------------------------------------------------------------------MAIN------------------------------------------------------
 
-
+/*
 
   double CalculateDelta(Event &e, Trajectory &t, double Rcil){
     double Delta=pow(e.GetVertix[1]*t.GetParC[1]+e.GetVertix[2]*t.GetParC[2],2)-(pow(t.GetParC[1],2)+pow(t.GetParC[2],2))*(pow(e.GetVertix[1],2)+pow(e.GetVertix[2],2)-pow(Rcil,2));
@@ -125,7 +125,7 @@ void TestRndmUni(unsigned int seed){
          return 0;
     } 
   }
-
+*/
 int main(){
     //creiamo un evento:
     unsigned int seed=123;
@@ -149,15 +149,6 @@ int main(){
         Trajs[j].PrintTrajectory();
 
     }
-    //calcoliamo Delta e t per ogni traiettoria
-    for(int k=0;k<Trajs.size();k++){
-        //raggio del berillio
-        double Rcil=3.08;
-        CalculateDelta(e,Trajs[k],Rcil);
-        CalculateParT(e,Trajs[k],Rcil);
-
-    }
-    delete Trajs;
     return 0;
 
 

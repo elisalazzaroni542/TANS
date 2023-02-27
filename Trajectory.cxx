@@ -99,7 +99,7 @@ ClassImp (Trajectory)
   void Trajectory::PrintTrajectory()const{
     cout<<"Coordinata Theta della traiettoria: "<<Ttheta<<endl;
     cout<<"Coordinata Phi della traiettoria: "<<Tphi<<endl;
-    cout<<"Parametri della traiettoria (GetParC[1],GetParC[2],c3)= "<<endl;
+    cout<<"Parametri della traiettoria (c1,c2,c3)= "<<endl;
     if (TparCSize>0){
       for(int i=0;i<TparCSize;i++){
         cout<<TparC[i]<<" ,";
@@ -111,7 +111,6 @@ ClassImp (Trajectory)
     }
   }
 //-----------ATTENZIONE----------
-//questa funzione probabilmente è da implementare nel main
 /*
   double CheckParT(){
     double t=CalculateParT(double Rcil);

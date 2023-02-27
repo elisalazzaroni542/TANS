@@ -35,7 +35,7 @@ class Event : public TRandom3{
     unsigned int Eseed;
     int EvertixSize;//dimensione del vettore vertix
     double *Evertix;//vettore con le coordinate del vertice
-    double Emult;//molteplicità dell'impatto
+    int Emult;//molteplicità dell'impatto
    
 
 ClassDef (Event,1)

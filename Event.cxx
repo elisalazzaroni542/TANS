@@ -86,13 +86,15 @@ ClassImp (Event)
   void Event::SetMultiplicity(int distrSelection=2){
     if(distrSelection==0){//distribuzione gaussiana di molteplicità
      double mean,sigma;
+     /*
      cout<<"Please insert mean and standard deviation for the gaussian disribution: "<<endl;
      cout<<"mean: ";
      cin>>mean;
      cout<<endl<<"std dev: ";
      cin>>sigma;
+     */
       do{
-       Emult=RndmGaus(mean,sigma);
+       Emult=(int)RndmGaus(mean,sigma);
         }
       while(Emult<0);
     }
@@ -107,14 +109,14 @@ ClassImp (Event)
      cin>>max;
      */
       do{
-       Emult=RndmUni(min,max);
+       Emult=(int)RndmUni(min,max);
         }
       while(Emult<0);
     }
     else if(distrSelection==2){//distribuzione letta da file
     
      do{
-       Emult=RndmCustom();
+       Emult=(int)RndmCustom();
        }
       while(Emult<0);
     }
