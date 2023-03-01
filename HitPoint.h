@@ -19,6 +19,7 @@ class HitPoint : public Trajectory(){
     double GetDelta()const{return Hdelta;}
     void SetT();
     double GetT()const{return Ht;}
+    void PrintHit()const;
 
   private:
     double Hx;

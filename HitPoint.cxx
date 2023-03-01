@@ -63,3 +63,8 @@ ClassImp (HitPoint)
         cout<<"parametro t= "<<Ht<<endl;
     } 
  }
+ void HitPoint::PrintHit()const {
+    cout<<"Discriminante dell'equazione Delta: "<<Hdelta<<endl;
+    cout<<"Parametro t: "<<Ht<<endl;
+    cout<<"Coordinate punto di impatto: "<<Hx<<", "<<Hy<<", "<<Hz<<endl;
+ }
