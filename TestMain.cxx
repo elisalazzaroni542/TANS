@@ -128,9 +128,8 @@ void TestRndmUni(unsigned int seed){
     } 
   }
 */
-int test(){
+int test(unsigned int seed){
     //creiamo un evento:
-    unsigned int seed=123;
     gRandom->SetSeed(seed);
     Event e(seed);
     e.SetVertix();
