@@ -23,11 +23,11 @@ ClassImp (HitPoint)
   }
 
   HitPoint::HitPoint(const Event &ev,const Trajectory &traj,double Rcil):Trajectory(seed),
-  Hx(ev.Evertix[1]+traj.TparC[1]*Ht),
-  Hy(ev.Evertix[2]+traj.TparC[2]*Ht),
-  Hz(ev.Evertix[3]+traj.TparC[3]*Ht),
-  Hdelta(pow(ev.Evertix[1]*traj.TparC[1]+ev.Evertix[2]*traj.TparC[2],2)-(pow(traj.TparC[1],2)+pow(traj.TparC[2],2))*(pow(ev.Evertix[1],2)+pow(ev.Evertix[2],2)-pow(Rcil,2))),
-  Ht((-(ev.Evertix[1]*traj.TparC[1]+ev.Evertix[2]*traj.TparC[2])+sqrt(Hdelta))/(pow(traj.TparC[1],2)+pow(traj.TparC[2],2)))
+  Hx(ev.GetVertix(1)+traj.GetParC(1)*Ht),
+  Hy(ev.GetVertix(2)+traj.GetParC(2)*Ht),
+  Hz(ev.GetVertix(3)+traj.GetParC(3)*Ht),
+  Hdelta(pow(ev.GetVertix(1)*traj.GetParC(1)+ev.GetVertix(2)*traj.GetParC(2),2)-(pow(traj.GetParC(1),2)+pow(traj.GetParC(2),2))*(pow(ev.GetVertix(1),2)+pow(ev.GetVertix(2),2)-pow(Rcil,2))),
+  Ht((-(ev.GetVertix(1)*traj.GetParC(1)+ev.GetVertix(2)*traj.GetParC(2))+sqrt(Hdelta))/(pow(traj.GetParC(1),2)+pow(traj.GetParC(2),2)))
   {
     //standard constructor
      //cout<<"std constr-this= "<<this<<endl;
@@ -54,12 +54,12 @@ ClassImp (HitPoint)
  //------------------------IMPLEMENTAZIONE MEMBER FUNCTIONS-------------------------------------
 
  void HitPoint::SetT(const Event &ev,const Trajectory &traj,double Rcil){
-    Ht=(-(ev.Evertix[1]*traj.TparC[1]+ev.Evertix[2]*traj.TparC[2])+sqrt(Hdelta))/(pow(traj.TparC[1],2)+pow(traj.TparC[2],2));
+    Ht=(-(ev.GetVertix(1)*traj.GetParC(1)+ev.GetVertix(2)*traj.GetParC(2))+sqrt(Hdelta))/(pow(traj.GetParC(1),2)+pow(traj.GetParC(2),2));
     if(Ht>=0){
         cout<<"parametro t= "<<Ht<<endl;
         } 
     else {
-        Ht=(-(ev.Evertix[1]*traj.TparC[1]+ev.Evertix[2]*traj.TparC[2])-sqrt(Hdelta))/(pow(traj.TparC[1],2)+pow(traj.TparC[2],2));
+        Ht=(-(ev.GetVertix(1)*traj.GetParC(1)+ev.GetVertix(2)*traj.GetParC(2))-sqrt(Hdelta))/(pow(traj.GetParC(1),2)+pow(traj.GetParC(2),2));
         cout<<"parametro t= "<<Ht<<endl;
     } 
  }
@@ -70,7 +70,7 @@ ClassImp (HitPoint)
  }
  /*
  void HitPoint::SetPoint(const Event &ev,const Trajectory &traj){
-    Hx=ev.Evertix[1]+traj.TparC[1]*Ht;
-    Hy=ev.Evertix[2]+traj.TparC[2]*Ht;
-    Hz=ev.Evertix[3]+traj.TparC[3]*Ht;
+    Hx=ev.GetVertix(1)+traj.GetParC(1)*Ht;
+    Hy=ev.GetVertix(2)+traj.GetParC(2)*Ht;
+    Hz=ev.GetVertix(3)+traj.GetParC(3)*Ht;
  }*/
