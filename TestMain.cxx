@@ -139,7 +139,7 @@ int test(){
     //associamo al vertice le sue traiettorie
     vector <Trajectory> Trajs;
     Trajs.reserve(5);
-    for(int i=0;i<e.GetMultiplicity();i++){
+    for(int i=1;i<=e.GetMultiplicity();i++){
         Trajectory t(seed);
         t.SetThetaNPhi();
         t.SetParC();
