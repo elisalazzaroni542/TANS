@@ -23,11 +23,11 @@ ClassImp (HitPoint)
   }
 
   HitPoint::HitPoint(const Event &ev,const Trajectory &traj,double Rcil):Trajectory(seed),
-  Hx(0),
-  Hy(0),
-  Hz(0),
+  Hx(ev.Evertix[1]+traj.TparC[1]*Ht),
+  Hy(ev.Evertix[2]+traj.TparC[2]*Ht),
+  Hz(ev.Evertix[3]+traj.TparC[3]*Ht),
   Hdelta(pow(ev.Evertix[1]*traj.TparC[1]+ev.Evertix[2]*traj.TparC[2],2)-(pow(traj.TparC[1],2)+pow(traj.TparC[2],2))*(pow(ev.Evertix[1],2)+pow(ev.Evertix[2],2)-pow(Rcil,2))),
-  Ht(0)
+  Ht((-(ev.Evertix[1]*traj.TparC[1]+ev.Evertix[2]*traj.TparC[2])+sqrt(Hdelta))/(pow(traj.TparC[1],2)+pow(traj.TparC[2],2)))
   {
     //standard constructor
      //cout<<"std constr-this= "<<this<<endl;
@@ -68,3 +68,9 @@ ClassImp (HitPoint)
     cout<<"Parametro t: "<<Ht<<endl;
     cout<<"Coordinate punto di impatto: "<<Hx<<", "<<Hy<<", "<<Hz<<endl;
  }
+ /*
+ void HitPoint::SetPoint(const Event &ev,const Trajectory &traj){
+    Hx=ev.Evertix[1]+traj.TparC[1]*Ht;
+    Hy=ev.Evertix[2]+traj.TparC[2]*Ht;
+    Hz=ev.Evertix[3]+traj.TparC[3]*Ht;
+ }*/

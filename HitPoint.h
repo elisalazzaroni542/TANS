@@ -13,20 +13,21 @@ class HitPoint : public Trajectory(){
     HitPoint(const HitPoint& source); //copy constructor 
     virtual ~HitPoint();//distruttore di default
 
+    //void SetPoint();//crea le coordinate dei punti di impatto 
     double GetX()const{return Hx;}
     double GetY()const{return Hy;}
     double GetZ()const{return Hz;}
     double GetDelta()const{return Hdelta;}
-    void SetT();
+    void SetT();//calcola il parametro t dell'equazione parametrica
     double GetT()const{return Ht;}
-    void PrintHit()const;
+    void PrintHit()const;//stampa le info sul punto di impatto
 
   private:
     double Hx;
     double Hy;
     double Hz;
-    double Hdelta; 
-    double Ht;
+    double Hdelta; //discriminante dell'equazione
+    double Ht;//parametro t dell'equazione
 
 ClassDef (HitPoint,1)
 };
