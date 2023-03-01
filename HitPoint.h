@@ -5,7 +5,7 @@
 #include "Trajectory.h"
 #include "Event.h"
 
-class HitPoint : public Trajectory(){
+class HitPoint : public Trajectory{
   //classe che avrà il compito di generare l'HitPointo
   public:
     HitPoint(); //costruttore di default
