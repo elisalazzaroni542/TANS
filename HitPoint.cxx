@@ -22,15 +22,18 @@ ClassImp (HitPoint)
       //cout<<"DEFAULT CONSTR-THIS= "<<this<<endl;
   }
 
-  HitPoint::HitPoint(const Event &ev,const Trajectory &traj,double Rcil):Trajectory(seed),
-  Hx(ev.GetVertix(1)+traj.GetParC(1)*Ht),
-  Hy(ev.GetVertix(2)+traj.GetParC(2)*Ht),
-  Hz(ev.GetVertix(3)+traj.GetParC(3)*Ht),
+  HitPoint::HitPoint(const Event &ev,const Trajectory &traj,double Rcil):Trajectory(),
+  Hx(0),
+  Hy(0),
+  Hz(0),
   Hdelta(pow(ev.GetVertix(1)*traj.GetParC(1)+ev.GetVertix(2)*traj.GetParC(2),2)-(pow(traj.GetParC(1),2)+pow(traj.GetParC(2),2))*(pow(ev.GetVertix(1),2)+pow(ev.GetVertix(2),2)-pow(Rcil,2))),
   Ht((-(ev.GetVertix(1)*traj.GetParC(1)+ev.GetVertix(2)*traj.GetParC(2))+sqrt(Hdelta))/(pow(traj.GetParC(1),2)+pow(traj.GetParC(2),2)))
   {
     //standard constructor
      //cout<<"std constr-this= "<<this<<endl;
+     if(Ht<0){
+       Ht=(-(ev.GetVertix(1)*traj.GetParC(1)+ev.GetVertix(2)*traj.GetParC(2))-sqrt(Hdelta))/(pow(traj.GetParC(1),2)+pow(traj.GetParC(2),2));
+     }
   }
   
   HitPoint::HitPoint (const HitPoint &source):
@@ -68,9 +71,9 @@ ClassImp (HitPoint)
     cout<<"Parametro t: "<<Ht<<endl;
     cout<<"Coordinate punto di impatto: "<<Hx<<", "<<Hy<<", "<<Hz<<endl;
  }
- /*
+ 
  void HitPoint::SetPoint(const Event &ev,const Trajectory &traj){
     Hx=ev.GetVertix(1)+traj.GetParC(1)*Ht;
     Hy=ev.GetVertix(2)+traj.GetParC(2)*Ht;
     Hz=ev.GetVertix(3)+traj.GetParC(3)*Ht;
- }*/
+ }

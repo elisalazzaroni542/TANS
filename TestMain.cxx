@@ -1,4 +1,6 @@
-#include "RndmPick.h"
+#include "Event.h"
+#include "Trajectory.h"
+#include "HitPoint.h"
 #include <Riostream.h>
 #include <TH1F.h>
 #include <TRandom3.h>
@@ -126,7 +128,7 @@ void TestRndmUni(unsigned int seed){
     } 
   }
 */
-int main(){
+int test(){
     //creiamo un evento:
     unsigned int seed=123;
     gRandom->SetSeed(seed);
@@ -149,8 +151,22 @@ int main(){
         Trajs[j].PrintTrajectory();
 
     }
-    return 0;
+    //calcoliamo i punti di impatto per ogni traiettoria
+    vector <HitPoint> hits;
+    hits.reserve(5);
+    //vogliamo hit con la beam pipe:
+    double Rcil=3;
+    for(int j=0;j<Trajs.size();j++){
+        HitPoint h(e,Traj[j],Rcil);
+        h.SetPoint(e,Traj[j]);
+        hits.push_back(h);
+    }
+    //stampiamo i punti di impatto
+    for(int j=0;j<hits.size();j++){
+        hits[j].PrintHit();
 
+    }
+    return 0;
 
 }
 
