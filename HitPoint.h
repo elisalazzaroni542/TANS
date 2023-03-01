@@ -3,12 +3,13 @@
 
 
 #include "Trajectory.h"
+#include "Event.h"
 
 class HitPoint : public Trajectory(){
   //classe che avrà il compito di generare l'HitPointo
   public:
     HitPoint(); //costruttore di default
-    HitPoint(double x,double y,double z,const Event &ev,const Trajectory &traj,double Rcil); //costruttore standard
+    HitPoint(const Event &ev,const Trajectory &traj,double Rcil); //costruttore standard
     HitPoint(const HitPoint& source); //copy constructor 
     virtual ~HitPoint();//distruttore di default
 
