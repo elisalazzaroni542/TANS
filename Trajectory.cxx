@@ -79,10 +79,10 @@ ClassImp (Trajectory)
     TparC=new double[size];
     TparCSize=size;
     SetThetaNPhi();
-    TparC[1]=(double)sin(GetTheta())*cos(GetPhi());
-    TparC[2]=(double)sin(GetTheta())*sin(GetPhi());
-    TparC[3]=(double)cos(GetTheta());
-    cout<<"c1 "<<TparC[1]<<"c2 "<<TparC[2]<<"c3= "<<TparC[3]<<endl;
+    TparC[0]=(double)sin(GetTheta())*cos(GetPhi());
+    TparC[1]=(double)sin(GetTheta())*sin(GetPhi());
+    TparC[2]=(double)cos(GetTheta());
+    cout<<"c1= "<<TparC[0]<<" c2= "<<TparC[1]<<" c3= "<<TparC[2]<<endl;
   }
 
   double Trajectory::GetParC(int i) const{//restituisce il parametro selezionato dalla i
