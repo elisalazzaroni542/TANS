@@ -157,8 +157,8 @@ int test(){
     //vogliamo hit con la beam pipe:
     double Rcil=3;
     for(int j=0;j<Trajs.size();j++){
-        HitPoint h(e,Traj[j],Rcil);
-        h.SetPoint(e,Traj[j]);
+        HitPoint h(e,Trajs[j],Rcil);
+        h.SetPoint(e,Trajs[j]);
         hits.push_back(h);
     }
     //stampiamo i punti di impatto
