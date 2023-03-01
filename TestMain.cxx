@@ -128,7 +128,7 @@ void TestRndmUni(unsigned int seed){
     } 
   }
 */
-int test(unsigned int seed){
+int test(unsigned int seed=123){
     //creiamo un evento:
     gRandom->SetSeed(seed);
     Event e(seed);
