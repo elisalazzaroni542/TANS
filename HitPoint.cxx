@@ -9,6 +9,7 @@
 
 
 
+
 ClassImp (HitPoint)
 
   HitPoint::HitPoint(): Trajectory(),
@@ -55,8 +56,10 @@ ClassImp (HitPoint)
   }
 
  //------------------------IMPLEMENTAZIONE MEMBER FUNCTIONS-------------------------------------
+/*
 
  void HitPoint::SetT(const Event &ev,const Trajectory &traj,double Rcil){
+
     Ht=(-(ev.GetVertix(1)*traj.GetParC(1)+ev.GetVertix(2)*traj.GetParC(2))+sqrt(Hdelta))/(pow(traj.GetParC(1),2)+pow(traj.GetParC(2),2));
     if(Ht>=0){
         cout<<"parametro t= "<<Ht<<endl;
@@ -65,7 +68,7 @@ ClassImp (HitPoint)
         Ht=(-(ev.GetVertix(1)*traj.GetParC(1)+ev.GetVertix(2)*traj.GetParC(2))-sqrt(Hdelta))/(pow(traj.GetParC(1),2)+pow(traj.GetParC(2),2));
         cout<<"parametro t= "<<Ht<<endl;
     } 
- }
+ }*/
  void HitPoint::PrintHit()const {
     cout<<"Discriminante dell'equazione Delta: "<<Hdelta<<endl;
     cout<<"Parametro t: "<<Ht<<endl;

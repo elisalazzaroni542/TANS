@@ -4,8 +4,6 @@
 #include <TFile.h>
 #include <math.h>
 
-//Very important comment
-
 ClassImp (Event)
 
   Event::Event(): TRandom3(),
@@ -49,7 +47,7 @@ ClassImp (Event)
   Event::~Event(){
     //default destructor
     //cout<<"destructor-this= "<<this<<endl;
-    if (EvertixSize>0) delete []Evertix;
+    if (EvertixSize>0) delete []Evertix; // This way it eliminates all occupied positions of Evertix
   }
 
 //------------------------IMPLEMENTAZIONE MEMBER FUNCTIONS-------------------------------------
@@ -117,13 +115,13 @@ ClassImp (Event)
     else if(distrSelection==2){//distribuzione letta da file
     
      do{
-       Emult=(int)RndmCustom();
+       Emult=(int)RndmCustom(); // This is a "cast". Emult is an int while RndmCustom returns a double, a cast solves the issue
        }
       while(Emult<0);
     }
   }  
 
-  double Event::GetVertix(int i) const{//restituisce la coordinata selezionata dalla i
+  double Event::GetVertix(int i) const{//restituisce la coordinata selezionata dalla i = 1,2,3
     if(i>0&&i<=EvertixSize){
       //cout<<"coordinata "<<i<<" del vertice: "<<Evertix[i-1]<<endl;
       return Evertix[i-1];
