@@ -19,8 +19,6 @@ class Trajectory : public Event{
      float GetPhi(){return Tphi;};
      void SetParC(int size=3);//inizializza i parametri c1,2,3 dell'equazione con le Theta e Phi estratte
      double GetParC(int i) const;//restituisce il parametro identificato dalla i
-     double CalculateDelta(double Rcil);// calcola il discriminante dell'equazione. Rcil è il raggio del cilindro con cui si vuole calcolare l'intersezione
-     double CalculateParT(double Rcil);//calcola il parametro t per trovare l'equazione della retta in 3D
      void PrintTrajectory() const;//stampa le informazioni relative a una traiettoria
      //double SetImpactCoord(double Rcil);//calcola le coordinate di impatto sul cilindro di raggio Rcil
    
