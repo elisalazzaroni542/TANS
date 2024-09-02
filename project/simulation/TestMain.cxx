@@ -138,9 +138,10 @@ int test(unsigned int seed=123){
     //associamo al vertice le sue traiettorie
     vector <Trajectory> Trajs;
     Trajs.reserve(5);
+    Trajectory t(seed);
     for(int i=1;i<=e.GetMultiplicity();i++){
-        Trajectory t(seed);
         t.SetThetaNPhi();
+    //std::cout<<"\nHere\n";
         t.SetParC();
         t.PrintTrajectory();
         Trajs.push_back(t);
