@@ -141,7 +141,7 @@ int test(unsigned int seed=123){
     Trajectory t(seed);
     for(int i=1;i<=e.GetMultiplicity();i++){
         t.SetThetaNPhi();
-    std::cout<<"\nHere\n";
+    //std::cout<<"\nHere\n";
         t.SetParC();
         t.PrintTrajectory();
         Trajs.push_back(t);

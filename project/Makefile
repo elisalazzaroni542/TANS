@@ -1,4 +1,4 @@
-.PHONY: list clean
+.PHONY: list clean compile_sim
 
 
 
@@ -11,6 +11,13 @@ clean:
 	@find $(TARGET_DIR) -type f -name '*.so' -delete -print
 	@find $(TARGET_DIR) -type f -name '*.pcm' -delete -print
 	@echo "Done."
+
+
+
+compile_sim:
+	@echo "Compiling simulation files..."
+	-@bash ./bash_script/compile_sim.sh 
+	@echo 'Done.'
 
 
 
