@@ -36,7 +36,7 @@ ClassImp (Event)
     //cout<<"copy constructor-this= "<<this<<endl;
     if (EvertixSize>0){
       Evertix=new double[EvertixSize];
-      for(int i=0;i<EvertixSize;i++){
+      for(int i=0;i<EvertixSize;++i){
         Evertix[i]=source.Evertix[i];
       }
     }
