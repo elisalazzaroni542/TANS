@@ -14,9 +14,9 @@ clean:
 
 
 
-compile_sim:
+compile:
 	@echo "Compiling simulation files..."
-	-@bash ./bash_script/compile_sim.sh 
+	-@bash ./bash/compile.sh 
 	@echo 'Done.'
 
 

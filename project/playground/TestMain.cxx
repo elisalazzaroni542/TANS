@@ -135,6 +135,7 @@ int test(unsigned int seed=123){
     e.SetVertix();
     e.SetMultiplicity(1);
     e.PrintEvent();
+    cout<<"Here"<<endl;
     //associamo al vertice le sue traiettorie
     vector <Trajectory> Trajs;
     Trajs.reserve(5);
@@ -168,5 +169,9 @@ int test(unsigned int seed=123){
     }
     return 0;
 
+}
+
+void TestMain() {
+    test();
 }
 
