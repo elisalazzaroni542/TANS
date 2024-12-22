@@ -47,7 +47,7 @@ void TestSetMult(unsigned int seed){
     gRandom->SetSeed(seed);
     TH1F* h1=new TH1F("h1","DIstribuzione molteplicita' da file",100,0,70);
     TH1F* h2=new TH1F("h2","Distribuzione molteplicita' da file",100,0,70);
-    for(int i=0;i<100;i++){
+    for(int i=0;i<1000;i++){
         Event e1(seed);
         Event e2(seed);
         e1.SetMultiplicity(2);

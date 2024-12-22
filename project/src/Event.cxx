@@ -125,7 +125,7 @@ ClassImp (Event)
   }  
 
   double Event::GetVertix(int i) const{//restituisce la coordinata selezionata dalla i = 1,2,3
-    if(i>0&&i<=EvertixSize){
+    if(i>0 && i<=EvertixSize){
       //cout<<"coordinata "<<i<<" del vertice: "<<Evertix[i-1]<<endl;
       return Evertix[i-1];
     }
