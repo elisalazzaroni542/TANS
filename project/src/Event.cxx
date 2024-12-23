@@ -118,7 +118,7 @@ ClassImp (Event)
     else if(distrSelection==2){//distribuzione letta da file
     
      do{
-       Emult=(int)RndmCustom(); // This is a "cast". Emult is an int while RndmCustom returns a double, a cast solves the issue
+       Emult=(int)RndmCustom(); // Typecast necessario: Emult é un int ma RndmCustom retorna un double
        }
       while(Emult<0);
     }

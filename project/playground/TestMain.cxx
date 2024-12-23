@@ -45,7 +45,7 @@ void TestSetMult(unsigned int seed){
     TStopwatch timer;
     timer.Start();
     gRandom->SetSeed(seed);
-    TH1F* h1=new TH1F("h1","DIstribuzione molteplicita' da file",100,0,70);
+    TH1F* h1=new TH1F("h1","Distribuzione molteplicita' da file",100,0,70);
     TH1F* h2=new TH1F("h2","Distribuzione molteplicita' da file",100,0,70);
     for(int i=0;i<1000;i++){
         Event e1(seed);
@@ -171,7 +171,7 @@ int test(unsigned int seed=123){
 
 }
 
-void TestMain() {
-    test();
-}
+//void TestMain() {
+//    test();
+//}
 

@@ -70,8 +70,8 @@ ClassImp (Trajectory)
   //funzioni di manipolazione-----------------------------------------------------------
 
   void Trajectory::SetThetaNPhi(){
-    double Heta=RndmCustom();//si estrae prima la rapidità Heta e poi si trasforma in theta
-    Ttheta=2*atan(exp(-Heta));
+    double heta=RndmCustom();//si estrae prima la pseudorapidità heta e poi si trasforma in theta
+    Ttheta=2*atan(exp(-heta));
     Tphi=RndmUni(0,2*M_PI);
   }
 
