@@ -1,14 +1,10 @@
-# Ignore object files
 *.o
-
-# Ignore temporary files
 *.tmp
-
-# Ignore dependency files
 *.d
-
-# Ignore shared library files
 *.so
-
-# Ignore ROOT PCM files
 *.pcm
+
+
+
+data/
+
