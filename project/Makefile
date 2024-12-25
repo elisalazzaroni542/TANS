@@ -1,4 +1,4 @@
-.PHONY: list clean compile_sim
+.PHONY: list clean compile sim
 
 
 
@@ -13,18 +13,19 @@ clean:
 	@echo "Done."
 
 
+list:
+	@echo "Available commands"
+	@grep -E '^[a-zA-Z_-]+:' Makefile | sed 's/:.*//' | sort
+
 
 compile:
 	@echo "Compiling simulation files..."
 	-@bash ./bash/compile.sh 
 	@echo 'Done.'
 
-
-
-list:
-	@echo "Available commands"
-	@grep -E '^[a-zA-Z_-]+:' Makefile | sed 's/:.*//' | sort
-
+sim: 
+	@echo 'Performing simulation'
+	
 
 
 #Explanation of Each Part:

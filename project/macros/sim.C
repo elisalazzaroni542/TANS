@@ -27,9 +27,10 @@ void sim(int seed=123, unsigned const int events=1000){
     gSystem->Load("HitPoint_cxx.so");
     gSystem->Load("Trajectory_cxx.so");
 */
-    std::string filename = "../data/sim" + std::to_string(events) + ".root";  
-//    TFile *file = new TFile(filename, "RECREATE");
-    TFile *file = new TFile("../data/ciao.root", "RECREATE");
+    string filename = "../data/sim" + to_string(events) + ".root";  
+    //cout<<filename<<endl;
+    TFile *file = new TFile(filename.c_str(), "RECREATE");
+    //TFile *file = new TFile("../data/ciao.root", "RECREATE");
 
     TTree *tree = new TTree("Events", "Simulated events");
 
@@ -61,71 +62,26 @@ void sim(int seed=123, unsigned const int events=1000){
     tree->Branch("outHits_z", &outHits_z);
 
 
-    for(unsigned int i=0; i<events; ++i){
+    for(unsigned int i = 0; i < events; ++i) {
         Event e(seed);
         e.SetVertix(3);
         e.SetMultiplicity(1);
 
         const unsigned int mult = e.GetMultiplicity();
-
-        cout<<"Molteplicita: "<<mult<<endl;
-
-        
-
-        cout<<"Passed event creation"<<endl;
-
-        Trajs.resize(mult);
-        Trajectory t(seed);
-        for(unsigned int j=0;j<mult;++j){
-            t.SetThetaNPhi();
-        //std::cout<<"\nHere\n";
-            t.SetParC();
-            t.PrintTrajectory();
-            Trajs[j] = t;
-        }
-
-        inHits_x.resize(mult);
-        inHits_y.resize(mult);
-        inHits_z.resize(mult);
-
-        outHits_x.resize(mult);
-        outHits_y.resize(mult);
-        outHits_z.resize(mult);
-
-        cout<<"Passed traj computation"<<endl;
-        vertex_x.push_back(e.GetVertix(1));
-        vertex_y.push_back(e.GetVertix(2));
-        vertex_z.push_back(e.GetVertix(3));
-
-        cout<<"Vertex branch"<<endl;
-
-        cout<<"Trajs.size() = "<<(int)Trajs.size()<<endl;
-
-        cout<<"Passed tree branch declaration"<<endl;
-        for(int k=0;k<(int)Trajs.size();++k){
-            HitPoint hIn(e,Trajs[k],rIn);
-            HitPoint hOut(e,Trajs[k],rOut);
-
-            hIn.SetPoint(e, Trajs[k]);
-            hOut.SetPoint(e, Trajs[k]);
-
-            inHits_x[k] = hIn.GetX();
-            inHits_y[k] = hIn.GetY(); 
-            inHits_z[k] = hIn.GetZ();
-
-            outHits_x[k] = hOut.GetX();
-            outHits_y[k] = hOut.GetY();
-            outHits_z[k] = hOut.GetZ();        
-        }
-
-        cout<<"Passed hit point computation"<<endl;
-
-        tree->Fill();
-
         Trajs.clear();
-        vertex_x.clear();
-        vertex_y.clear();
-        vertex_z.clear();
+        Trajs.reserve(mult);
+
+        for(unsigned int j = 0; j < mult; ++j) {
+            Trajectory t(seed);
+            t.SetThetaNPhi();
+            t.SetParC();
+            Trajs.emplace_back(t);
+        }
+
+        vertex_x.emplace_back(e.GetVertix(1));
+        vertex_y.emplace_back(e.GetVertix(2));
+        vertex_z.emplace_back(e.GetVertix(3));
+
         inHits_x.clear();
         inHits_y.clear();
         inHits_z.clear();
@@ -133,9 +89,32 @@ void sim(int seed=123, unsigned const int events=1000){
         outHits_y.clear();
         outHits_z.clear();
 
+        for (const auto& traj : Trajs) {
+            HitPoint hIn(e, traj, rIn);
+            HitPoint hOut(e, traj, rOut);
+
+            hIn.SetPoint(e, traj);
+            hOut.SetPoint(e, traj);
+
+            inHits_x.emplace_back(hIn.GetX());
+            inHits_y.emplace_back(hIn.GetY());
+            inHits_z.emplace_back(hIn.GetZ());
+
+            outHits_x.emplace_back(hOut.GetX());
+            outHits_y.emplace_back(hOut.GetY());
+            outHits_z.emplace_back(hOut.GetZ());
+        }
+
+        tree->Fill();
     }
+
+// No need to clear vectors after loop; they will be destroyed with scope.
+
     tree->Write();
+    cout<<"HERE"<<endl;
     file->Close();
+
+    delete file;
 
     stopwatch.Stop();
     stopwatch.Print();

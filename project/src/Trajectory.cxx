@@ -91,7 +91,7 @@ ClassImp (Trajectory)
       //cout<<"parametro "<<i<<" della retta: "<<TparC[i-1]<<endl;
       return TparC[i-1];
     }
-    else{cout<<"invalid input"<<endl;
+    else{cout<<"Invalid trajectory input"<<endl;
         return 0;
         }
   }

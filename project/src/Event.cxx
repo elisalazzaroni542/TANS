@@ -159,6 +159,7 @@ ClassImp (Event)
       }
       while (rndmN>=3.08||rndmN<=-3.08); 
     }
+  
     else{
       do {
         rndmN=RndmGaus(0,5.3);
