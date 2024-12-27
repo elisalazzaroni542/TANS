@@ -13,7 +13,7 @@ class HitPoint : public Trajectory{
     HitPoint(const HitPoint& source); //copy constructor 
     virtual ~HitPoint();//distruttore di default
 
-    void SetPoint(const Event &ev,const Trajectory &traj);//crea le coordinate dei punti di impatto 
+    void SetPoint(const Event &ev,const Trajectory &traj, bool smearing);//crea le coordinate dei punti di impatto 
     double GetX()const{return Hx;}
     double GetY()const{return Hy;}
     double GetZ()const{return Hz;}

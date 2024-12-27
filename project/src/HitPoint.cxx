@@ -75,8 +75,15 @@ ClassImp (HitPoint)
     cout<<"Coordinate punto di impatto: "<<Hx<<", "<<Hy<<", "<<Hz<<endl;
  }
  
- void HitPoint::SetPoint(const Event &ev,const Trajectory &traj){
+ void HitPoint::SetPoint(const Event &ev,const Trajectory &traj, bool smearing=false){
     Hx=ev.GetVertix(1)+traj.GetParC(1)*Ht;
     Hy=ev.GetVertix(2)+traj.GetParC(2)*Ht;
     Hz=ev.GetVertix(3)+traj.GetParC(3)*Ht;
+
+    if(smearing){
+        Hx = Hx + RndmGaus(0, 0.012); 
+        Hy = Hy + RndmGaus(0, 0.012); 
+        Hz = Hz + RndmGaus(0, 0.012); 
+    }
+
  }

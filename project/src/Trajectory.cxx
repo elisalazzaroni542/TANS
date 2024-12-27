@@ -1,10 +1,10 @@
 #include <Riostream.h>
 #include "Trajectory.h"
 #include "Event.h"
-#include <TRandom3.h>
+//#include <TRandom3.h>
 #include <TFile.h>
 #include <math.h>
-#include <TH1F.h>
+//#include <TH1F.h>
 
 
 
@@ -59,27 +59,30 @@ ClassImp (Trajectory)
  //------------------------IMPLEMENTAZIONE MEMBER FUNCTIONS-------------------------------------
   //funzioni di estrazione casuale 
 
-  double Trajectory::RndmCustom(){//reimplementata da Event cambiando il nome del file da leggere
-    TFile f("kinem.root");
-    TH1F *h=(TH1F*)f.Get("heta2");//quello che viene letta in realtà è una distribuizione di pseudorapidità. Bisogna poi trasformarlo in theta
-    double custN=h->GetRandom();
-    //cout<<"Numero estratto: "<<custN<<endl;
-    return custN;
-  }
+//  double Trajectory::RndmCustom(){//reimplementata da Event cambiando il nome del file da leggere
+//    TFile f("kinem.root");
+//    TH1F *h=(TH1F*)f.Get("heta2");//quello che viene letta in realtà è una distribuizione di pseudorapidità. Bisogna poi trasformarlo in theta
+//    double custN=h->GetRandom();
+//    //cout<<"Numero estratto: "<<custN<<endl;
+//    return custN;
+//  }
   
   //funzioni di manipolazione-----------------------------------------------------------
 
-  void Trajectory::SetThetaNPhi(){
-    double heta=RndmCustom();//si estrae prima la pseudorapidità heta e poi si trasforma in theta
+  void Trajectory::SetThetaNPhi(TH1F* customHist){
+    double heta=RndmCustom(customHist);//si estrae prima la pseudorapidità heta e poi si trasforma in theta
     Ttheta=2*atan(exp(-heta));
     Tphi=RndmUni(0,2*M_PI);
   }
 
   void Trajectory::SetParC(int size){
-    if (TparCSize>0) delete []TparC;
-    TparC=new double[size];
-    TparCSize=size;
-    SetThetaNPhi();
+    if (TparCSize>0 || size!=TparCSize){ 
+      delete []TparC;
+      TparC=new double[size];
+      TparCSize=size;
+      }
+
+    //SetThetaNPhi();
     TparC[0]=(double)sin(GetTheta())*cos(GetPhi());
     TparC[1]=(double)sin(GetTheta())*sin(GetPhi());
     TparC[2]=(double)cos(GetTheta());

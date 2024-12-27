@@ -3,7 +3,8 @@
 #include <TRandom3.h>
 #include <TFile.h>
 #include <math.h>
-#include <TH1F.h>
+#include <string>
+//#include <TH1F.h>
 
 
 ClassImp (Event)
@@ -53,6 +54,30 @@ ClassImp (Event)
   }
 
 //------------------------IMPLEMENTAZIONE MEMBER FUNCTIONS-------------------------------------
+  
+
+
+  double Event::OLDRndmCustom(){
+    TFile f("kinem.root");
+    TH1F *h=(TH1F*)f.Get("hm");
+    double custN=h->GetRandom();
+    //cout<<"Numero estratto: "<<custN<<endl;
+    return custN;
+  }
+
+
+  TH1F* Event::LoadDistribution(const char* histName) {
+      TFile f("kinem.root");
+      TH1F* h = (TH1F*)f.Get(histName);
+      if (h) {
+          h = (TH1F*)h->Clone("hCustomDist");  // Create a clone that survives after file closes
+          h->SetDirectory(0);  // Detach from file
+      }
+      f.Close();
+      return h;
+  }
+
+  
   //funzioni di estrazione casuale
 
   double Event::RndmGaus(double mean, double sigma){
@@ -67,26 +92,26 @@ ClassImp (Event)
     return uniN;
   }
   
-  double Event::RndmCustom(){
-    TFile f("kinem.root");
-    TH1F *h=(TH1F*)f.Get("hm");
-    double custN=h->GetRandom();
-    //cout<<"Numero estratto: "<<custN<<endl;
-    return custN;
-  }
+double Event::RndmCustom(TH1F* customHist) {
+    return customHist->GetRandom();
+}
 
 
   //funzioni di manipolazione--------------------------------------------------------------
 //  void Event::SetVertix(int size=3){
-  void Event::SetVertix(int size){
-    if (EvertixSize>0) delete []Evertix;
-    Evertix=new double[size];
-    EvertixSize=size;
-    for(int i=0;i<EvertixSize;i++) Evertix[i]=PickNCheckVertRndm(i+1);
-  }
+void Event::SetVertix(int size) {
+    if (size != EvertixSize) {
+        delete[] Evertix;
+        Evertix = new double[size];
+        EvertixSize = size;
+    }
+    for (int i = 0; i < EvertixSize; ++i) {
+        Evertix[i] = PickNCheckVertRndm(i + 1);
+    }
+}
 
-  void Event::SetMultiplicity(int distrSelection){
-    if(distrSelection==0){//distribuzione gaussiana di molteplicità
+  void Event::SetMultiplicity(const string& distr){
+    if(distr=="gaus"){//distribuzione gaussiana di molteplicità
      double mean,sigma;
      /*
      cout<<"Please insert mean and standard deviation for the gaussian disribution: "<<endl;
@@ -96,13 +121,13 @@ ClassImp (Event)
      cin>>sigma;
      */
       do{
-       Emult=(int)RndmGaus(mean,sigma);
+       Emult=(int)RndmGaus(mean=20,sigma=5);
         }
       while(Emult<0);
     }
-    else if(distrSelection==1){//distribuzione uniforme tra min e max
+    else if(distr=="uni"){//distribuzione uniforme tra min e max
      double min=1;
-     double max=5;
+     double max=100;
      /*
      cout<<"Please insert range for the uniform disribution: "<<endl;
      cout<<"minimum: ";
@@ -115,10 +140,15 @@ ClassImp (Event)
         }
       while(Emult<0);
     }
-    else if(distrSelection==2){//distribuzione letta da file
-    
-     do{
-       Emult=(int)RndmCustom(); // Typecast necessario: Emult é un int ma RndmCustom retorna un double
+    else if(distr=="custom"){//distribuzione letta da file
+      static TH1F* customHist = nullptr;   // A static keeps it's value in different calls of the same function
+                                           // But it's imited to it's scope, so it needs to be initialized outside of the if condition  
+      if (!customHist) {  
+        customHist = LoadDistribution("hm"); 
+        cout<<"customHistDefined"<<endl; 
+      }
+      do{
+       Emult=(int)RndmCustom(customHist); // Typecast necessario: Emult é un int ma RndmCustom ritorna un double
        }
       while(Emult<0);
     }
@@ -137,7 +167,7 @@ ClassImp (Event)
   void Event::PrintEvent()const{
     cout<<"Coordinate del vertice generato: (x,y,z)= "<<endl;
     if (EvertixSize>0){
-      for(int i=0;i<EvertixSize;i++){
+      for(int i=0;i<EvertixSize;++i){
         cout<<Evertix[i]<<" ,";
       }
       cout<<endl;

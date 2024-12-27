@@ -7,82 +7,7 @@
 #include "../headers/Trajectory.h"
 #include "../headers/HitPoint.h"
 
-
-//void sim(int seed = 123, unsigned const int events = 1000) {
-//    TStopwatch stopwatch;
-//    stopwatch.Start();
-//
-//    string filename = "../data/sim" + to_string(events) + ".root";
-//    TFile *file = new TFile(filename.c_str(), "RECREATE");
-//    //file->SetCompressionLevel(9); // Moderate compression
-//
-//    TTree *tree = new TTree("Events", "Simulated events");
-//
-//    const unsigned int rIn = 4, rOut = 7;
-//    vector<double> vertex_x(1), vertex_y(1), vertex_z(1);
-//    vector<double> inHits_x, inHits_y, inHits_z, outHits_x, outHits_y, outHits_z;
-//
-//    size_t max_hits = 100; // Estimate maximum hits per event
-//    inHits_x.resize(max_hits);
-//    inHits_y.resize(max_hits);
-//    inHits_z.resize(max_hits);
-//    outHits_x.resize(max_hits);
-//    outHits_y.resize(max_hits);
-//    outHits_z.resize(max_hits);
-//
-//    tree->Branch("vertex_x", &vertex_x);
-//    tree->Branch("vertex_y", &vertex_y);
-//    tree->Branch("vertex_z", &vertex_z);
-//    tree->Branch("inHits_x", &inHits_x);
-//    tree->Branch("inHits_y", &inHits_y);
-//    tree->Branch("inHits_z", &inHits_z);
-//    tree->Branch("outHits_x", &outHits_x);
-//    tree->Branch("outHits_y", &outHits_y);
-//    tree->Branch("outHits_z", &outHits_z);
-//
-//    Event e(seed);
-//    Trajectory t(seed);
-//    HitPoint hIn, hOut;
-//
-//    for (unsigned int i = 0; i < events; ++i) {
-//        e.SetVertix(3);
-//        e.SetMultiplicity(1);
-//
-//        vertex_x[0] = e.GetVertix(1);
-//        vertex_y[0] = e.GetVertix(2);
-//        vertex_z[0] = e.GetVertix(3);
-//
-//        for (unsigned int j = 0; j < e.GetMultiplicity(); ++j) {
-//            t.SetThetaNPhi();
-//            t.SetParC();
-//
-//            hIn.SetPoint(e, t);
-//            hOut.SetPoint(e, t);
-//
-//            inHits_x[j] = hIn.GetX();
-//            inHits_y[j] = hIn.GetY();
-//            inHits_z[j] = hIn.GetZ();
-//            outHits_x[j] = hOut.GetX();
-//            outHits_y[j] = hOut.GetY();
-//            outHits_z[j] = hOut.GetZ();
-//
-//        }
-//
-//        tree->Fill();
-//    }
-//
-//    file->cd();
-//    tree->Print();
-//    tree->Write();
-//    file->Close();
-//    delete file;
-//
-//    stopwatch.Stop();
-//    stopwatch.Print();
-//}
-
-
-void sim(int seed = 123, unsigned const int events = 1000) {
+void sim(int seed = 123, unsigned const int events = 1000, bool smearing = false) {
     TStopwatch stopwatch;
     stopwatch.Start();
 
@@ -90,18 +15,26 @@ void sim(int seed = 123, unsigned const int events = 1000) {
     vector<double> inHits_x, inHits_y, inHits_z;
     vector<double> outHits_x, outHits_y, outHits_z;
     
-    const size_t expected_multiplicity = 100;
+    const size_t max_expected_multiplicity = 100;
 
-    inHits_x.reserve(expected_multiplicity);
-    inHits_y.reserve(expected_multiplicity);
-    inHits_z.reserve(expected_multiplicity);
-    outHits_x.reserve(expected_multiplicity);
-    outHits_y.reserve(expected_multiplicity);
-    outHits_z.reserve(expected_multiplicity);
+    inHits_x.reserve(max_expected_multiplicity);
+    inHits_y.reserve(max_expected_multiplicity);
+    inHits_z.reserve(max_expected_multiplicity);
+    outHits_x.reserve(max_expected_multiplicity);
+    outHits_y.reserve(max_expected_multiplicity);
+    outHits_z.reserve(max_expected_multiplicity);
 
     const int autoSaveSize = 100000;
 
-    string filename = "../data/sim" + to_string(events) + ".root";
+    string filename;
+
+    if (!smearing) {
+        filename = "../data/sim" + to_string(events) + ".root";
+    } else {
+        filename = "../data/sim" + to_string(events) + "_smearing.root";
+    }
+    
+    
     TFile* file = TFile::Open(filename.c_str(), "RECREATE");
 
     
@@ -124,9 +57,15 @@ void sim(int seed = 123, unsigned const int events = 1000) {
     HitPoint hIn, hOut;
 
 
+    TH1F* thetaHist = t.LoadDistribution("heta2");
+
+
+    //t.SetThetaNPhi(thetaHist);
+    //t.SetParC(3);
     for (unsigned int i = 0; i < events; ++i) {
         e.SetVertix(3);
-        e.SetMultiplicity(1);
+        e.SetMultiplicity("gaus");
+        //if (i%1000 == 0) {cout<<"Multiplicity = "<<e.GetMultiplicity()<<endl;}
         
         vertex_x[0] = e.GetVertix(1);
         vertex_y[0] = e.GetVertix(2);
@@ -141,11 +80,11 @@ void sim(int seed = 123, unsigned const int events = 1000) {
         outHits_z.clear();
 
         for (unsigned int j = 0; j < e.GetMultiplicity(); ++j) {
-            t.SetThetaNPhi();
+            t.SetThetaNPhi(thetaHist);
             t.SetParC(3);
-            hIn.SetPoint(e, t);
-            hOut.SetPoint(e, t);
-            
+            hIn.SetPoint(e, t, smearing);
+            hOut.SetPoint(e, t, smearing);
+
             inHits_x.push_back(hIn.GetX());
             inHits_y.push_back(hIn.GetY());
             inHits_z.push_back(hIn.GetZ());

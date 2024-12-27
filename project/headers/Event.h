@@ -3,6 +3,7 @@
 
 
 #include <TRandom3.h>
+#include <TH1F.h>
 
 
 class Event : public TRandom3{
@@ -17,9 +18,12 @@ class Event : public TRandom3{
 
     //funzioni che estraggono secondo diverse distribuzioni//
 
+    static TH1F* LoadDistribution(const char* histName);
+
     double RndmGaus(double mean, double sigma); //funzione che estrae un numero a caso da una distribuzione gaussiana
     double RndmUni(double min, double max);//funzione che estrae un numero secondo una distribuzione uniforme tra min e max
-    double RndmCustom();//funzione che estrae un numero da una distribuzione qualsiasi selezionata dall'utente tramite importazione di un istogramma
+    double RndmCustom(TH1F* customHist);//funzione che estrae un numero da una distribuzione qualsiasi selezionata dall'utente tramite importazione di un istogramma
+    double OLDRndmCustom();//funzione che estrae un numero da una distribuzione qualsiasi selezionata dall'utente tramite importazione di un istogramma
 
     //funzioni di manipolazione risultati//
 
@@ -29,7 +33,7 @@ class Event : public TRandom3{
     double GetMultiplicity() const{return Emult;}
     void CheckMultiplicity (); //funzione che controlla che la molteplicità sia accettabile
     void PrintEvent () const; //funzione che stampa le coordinate del vertice e la sua molteplicità
-    void SetMultiplicity (int distrSelection=2);//funzione che inizializza la molteplicità dell'evento
+    void SetMultiplicity (const string& distr);//funzione che inizializza la molteplicità dell'evento
     //double GetEvent(RndmPick vertix, double mult) const;
 
   private:
