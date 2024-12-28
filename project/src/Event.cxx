@@ -57,14 +57,6 @@ ClassImp (Event)
   
 
 
-  double Event::OLDRndmCustom(){
-    TFile f("kinem.root");
-    TH1F *h=(TH1F*)f.Get("hm");
-    double custN=h->GetRandom();
-    //cout<<"Numero estratto: "<<custN<<endl;
-    return custN;
-  }
-
 
   TH1F* Event::LoadDistribution(const char* histName) {
       TFile f("kinem.root");

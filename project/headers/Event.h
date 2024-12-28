@@ -23,7 +23,6 @@ class Event : public TRandom3{
     double RndmGaus(double mean, double sigma); //funzione che estrae un numero a caso da una distribuzione gaussiana
     double RndmUni(double min, double max);//funzione che estrae un numero secondo una distribuzione uniforme tra min e max
     double RndmCustom(TH1F* customHist);//funzione che estrae un numero da una distribuzione qualsiasi selezionata dall'utente tramite importazione di un istogramma
-    double OLDRndmCustom();//funzione che estrae un numero da una distribuzione qualsiasi selezionata dall'utente tramite importazione di un istogramma
 
     //funzioni di manipolazione risultati//
 

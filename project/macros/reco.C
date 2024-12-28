@@ -13,8 +13,8 @@ void reco(){
     //TFile* fIn = TFile::Open(simData, "READ");
 
     // Input and output file names
-    const char* inputFileName = "../data/sim100000.root";
-    const char* outputFileName = "../data/sim100000_smearing.root";
+    const char* inputFileName = "../data/sim1000000.root";
+    const char* outputFileName = "../data/sim1000000_smearing.root";
     const char* treeName = "Events"; // Replace with your tree name
 
     // Create a RDataFrame for the input tree
@@ -26,7 +26,7 @@ void reco(){
 
     // Add Gaussian noise to a branch (e.g., "x")
 auto dfWithNoise = df.Define("sm_inHits_x", [&rnd](const std::vector<double>& xVec) {
-                                std::vector<double> xWithNoise;
+                                vector<double> xWithNoise;
                                 xWithNoise.reserve(xVec.size());
                                 for (auto x : xVec) {
                                     xWithNoise.push_back(x + rnd.Gaus(0, 0.012)); // Noise for each "x"
@@ -34,7 +34,7 @@ auto dfWithNoise = df.Define("sm_inHits_x", [&rnd](const std::vector<double>& xV
                                 return xWithNoise;
                             }, {"inHits_x"})
                    .Define("sm_inHits_y", [&rnd](const std::vector<double>& yVec) {
-                                std::vector<double> yWithNoise;
+                                vector<double> yWithNoise;
                                 yWithNoise.reserve(yVec.size());
                                 for (auto y : yVec) {
                                     yWithNoise.push_back(y + rnd.Gaus(0, 0.012)); // Noise for each "y"
@@ -42,7 +42,7 @@ auto dfWithNoise = df.Define("sm_inHits_x", [&rnd](const std::vector<double>& xV
                                 return yWithNoise;
                             }, {"inHits_y"})
                    .Define("sm_inHits_z", [&rnd](const std::vector<double>& zVec) {
-                                std::vector<double> zWithNoise;
+                                vector<double> zWithNoise;
                                 zWithNoise.reserve(zVec.size());
                                 for (auto z : zVec) {
                                     zWithNoise.push_back(z + rnd.Gaus(0, 0.012)); // Noise for each "z"
@@ -50,7 +50,7 @@ auto dfWithNoise = df.Define("sm_inHits_x", [&rnd](const std::vector<double>& xV
                                 return zWithNoise;
                             }, {"inHits_z"})
                    .Define("sm_outHits_x", [&rnd](const std::vector<double>& xVec) {
-                                std::vector<double> xWithNoise;
+                                vector<double> xWithNoise;
                                 xWithNoise.reserve(xVec.size());
                                 for (auto x : xVec) {
                                     xWithNoise.push_back(x + rnd.Gaus(0, 0.012)); // Noise for each "x"
@@ -58,7 +58,7 @@ auto dfWithNoise = df.Define("sm_inHits_x", [&rnd](const std::vector<double>& xV
                                 return xWithNoise;
                             }, {"outHits_x"})
                    .Define("sm_outHits_y", [&rnd](const std::vector<double>& yVec) {
-                                std::vector<double> yWithNoise;
+                                vector<double> yWithNoise;
                                 yWithNoise.reserve(yVec.size());
                                 for (auto y : yVec) {
                                     yWithNoise.push_back(y + rnd.Gaus(0, 0.012)); // Noise for each "y"
@@ -66,7 +66,7 @@ auto dfWithNoise = df.Define("sm_inHits_x", [&rnd](const std::vector<double>& xV
                                 return yWithNoise;
                             }, {"outHits_y"})
                    .Define("sm_outHits_z", [&rnd](const std::vector<double>& zVec) {
-                                std::vector<double> zWithNoise;
+                                vector<double> zWithNoise;
                                 zWithNoise.reserve(zVec.size());
                                 for (auto z : zVec) {
                                     zWithNoise.push_back(z + rnd.Gaus(0, 0.012)); // Noise for each "z"
@@ -79,6 +79,10 @@ auto dfWithNoise = df.Define("sm_inHits_x", [&rnd](const std::vector<double>& xV
 
     // Save the updated tree to a new ROOT file
     dfWithNoise.Snapshot(treeName, outputFileName);
+    
+    //delete dfWithNoise;
+    //delete rnd;
+
 
     stopwatch.Stop();
     stopwatch.Print();
