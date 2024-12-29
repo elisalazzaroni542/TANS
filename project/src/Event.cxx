@@ -11,9 +11,9 @@ ClassImp (Event)
 
   Event::Event(): TRandom3(),
   Eseed(123),
-  EvertixSize(0),
+  //EvertixSize(0),
   Emult(0),
-  Evertix(NULL)
+  Evertix({-999, -999, -999})
   {
     //default constructor
       //cout<<"DEFAULT CONSTR-THIS= "<<this<<endl;
@@ -21,9 +21,9 @@ ClassImp (Event)
 
   Event::Event(unsigned int seed):TRandom3(seed),
   Eseed(seed),
-  EvertixSize(0),
+  //EvertixSize(0),
   Emult(0),
-  Evertix(NULL)
+  Evertix({-999, -999, -999})
   {
     //standard constructor
      //cout<<"std constr-this= "<<this<<endl;
@@ -32,25 +32,33 @@ ClassImp (Event)
   Event::Event (const Event &source):
    TRandom3(source),
    Eseed(source.Eseed),
-   EvertixSize(source.EvertixSize)
-  {//copy constructor
-    //cout<<"copy constructor-this= "<<this<<endl;
-    if (EvertixSize>0){
-      Evertix=new double[EvertixSize];
-      for(int i=0;i<EvertixSize;++i){
-        Evertix[i]=source.Evertix[i];
-      }
-    }
-    else {
-      Evertix=NULL;
-    }
+   Evertix(source.Evertix)
+   {
 
-  }
+    // copy constructor
+
+   }
+   //EvertixSize(source.EvertixSize)
+  //{//copy constructor
+    //cout<<"copy constructor-this= "<<this<<endl;
+  //  if (Evertix.size()>0){
+  //    Evertix = source.Evertix;
+//      Evertix.resize(3)
+  //    for(int i=0;i<Evertix.size();++i){
+  //      Evertix[i]=source.Evertix[i];
+  //    }
+  //  }
+    //else {
+    //  Evertix=NULL;
+    //  Evertix=Evertix();
+    //}
+
+  //}
 
   Event::~Event(){
     //default destructor
     //cout<<"destructor-this= "<<this<<endl;
-    if (EvertixSize>0) delete []Evertix; // This way it eliminates all occupied positions of Evertix
+    //if (Evertix.size()>0) delete Evertix; // This way it eliminates all occupied positions of Evertix
   }
 
 //------------------------IMPLEMENTAZIONE MEMBER FUNCTIONS-------------------------------------
@@ -91,13 +99,13 @@ double Event::RndmCustom(TH1F* customHist) {
 
   //funzioni di manipolazione--------------------------------------------------------------
 //  void Event::SetVertix(int size=3){
-void Event::SetVertix(int size) {
-    if (size != EvertixSize) {
-        delete[] Evertix;
-        Evertix = new double[size];
-        EvertixSize = size;
+void Event::SetVertix(unsigned int size) {
+    if (size != Evertix.size()) {
+        //Evertix.clear();
+        //Evertix = new vector<double>;
+        Evertix.resize(size);
     }
-    for (int i = 0; i < EvertixSize; ++i) {
+    for (unsigned int i = 0; i < size; ++i) {
         Evertix[i] = PickNCheckVertRndm(i + 1);
     }
 }
@@ -119,7 +127,7 @@ void Event::SetVertix(int size) {
     }
     else if(distr=="uni"){//distribuzione uniforme tra min e max
      double min=1;
-     double max=100;
+     double max=5;
      /*
      cout<<"Please insert range for the uniform disribution: "<<endl;
      cout<<"minimum: ";
@@ -146,10 +154,10 @@ void Event::SetVertix(int size) {
     }
   }  
 
-  double Event::GetVertix(int i) const{//restituisce la coordinata selezionata dalla i = 1,2,3
-    if(i>0 && i<=EvertixSize){
+  double Event::GetVertix(unsigned int i) const{//restituisce la coordinata selezionata dalla i = 1,2,3
+    if(i< Evertix.size()){
       //cout<<"coordinata "<<i<<" del vertice: "<<Evertix[i-1]<<endl;
-      return Evertix[i-1];
+      return Evertix[i];
     }
     else{cout<<"invalid input"<<endl;
         return 0;
@@ -158,8 +166,8 @@ void Event::SetVertix(int size) {
 
   void Event::PrintEvent()const{
     cout<<"Coordinate del vertice generato: (x,y,z)= "<<endl;
-    if (EvertixSize>0){
-      for(int i=0;i<EvertixSize;++i){
+    if (Evertix.size()>0){
+      for(unsigned int i=0;i<Evertix.size();++i){
         cout<<Evertix[i]<<" ,";
       }
       cout<<endl;
@@ -171,7 +179,7 @@ void Event::SetVertix(int size) {
   }
 
     
-  double Event::PickNCheckVertRndm(int numcoord){//numcoord è un numero (1, 2 o 3) che indica per quale coordinata si sta eseguendo il controllo del numero casuale
+  double Event::PickNCheckVertRndm(unsigned int numcoord){//numcoord è un numero (1, 2 o 3) che indica per quale coordinata si sta eseguendo il controllo del numero casuale
   //selezione del vertice e controlli per avere numeri compatibili con geometria del rivelatore-----------------
    double rndmN;
     if(numcoord==1||numcoord==2){

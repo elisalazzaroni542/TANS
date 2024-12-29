@@ -6,15 +6,21 @@
 #include "../headers/Event.h"         // TODO: remove relative paths
 #include "../headers/Trajectory.h"
 #include "../headers/HitPoint.h"
+//#include <ROOT/RDataFrame.hxx>
 
-void sim(int seed = 123, unsigned const int events = 1000, bool smearing = false) {
+
+
+void sim(int seed = 123, unsigned const int events = 1000) {
     TStopwatch stopwatch;
     stopwatch.Start();
 
-    vector<double> vertex_x(1), vertex_y(1), vertex_z(1);
+//    vector<double> vertex_x(1), vertex_y(1), vertex_z(1);
+    vector<double> vertex;
     vector<double> inHits_x, inHits_y, inHits_z;
     vector<double> outHits_x, outHits_y, outHits_z;
     
+    vertex.resize(3);
+
     const size_t max_expected_multiplicity = 100;
 
     inHits_x.reserve(max_expected_multiplicity);
@@ -26,13 +32,8 @@ void sim(int seed = 123, unsigned const int events = 1000, bool smearing = false
 
     const int autoSaveSize = 100000;
 
-    string filename;
 
-    if (!smearing) {
-        filename = "../data/sim" + to_string(events) + ".root";
-    } else {
-        filename = "../data/sim" + to_string(events) + "_smearing.root";
-    }
+    string filename = "../data/sim" + to_string(events) + ".root";
     
     
     TFile* file = TFile::Open(filename.c_str(), "RECREATE");
@@ -42,9 +43,11 @@ void sim(int seed = 123, unsigned const int events = 1000, bool smearing = false
     tree->SetAutoSave(autoSaveSize);
     //file->SetCompressionLevel(0);
 
-    tree->Branch("vertex_x", &vertex_x);
-    tree->Branch("vertex_y", &vertex_y);
-    tree->Branch("vertex_z", &vertex_z);
+    //tree->Branch("vertex_x", &vertex_x);
+    //tree->Branch("vertex_y", &vertex_y);
+    //tree->Branch("vertex_z", &vertex_z);
+
+    tree->Branch("vertex", &vertex);
     tree->Branch("inHits_x", &inHits_x);
     tree->Branch("inHits_y", &inHits_y);
     tree->Branch("inHits_z", &inHits_z);
@@ -59,18 +62,17 @@ void sim(int seed = 123, unsigned const int events = 1000, bool smearing = false
 
     TH1F* thetaHist = t.LoadDistribution("heta2");
 
+    //ROOT::EnableImplicitMT();
 
     //t.SetThetaNPhi(thetaHist);
     //t.SetParC(3);
     for (unsigned int i = 0; i < events; ++i) {
         e.SetVertix(3);
-        e.SetMultiplicity("gaus");
+        e.SetMultiplicity("custom");
         //if (i%1000 == 0) {cout<<"Multiplicity = "<<e.GetMultiplicity()<<endl;}
-        
-        vertex_x[0] = e.GetVertix(1);
-        vertex_y[0] = e.GetVertix(2);
-        vertex_z[0] = e.GetVertix(3);
-
+        vertex[0] = e.GetVertix(0);
+        vertex[1] = e.GetVertix(1);
+        vertex[2] = e.GetVertix(2);
         // Clear previous hits
         inHits_x.clear();
         inHits_y.clear();
@@ -82,8 +84,8 @@ void sim(int seed = 123, unsigned const int events = 1000, bool smearing = false
         for (unsigned int j = 0; j < e.GetMultiplicity(); ++j) {
             t.SetThetaNPhi(thetaHist);
             t.SetParC(3);
-            hIn.SetPoint(e, t, smearing);
-            hOut.SetPoint(e, t, smearing);
+            hIn.SetPoint(e, t);
+            hOut.SetPoint(e, t);
 
             inHits_x.push_back(hIn.GetX());
             inHits_y.push_back(hIn.GetY());

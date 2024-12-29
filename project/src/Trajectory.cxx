@@ -14,8 +14,9 @@ ClassImp (Trajectory)
   Trajectory::Trajectory(): Event(),
   Ttheta(0),
   Tphi(0),
-  TparCSize(0),
-  TparC(NULL)
+  TparC({-999, -999, -999})
+  //TparCSize(0),
+  //TparC(NULL)
   {
     //default constructor
       //cout<<"DEFAULT CONSTR-THIS= "<<this<<endl;
@@ -24,36 +25,45 @@ ClassImp (Trajectory)
   Trajectory::Trajectory(unsigned int seed):Event(seed),
   Ttheta(0),
   Tphi(0),
-  TparCSize(0),
-  TparC(NULL)
+  TparC({-999, -999, -999})
+  //TparCSize(0),
+  //TparC(NULL)
   {
     //standard constructor
      //cout<<"std constr-this= "<<this<<endl;
   }
   
   Trajectory::Trajectory (const Trajectory &source):
-   Event(source),
-   Ttheta(source.Ttheta),
-   Tphi(source.Tphi),
-   TparCSize(source.TparCSize)
-  {//copy constructor
-    //cout<<"copy constructor-this= "<<this<<endl;
-    if (TparCSize>0){
-      TparC=new double[TparCSize];
-      for(int i=0;i<TparCSize;++i){
-        TparC[i]=source.TparC[i];
-      }
-    }
-    else {
-      TparC=NULL;
+    Event(source),
+    Ttheta(source.Ttheta),
+    Tphi(source.Tphi),
+    TparC(source.TparC)
+    {
+
+      //copy constructor
+
     }
 
-  }
+
+  //TparCSize(source.TparCSize)
+  //{//copy constructor
+  //  //cout<<"copy constructor-this= "<<this<<endl;
+  //  if (TparCSize>0){
+  //    TparC=new double[TparCSize];
+  //    for(int i=0;i<TparCSize;++i){
+  //      TparC[i]=source.TparC[i];
+  //    }
+  //  }
+  //  else {
+  //    TparC=NULL;
+  //  }
+//
+  //}
 
   Trajectory::~Trajectory(){
     //default destructor
     //cout<<"destructor-this= "<<this<<endl;
-    if (TparCSize>0) delete []TparC;
+    //if (TparCSize>0) delete []TparC;
   }
 
  //------------------------IMPLEMENTAZIONE MEMBER FUNCTIONS-------------------------------------
@@ -75,12 +85,12 @@ ClassImp (Trajectory)
     Tphi=RndmUni(0,2*M_PI);
   }
 
-  void Trajectory::SetParC(int size){
-    if (TparCSize>0 || size!=TparCSize){ 
-      delete []TparC;
-      TparC=new double[size];
-      TparCSize=size;
-      }
+  void Trajectory::SetParC(unsigned const int size){ // TODO: REMOVE SIZE?
+    //if (size!=TparC.size()){ 
+      //delete []TparC;
+      //TparC=new double[size];
+      //TparCSize.resize(size);
+      //}
 
     //SetThetaNPhi();
     TparC[0]=(double)sin(GetTheta())*cos(GetPhi());
@@ -89,10 +99,10 @@ ClassImp (Trajectory)
     //cout<<"c1= "<<TparC[0]<<" c2= "<<TparC[1]<<" c3= "<<TparC[2]<<endl;
   }
 
-  double Trajectory::GetParC(int i) const{//restituisce il parametro selezionato dalla i
-    if(i>0&&i<=TparCSize){
+  double Trajectory::GetParC(unsigned const int i) const{//restituisce il parametro selezionato dalla i
+    if(i<TparC.size()){
       //cout<<"parametro "<<i<<" della retta: "<<TparC[i-1]<<endl;
-      return TparC[i-1];
+      return TparC[i];
     }
     else{cout<<"Invalid trajectory input"<<endl;
         return 0;
@@ -104,8 +114,8 @@ ClassImp (Trajectory)
     cout<<"Coordinata Theta della traiettoria: "<<Ttheta<<endl;
     cout<<"Coordinata Phi della traiettoria: "<<Tphi<<endl;
     cout<<"Parametri della traiettoria (c1,c2,c3)= "<<endl;
-    if (TparCSize>0){
-      for(int i=0;i<TparCSize;i++){
+    if (TparC.size()>0){
+      for(unsigned int i=0;i<TparC.size();++i){
         cout<<TparC[i]<<" ,";
       }
       cout<<endl;

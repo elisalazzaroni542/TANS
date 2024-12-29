@@ -17,16 +17,16 @@ class Trajectory : public Event{
      void SetThetaNPhi(TH1F* customHist);//estrae theta e phi di una traiettoria
      float GetTheta(){return Ttheta;};
      float GetPhi(){return Tphi;};
-     void SetParC(int size=3);//inizializza i parametri c1,2,3 dell'equazione con le Theta e Phi estratte
-     double GetParC(int i) const;//restituisce il parametro identificato dalla i
+     void SetParC(const unsigned int size=3);//inizializza i parametri c1,2,3 dell'equazione con le Theta e Phi estratte
+     double GetParC(const unsigned int i) const;//restituisce il parametro identificato dalla i
      void PrintTrajectory() const;//stampa le informazioni relative a una traiettoria
      //double SetImpactCoord(double Rcil);//calcola le coordinate di impatto sul cilindro di raggio Rcil
    
    private:
      float Ttheta;//coord. theta estratta
      float Tphi;//coord. phi estratta
-     int TparCSize;//dimensione del vettore parC
-     double *TparC;//vettore che contiene i 3 parametri della retta c1,2,3
+     //int TparCSize;//dimensione del vettore parC
+     vector<double> TparC;//vettore che contiene i 3 parametri della retta c1,2,3
 
 ClassDef (Trajectory,1)
 };

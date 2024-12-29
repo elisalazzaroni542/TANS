@@ -26,9 +26,9 @@ class Event : public TRandom3{
 
     //funzioni di manipolazione risultati//
 
-    double PickNCheckVertRndm (int numcoord); //funzione che estrae e controlla che il numero estratto rispetti delle condizioni
-    void SetVertix (int size=3);
-    double GetVertix(int i) const;
+    double PickNCheckVertRndm (unsigned int numcoord); //funzione che estrae e controlla che il numero estratto rispetti delle condizioni
+    void SetVertix (unsigned int size=3);
+    double GetVertix(unsigned int i) const;
     double GetMultiplicity() const{return Emult;}
     void CheckMultiplicity (); //funzione che controlla che la molteplicità sia accettabile
     void PrintEvent () const; //funzione che stampa le coordinate del vertice e la sua molteplicità
@@ -37,8 +37,8 @@ class Event : public TRandom3{
 
   private:
     unsigned int Eseed;
-    int EvertixSize;//dimensione del vettore vertix
-    double *Evertix;//vettore con le coordinate del vertice
+    //int EvertixSize;//dimensione del vettore vertix
+    vector<double> Evertix;//vettore con le coordinate del vertice
     int Emult;//molteplicità dell'impatto
    
 
