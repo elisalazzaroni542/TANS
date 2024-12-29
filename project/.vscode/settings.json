@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "sim.C": "cpp",
+        "distributions.C": "cpp",
+        "reco.C": "cpp"
+    }
+}

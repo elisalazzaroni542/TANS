@@ -57,7 +57,7 @@ void sim(int seed = 123, unsigned const int events = 1000) {
 
     Event e(seed);
     Trajectory t(seed);
-    HitPoint hIn, hOut;
+    HitPoint hIn(e, t, 4), hOut(e, t, 7);
 
 
     TH1F* thetaHist = t.LoadDistribution("heta2");

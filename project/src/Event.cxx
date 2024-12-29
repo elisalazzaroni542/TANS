@@ -106,7 +106,7 @@ void Event::SetVertix(unsigned int size) {
         Evertix.resize(size);
     }
     for (unsigned int i = 0; i < size; ++i) {
-        Evertix[i] = PickNCheckVertRndm(i + 1);
+        Evertix[i] = PickNCheckVertRndm(i);
     }
 }
 
