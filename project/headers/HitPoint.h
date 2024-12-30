@@ -18,6 +18,7 @@ class HitPoint : public Trajectory{
     double GetY()const{return Hy;}
     double GetZ()const{return Hz;}
     double GetDelta()const{return Hdelta;}
+    void SetDelta_and_T(const Event &ev, const Trajectory &traj, const double Rcil);
     void SetDelta(const Event &ev, const Trajectory &traj, const double Rcil);
     void SetT(const Event &ev, const Trajectory &traj);//calcola il parametro t dell'equazione parametrica
     double GetT()const{return Ht;}

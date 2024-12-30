@@ -23,9 +23,17 @@ compile:
 	-@bash ./bash/compile.sh 
 	@echo 'Done.'
 
-sim: 
-	@echo 'Performing simulation'
+sim:
+	@echo "Running simulation..."
+	@bash -c 'cd macros/ && root -b -l -q sim.C+'
+	@echo 'Simulation done.'
 	
+
+reco:
+	@echo "Running reconstruction..."
+	@bash -c 'cd macros/ && root -b -l -q reco.C+'
+	@echo 'Reconstruction done.'
+
 
 
 #Explanation of Each Part:

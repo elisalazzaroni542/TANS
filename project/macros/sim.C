@@ -10,7 +10,7 @@
 
 
 
-void sim(int seed = 123, unsigned const int events = 1000) {
+void sim(int seed = 123, unsigned const int events = 1000000) {
     TStopwatch stopwatch;
     stopwatch.Start();
 
@@ -85,7 +85,7 @@ void sim(int seed = 123, unsigned const int events = 1000) {
             t.SetThetaNPhi(thetaHist);
             t.SetParC(3);
             hIn.SetDelta(e, t, 4);
-            hOut.SetDelta(e, t, 4);
+            hOut.SetDelta(e, t, 8);
             
             hIn.SetT(e, t);
             hOut.SetT(e, t);
@@ -93,12 +93,16 @@ void sim(int seed = 123, unsigned const int events = 1000) {
             hIn.SetPoint(e, t);
             hOut.SetPoint(e, t);
 
-            inHits_x.push_back(hIn.GetX());
-            inHits_y.push_back(hIn.GetY());
-            inHits_z.push_back(hIn.GetZ());
-            outHits_x.push_back(hOut.GetX());
-            outHits_y.push_back(hOut.GetY());
-            outHits_z.push_back(hOut.GetZ());
+            if(abs(hIn.GetZ()) < 13.5){
+                inHits_x.push_back(hIn.GetX());
+                inHits_y.push_back(hIn.GetY());
+                inHits_z.push_back(hIn.GetZ());
+            }
+            if(abs(hOut.GetZ()) < 13.5){
+                outHits_x.push_back(hOut.GetX());
+                outHits_y.push_back(hOut.GetY());
+                outHits_z.push_back(hOut.GetZ());
+            }
         }
         
         tree->Fill();

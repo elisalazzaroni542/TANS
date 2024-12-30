@@ -31,8 +31,7 @@ ClassImp (HitPoint)
   Hdelta(0),
   Ht(0)
   {
-    SetDelta(ev, traj, Rcil);
-    SetT(ev, traj);
+    SetDelta_and_T(ev, traj, Rcil);
 
   }
 
@@ -93,15 +92,6 @@ ClassImp (HitPoint)
     //cout<<"Delta="<<Hdelta<<endl;
   }
 
-  void HitPoint::MSSetDelta(const HitPoint &h, const Trajectory &traj, const double Rcil){
-
-    double first = pow(h.GetX()*traj.GetParC(0)+h.GetY()*traj.GetParC(1),2);
-    double second = (pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2))*(pow(h.GetX(),2)+pow(h.GetY(),2)-pow(Rcil,2));
-
-    Hdelta = first - second;
-    //cout<<"Delta="<<Hdelta<<endl;
-  }
-
   void HitPoint::SetT(const Event &ev, const Trajectory &traj){
 
   Ht = (-(ev.GetVertix(0)*traj.GetParC(0)+ev.GetVertix(1)*traj.GetParC(1))+sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
@@ -112,6 +102,28 @@ ClassImp (HitPoint)
   //cout<<"T="<<Ht<<endl;
   
 }
+
+void HitPoint::SetDelta_and_T(const Event &ev, const Trajectory &traj, const double Rcil) {
+    // Cache commonly used values
+    const double pc0 = traj.GetParC(0);
+    const double pc1 = traj.GetParC(1);
+    const double v0 = ev.GetVertix(0);
+    const double v1 = ev.GetVertix(1);
+    
+    // Cache sum of squares and dot product - used in both calculations
+    const double pc_sum_sq = pc0*pc0 + pc1*pc1;
+    const double dot_prod = v0*pc0 + v1*pc1;
+    
+    // Calculate delta
+    Hdelta = dot_prod*dot_prod - 
+             pc_sum_sq*(v0*v0 + v1*v1 - Rcil*Rcil);
+             
+    // Calculate T using the cached values
+    Ht = (-dot_prod + sqrt(Hdelta))/pc_sum_sq;
+    if(Ht < 0) {
+        Ht = (-dot_prod - sqrt(Hdelta))/pc_sum_sq;
+    }
+
 
 void HitPoint::MSSetT(const HitPoint &h, const Trajectory &traj){
 

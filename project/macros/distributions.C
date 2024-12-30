@@ -28,8 +28,8 @@ void distributions(const char* filename="../data/sim1000000_smearing.root", cons
             vector<double>* vertex = new vector<double>();
             tree->SetBranchAddress(branchName.c_str(), &vertex);
 
-            TH1D* histX = new TH1D("vertex_x", "Vertex - X Coordinate", 100, -0.5, 0.5);
-            TH1D* histY = new TH1D("vertex_y", "Vertex - Y Coordinate", 100, -0.5, 0.5);
+            TH1D* histX = new TH1D("vertex_x", "Vertex - X Coordinate", 100, -0.05, 0.05);
+            TH1D* histY = new TH1D("vertex_y", "Vertex - Y Coordinate", 100, -0.05, 0.05);
             TH1D* histZ = new TH1D("vertex_z", "Vertex - Z Coordinate", 100, -15, 15);
 
             unsigned int nEntries = tree->GetEntries();
