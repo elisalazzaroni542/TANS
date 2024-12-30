@@ -99,6 +99,35 @@ ClassImp (Trajectory)
     //cout<<"c1= "<<TparC[0]<<" c2= "<<TparC[1]<<" c3= "<<TparC[2]<<endl;
   }
 
+  void Trajectory::MSRotateParC(const Trajectory &traj){
+    double thetap=RndmGaus(0,0.001);//sigma di 1 mrad
+    double phip=RndmUni(0,2*M_PI);//uniforme tra 0 e 2pi
+    double mat[3][3];
+    mat[0][0]=-sin(traj.GetPhi());
+    mat[1][0]=cos(traj.GetPhi());
+    mat[2][0]=0.;
+    mat[0][1]=-cos(traj.GetPhi())*cos(traj.GetTheta());
+    mat[1][1]=-cos(traj.GetTheta())*sin(traj.GetPhi());
+    mat[2][1]=sin(traj.GetTheta());
+    mat[0][2]=sin(traj.GetTheta())*cos(traj.GetPhi());
+    mat[1][2]=sin(traj.GetTheta())*sin(traj.GetPhi());
+    mat[2][2]=cos(traj.GetTheta());
+
+    double newang[3];
+    newang[0]=sin(thetap)*cos(phip);
+    newang[1]=sin(thetap)*sin(phip);
+    newang[2]=cos(thetap);
+
+
+    for(int i=0; i<3; i++){
+      TParC[i]=0.;
+      for(int j=0; j<3; j++){
+        TParC[i]+=mat[i][j]*newang[j];
+      }
+    }
+    
+  }
+
   double Trajectory::GetParC(unsigned const int i) const{//restituisce il parametro selezionato dalla i
     if(i<TparC.size()){
       //cout<<"parametro "<<i<<" della retta: "<<TparC[i-1]<<endl;

@@ -93,12 +93,32 @@ ClassImp (HitPoint)
     //cout<<"Delta="<<Hdelta<<endl;
   }
 
+  void HitPoint::MSSetDelta(const HitPoint &h, const Trajectory &traj, const double Rcil){
+
+    double first = pow(h.GetX()*traj.GetParC(0)+h.GetY()*traj.GetParC(1),2);
+    double second = (pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2))*(pow(h.GetX(),2)+pow(h.GetY(),2)-pow(Rcil,2));
+
+    Hdelta = first - second;
+    //cout<<"Delta="<<Hdelta<<endl;
+  }
+
   void HitPoint::SetT(const Event &ev, const Trajectory &traj){
 
   Ht = (-(ev.GetVertix(0)*traj.GetParC(0)+ev.GetVertix(1)*traj.GetParC(1))+sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
 
      if(Ht<0){
         Ht=(-(ev.GetVertix(0)*traj.GetParC(0)+ev.GetVertix(1)*traj.GetParC(1))-sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
+     }
+  //cout<<"T="<<Ht<<endl;
+  
+}
+
+void HitPoint::MSSetT(const HitPoint &h, const Trajectory &traj){
+
+  Ht = (-(h.GetX()*traj.GetParC(0)+h.GetY()*traj.GetParC(1))+sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
+
+     if(Ht<0){
+        Ht=(-(h.GetX()*traj.GetParC(0)+h:GetY()*traj.GetParC(1))-sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
      }
   //cout<<"T="<<Ht<<endl;
   
@@ -115,6 +135,14 @@ ClassImp (HitPoint)
     Hx=ev.GetVertix(0)+traj.GetParC(0)*Ht;
     Hy=ev.GetVertix(1)+traj.GetParC(1)*Ht;
     Hz=ev.GetVertix(2)+traj.GetParC(2)*Ht;
+
+
+ }
+
+ void HitPoint::MSSetPoint(const HitPoint &h,const Trajectory &traj){
+    Hx=h.GetX()+traj.GetParC(0)*Ht;
+    Hy=h.GetY()+traj.GetParC(1)*Ht;
+    Hz=h.GetZ()+traj.GetParC(2)*Ht;
 
 
  }
