@@ -23,19 +23,33 @@ ClassImp (HitPoint)
       //cout<<"DEFAULT CONSTR-THIS= "<<this<<endl;
   }
 
-  HitPoint::HitPoint(const Event &ev,const Trajectory &traj,double Rcil):Trajectory(),
+
+  HitPoint::HitPoint(const Event &ev,const Trajectory &traj,const double Rcil):Trajectory(),
   Hx(0),
   Hy(0),
   Hz(0),
-  Hdelta(pow(ev.GetVertix(1)*traj.GetParC(1)+ev.GetVertix(2)*traj.GetParC(2),2)-(pow(traj.GetParC(1),2)+pow(traj.GetParC(2),2))*(pow(ev.GetVertix(1),2)+pow(ev.GetVertix(2),2)-pow(Rcil,2))),
-  Ht((-(ev.GetVertix(1)*traj.GetParC(1)+ev.GetVertix(2)*traj.GetParC(2))+sqrt(Hdelta))/(pow(traj.GetParC(1),2)+pow(traj.GetParC(2),2)))
+  Hdelta(0),
+  Ht(0)
   {
-    //standard constructor
-     //cout<<"std constr-this= "<<this<<endl;
-     if(Ht<0){
-       Ht=(-(ev.GetVertix(1)*traj.GetParC(1)+ev.GetVertix(2)*traj.GetParC(2))-sqrt(Hdelta))/(pow(traj.GetParC(1),2)+pow(traj.GetParC(2),2));
-     }
+    SetDelta(ev, traj, Rcil);
+    SetT(ev, traj);
+
   }
+
+  //OLD IMPLEMENTATION
+  //HitPoint::HitPoint(const Event &ev,const Trajectory &traj,double Rcil):Trajectory(),
+  //Hx(0),
+  //Hy(0),
+  //Hz(0),
+  //Hdelta(pow(ev.GetVertix(0)*traj.GetParC(0)+ev.GetVertix(1)*traj.GetParC(1),2)-(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2))*(pow(ev.GetVertix(0),2)+pow(ev.GetVertix(1),2)-pow(Rcil,2))),
+  //Ht((-(ev.GetVertix(0)*traj.GetParC(0)+ev.GetVertix(1)*traj.GetParC(1))+sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2)))
+  //{
+  //  //standard constructor
+  //   //cout<<"std constr-this= "<<this<<endl;
+  //   if(Ht<0){
+  //     Ht=(-(ev.GetVertix(0)*traj.GetParC(0)+ev.GetVertix(1)*traj.GetParC(1))-sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
+  //   }
+  //}
   
   HitPoint::HitPoint (const HitPoint &source):
    Trajectory(source),
@@ -69,7 +83,29 @@ ClassImp (HitPoint)
         cout<<"parametro t= "<<Ht<<endl;
     } 
  }*/
+
+  void HitPoint::SetDelta(const Event &ev, const Trajectory &traj, const double Rcil){
+
+    double first = pow(ev.GetVertix(0)*traj.GetParC(0)+ev.GetVertix(1)*traj.GetParC(1),2);
+    double second = (pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2))*(pow(ev.GetVertix(0),2)+pow(ev.GetVertix(1),2)-pow(Rcil,2));
+
+    Hdelta = first - second;
+    //cout<<"Delta="<<Hdelta<<endl;
+  }
+
+  void HitPoint::SetT(const Event &ev, const Trajectory &traj){
+
+  Ht = (-(ev.GetVertix(0)*traj.GetParC(0)+ev.GetVertix(1)*traj.GetParC(1))+sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
+
+     if(Ht<0){
+        Ht=(-(ev.GetVertix(0)*traj.GetParC(0)+ev.GetVertix(1)*traj.GetParC(1))-sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
+     }
+  //cout<<"T="<<Ht<<endl;
+  
+}
+
  void HitPoint::PrintHit()const {
+  
     cout<<"Discriminante dell'equazione Delta: "<<Hdelta<<endl;
     cout<<"Parametro t: "<<Ht<<endl;
     cout<<"Coordinate punto di impatto: "<<Hx<<", "<<Hy<<", "<<Hz<<endl;

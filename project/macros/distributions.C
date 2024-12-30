@@ -6,7 +6,7 @@
 #include <filesystem>
 #include <Riostream.h>
 
-void DrawHistograms(const char* filename="../data/sim1000000_smearing.root", const char* treename="Events") {
+void distributions(const char* filename="../data/sim1000000_smearing.root", const char* treename="Events") {
     TStopwatch stopwatch;
     stopwatch.Start();
 

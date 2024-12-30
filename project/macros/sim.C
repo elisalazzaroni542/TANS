@@ -57,7 +57,7 @@ void sim(int seed = 123, unsigned const int events = 1000) {
 
     Event e(seed);
     Trajectory t(seed);
-    HitPoint hIn(e, t, 4), hOut(e, t, 7);
+    HitPoint hIn, hOut;
 
 
     TH1F* thetaHist = t.LoadDistribution("heta2");
@@ -84,6 +84,12 @@ void sim(int seed = 123, unsigned const int events = 1000) {
         for (unsigned int j = 0; j < e.GetMultiplicity(); ++j) {
             t.SetThetaNPhi(thetaHist);
             t.SetParC(3);
+            hIn.SetDelta(e, t, 4);
+            hOut.SetDelta(e, t, 4);
+            
+            hIn.SetT(e, t);
+            hOut.SetT(e, t);
+
             hIn.SetPoint(e, t);
             hOut.SetPoint(e, t);
 

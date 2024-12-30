@@ -182,12 +182,12 @@ void Event::SetVertix(unsigned int size) {
   double Event::PickNCheckVertRndm(unsigned int numcoord){//numcoord è un numero (1, 2 o 3) che indica per quale coordinata si sta eseguendo il controllo del numero casuale
   //selezione del vertice e controlli per avere numeri compatibili con geometria del rivelatore-----------------
    double rndmN;
-    if(numcoord==1||numcoord==2){
+    if(numcoord==0||numcoord==1){
       do {
-        rndmN=RndmGaus(0,0.1);
+        rndmN=RndmGaus(0,0.01);
         //cout<<"Numero selezionato: "<<rndmN<<endl;
       }
-      while (rndmN>=3.08||rndmN<=-3.08); 
+      while (rndmN>=3||rndmN<=-3); 
     }
   
     else{

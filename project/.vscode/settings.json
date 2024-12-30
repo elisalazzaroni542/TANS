@@ -2,6 +2,7 @@
     "files.associations": {
         "sim.C": "cpp",
         "distributions.C": "cpp",
-        "reco.C": "cpp"
+        "reco.C": "cpp",
+        "test_hitpoint.C": "cpp"
     }
 }

@@ -38,9 +38,9 @@ void reco(){
     auto dfWithNoise = df.Define("inHits_x_sm", [&rnd, &sigmaX](const vector<double>& coorVec){return apply_smearing(rnd, coorVec, sigmaX);}, {"inHits_x"})
                         .Define("inHits_y_sm", [&rnd, &sigmaY](const vector<double>& coorVec){return apply_smearing(rnd, coorVec, sigmaY);}, {"inHits_y"})
                         .Define("inHits_z_sm", [&rnd, &sigmaZ](const vector<double>& coorVec){return apply_smearing(rnd, coorVec, sigmaZ);}, {"inHits_z"})
-                        .Define("outHits_x_sm", [&rnd, &sigmaX](const vector<double>& coorVec){return apply_smearing(rnd, coorVec, sigmaX);}, {"inHits_x"})
-                        .Define("outHits_y_sm", [&rnd, &sigmaY](const vector<double>& coorVec){return apply_smearing(rnd, coorVec, sigmaY);}, {"inHits_y"})
-                        .Define("outHits_z_sm", [&rnd, &sigmaZ](const vector<double>& coorVec){return apply_smearing(rnd, coorVec, sigmaZ);}, {"inHits_z"});
+                        .Define("outHits_x_sm", [&rnd, &sigmaX](const vector<double>& coorVec){return apply_smearing(rnd, coorVec, sigmaX);}, {"outHits_x"})
+                        .Define("outHits_y_sm", [&rnd, &sigmaY](const vector<double>& coorVec){return apply_smearing(rnd, coorVec, sigmaY);}, {"outHits_y"})
+                        .Define("outHits_z_sm", [&rnd, &sigmaZ](const vector<double>& coorVec){return apply_smearing(rnd, coorVec, sigmaZ);}, {"outHits_z"});
 
 
     //                    .Define("sm_inHits_y", apply_smearing, {"inHits_y"})

@@ -9,7 +9,7 @@ class HitPoint : public Trajectory{
   //classe che avrà il compito di generare l'HitPointo
   public:
     HitPoint(); //costruttore di default
-    HitPoint(const Event &ev,const Trajectory &traj,double Rcil); //costruttore standard
+    HitPoint(const Event &ev, const Trajectory &traj, const double Rcil); //costruttore standard
     HitPoint(const HitPoint& source); //copy constructor 
     virtual ~HitPoint();//distruttore di default
 
@@ -18,7 +18,8 @@ class HitPoint : public Trajectory{
     double GetY()const{return Hy;}
     double GetZ()const{return Hz;}
     double GetDelta()const{return Hdelta;}
-    void SetT();//calcola il parametro t dell'equazione parametrica
+    void SetDelta(const Event &ev, const Trajectory &traj, const double Rcil);
+    void SetT(const Event &ev, const Trajectory &traj);//calcola il parametro t dell'equazione parametrica
     double GetT()const{return Ht;}
     void PrintHit()const;//stampa le info sul punto di impatto
 
