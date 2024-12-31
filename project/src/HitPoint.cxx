@@ -123,18 +123,18 @@ void HitPoint::SetDelta_and_T(const Event &ev, const Trajectory &traj, const dou
     if(Ht < 0) {
         Ht = (-dot_prod - sqrt(Hdelta))/pc_sum_sq;
     }
-
-
-void HitPoint::MSSetT(const HitPoint &h, const Trajectory &traj){
-
-  Ht = (-(h.GetX()*traj.GetParC(0)+h.GetY()*traj.GetParC(1))+sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
-
-     if(Ht<0){
-        Ht=(-(h.GetX()*traj.GetParC(0)+h:GetY()*traj.GetParC(1))-sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
-     }
-  //cout<<"T="<<Ht<<endl;
-  
 }
+
+//void HitPoint::MSSetT(const HitPoint &h, const Trajectory &traj){
+//
+//  Ht = (-(h.GetX()*traj.GetParC(0)+h.GetY()*traj.GetParC(1))+sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
+//
+//     if(Ht<0){
+//        Ht=(-(h.GetX()*traj.GetParC(0)+h:GetY()*traj.GetParC(1))-sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
+//     }
+//  //cout<<"T="<<Ht<<endl;
+//  
+//}
 
  void HitPoint::PrintHit()const {
   
@@ -151,10 +151,10 @@ void HitPoint::MSSetT(const HitPoint &h, const Trajectory &traj){
 
  }
 
- void HitPoint::MSSetPoint(const HitPoint &h,const Trajectory &traj){
-    Hx=h.GetX()+traj.GetParC(0)*Ht;
-    Hy=h.GetY()+traj.GetParC(1)*Ht;
-    Hz=h.GetZ()+traj.GetParC(2)*Ht;
-
-
- }
+// void HitPoint::MSSetPoint(const HitPoint &h,const Trajectory &traj){
+//    Hx=h.GetX()+traj.GetParC(0)*Ht;
+//    Hy=h.GetY()+traj.GetParC(1)*Ht;
+//    Hz=h.GetZ()+traj.GetParC(2)*Ht;
+//
+//
+// }

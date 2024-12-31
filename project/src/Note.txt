@@ -1,5 +1,0 @@
-How to move all files from a folder to another:
-find ~/StartDirectory/ -type f -print0 | xargs -0 mv -t ~/EndDirectory
-
-How to copy all the files in a directory into another:
-cp -r ./DirectoryA_1/Folder/ ./DirectoryA_2
