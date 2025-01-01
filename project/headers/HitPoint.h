@@ -36,5 +36,3 @@ ClassDef (HitPoint,1)
 
 
 #endif     
-
-

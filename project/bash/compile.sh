@@ -24,6 +24,11 @@ cat > rootlogon.C << EOF
     if (!gSystem->AccessPathName("$SOURCE_DIR/HitPoint_cxx.so")) {
         gSystem->Load("$SOURCE_DIR/HitPoint_cxx.so");
     }
+
+    if (!gSystem->AccessPathName("$SOURCE_DIR/Point_cxx.so")) {
+        gSystem->Load("$SOURCE_DIR/Point_cxx.so");
+    }
+
 }
 EOF
 
@@ -37,7 +42,9 @@ EOF
 root -b -l -q "$SOURCE_DIR/Event.cxx+" || true
 root -b -l -q "$SOURCE_DIR/Trajectory.cxx+" || true
 root -b -l -q "$SOURCE_DIR/HitPoint.cxx+" || true
+root -b -l -q "$SOURCE_DIR/Point.cxx+" || true
+
 #root -b -l -q "$SOURCE_DIR/TestMain.cxx+" || true
 
-rm rootlogon.C
+#rm rootlogon.C
 
