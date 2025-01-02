@@ -100,10 +100,10 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS=false) {
     TTree* tree = new TTree("Events", "Simulated events");
     tree->SetAutoSave(autoSaveSize);
 
-    tree->Branch("vertex", &vertex);
-    tree->Branch("inHits", &inHits);
-    tree->Branch("outHits", &outHits);
-    tree->Branch("multiplicity", &m);
+    tree->Branch("vertex", &vertex, 3200, 0);
+    tree->Branch("inHits", &inHits, 3200, 0);
+    tree->Branch("outHits", &outHits, 3200, 0);
+    tree->Branch("multiplicity", &m, 3200, 0);
 
     Event e(seed);
     Trajectory t(seed);
