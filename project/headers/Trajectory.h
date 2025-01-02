@@ -21,6 +21,9 @@ class Trajectory : public Event{
      double GetParC(const unsigned int i) const;//restituisce il parametro identificato dalla i
      void PrintTrajectory() const;//stampa le informazioni relative a una traiettoria
      //double SetImpactCoord(double Rcil);//calcola le coordinate di impatto sul cilindro di raggio Rcil
+
+     //-------------------------------MS----------------------------------------------------------------------------------------
+     void MSRotateParC(Trajectory &traj);
    
    private:
      float Ttheta;//coord. theta estratta
