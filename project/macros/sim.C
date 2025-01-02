@@ -83,7 +83,7 @@ void sim(int seed = 123, unsigned const int events = 1000000) {
 }
 
 */
-void sim(int seed = 123, unsigned const int events = 1000000) {
+void sim(int seed = 123, unsigned const int events = 1000000, bool MS=false) {
     TStopwatch stopwatch;
     stopwatch.Start();
 
@@ -111,46 +111,101 @@ void sim(int seed = 123, unsigned const int events = 1000000) {
     //Point *pIn, pOut;
 
     TH1F* thetaHist = t.LoadDistribution("heta2");
-
-    for (unsigned int i = 0; i < events; ++i) {
-        e.SetVertix(3);
-        e.SetMultiplicity("custom");
-        m = e.GetMultiplicity();
-        vertex[0] = e.GetVertix(0);
-        vertex[1] = e.GetVertix(1);
-        vertex[2] = e.GetVertix(2);
-
-        inHits.Clear();
-        outHits.Clear();
-
-        for (unsigned int j = 0; j < m; ++j) {
-            t.SetThetaNPhi(thetaHist);
-            t.SetParC(3);
-
-            hIn.SetDelta(e, t, 4.1);
-            hOut.SetDelta(e, t, 7.1);
-
-            hIn.SetT(e, t);
-            hOut.SetT(e, t);
-
-            hIn.SetPoint(e, t);
-            hOut.SetPoint(e, t);
-
-            if (abs(hIn.GetZ()) < 13.5) {
-                Point* pIn = new (inHits[inHits.GetEntriesFast()]) Point(hIn.GetX(), hIn.GetY(), hIn.GetZ());
-            }
-            if (abs(hOut.GetZ()) < 13.5) {
-                Point* pOut = new (outHits[outHits.GetEntriesFast()]) Point(hOut.GetX(), hOut.GetY(), hOut.GetZ());
-            }
-        }
-
-        tree->Fill();
+    
+    if (!MS){
+      for (unsigned int i = 0; i < events; ++i) {
+          e.SetVertix(3);
+          e.SetMultiplicity("custom");
+          m = e.GetMultiplicity();
+          vertex[0] = e.GetVertix(0);
+          vertex[1] = e.GetVertix(1);
+          vertex[2] = e.GetVertix(2);
+  
+          inHits.Clear();
+          outHits.Clear();
+          
+  
+          for (unsigned int j = 0; j < m; ++j) {
+              t.SetThetaNPhi(thetaHist);
+              t.SetParC(3);
+  
+              hIn.SetDelta_and_T(e, t, 4.1);
+              hOut.SetDelta_and_T(e, t, 7.1);
+   
+              hIn.SetPoint(e, t);
+              hOut.SetPoint(e, t);
+  
+              if (abs(hIn.GetZ()) < 13.5) {
+                  Point* pIn = new (inHits[inHits.GetEntriesFast()]) Point(hIn.GetX(), hIn.GetY(), hIn.GetZ());
+              }
+              if (abs(hOut.GetZ()) < 13.5) {
+                  Point* pOut = new (outHits[outHits.GetEntriesFast()]) Point(hOut.GetX(), hOut.GetY(), hOut.GetZ());
+              }
+          }
+  
+          tree->Fill();
+      }
+  
+      file->Write();
+      file->Close();
+      delete file;
+  
+      stopwatch.Stop();
+      stopwatch.Print();
     }
+    else{  
+        HitPoint hB;
+              
+        for (unsigned int i = 0; i < events; ++i) {
+          e.SetVertix(3);
+          e.SetMultiplicity("uni");
+          m = e.GetMultiplicity();
+          vertex[0] = e.GetVertix(0);
+          vertex[1] = e.GetVertix(1);
+          vertex[2] = e.GetVertix(2);
+  
+          inHits.Clear();
+          outHits.Clear();
+  
+          for (unsigned int j = 0; j < m; ++j) {
+              //cout<<"------------------------------------------------------------------------Event "<<i<<"---------------------------------------------------------------------------------------------"<<endl;
+              t.SetThetaNPhi(thetaHist);
+              t.SetParC(3);
+  
+              hB.SetDelta_and_T(e, t, 3.1);//Hit against beam pipe
+              //t.PrintTrajectory();
+              hB.SetPoint(e, t);
+              //hB.PrintHit();
+              t.MSRotateParC(t);//first rotation
+            
+              hIn.MSSetDelta_and_T(hB, t, 4.1);//hit layer 1
+              //t.PrintTrajectory();
+              hIn.MSSetPoint(hB, t);
+              //hIn.PrintHit();
+              t.MSRotateParC(t);//second rotation
 
-    file->Write();
-    file->Close();
-    delete file;
-
-    stopwatch.Stop();
-    stopwatch.Print();
+              hOut.MSSetDelta_and_T(hIn, t, 7.1);//hit layer 2
+              //t.PrintTrajectory();  
+              hOut.MSSetPoint(hIn, t);
+              //hOut.PrintHit();
+  
+              if (abs(hIn.GetZ()) < 13.5) {
+                  Point* pIn = new (inHits[inHits.GetEntriesFast()]) Point(hIn.GetX(), hIn.GetY(), hIn.GetZ());
+              }
+              if (abs(hOut.GetZ()) < 13.5) {
+                  Point* pOut = new (outHits[outHits.GetEntriesFast()]) Point(hOut.GetX(), hOut.GetY(), hOut.GetZ());
+              }
+          }
+  
+          tree->Fill();
+      }
+  
+      file->Write();
+      file->Close();
+      delete file;
+  
+      stopwatch.Stop();
+      stopwatch.Print();
+    }
 }
+ 
