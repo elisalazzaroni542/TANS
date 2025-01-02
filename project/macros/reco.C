@@ -5,33 +5,46 @@
 #include <cmath>
 #include <TClonesArray.h>
 #include "Point.h"
+#include "HitPoint.h"
+
 
 TClonesArray* apply_smearing(TRandom3& rnd, const TClonesArray* hits, double sigmaXY, double sigmaZ, unsigned int rCil) {
-    TClonesArray* smeared = new TClonesArray("Point", hits->GetSize());
-    
-    for(int i = 0; i < hits->GetEntriesFast(); i++) {
-        Point* point = (Point*)hits->At(i);
-        double x = point->GetX();
-        double y = point->GetY();
-        double z = point->GetZ();
-        
-        double x_sm, y_sm, z_sm;
-        double new_radius2;
-        
-        do {
-            x_sm = x + rnd.Gaus(0, sigmaXY);
-            y_sm = y + rnd.Gaus(0, sigmaXY);
-            new_radius2 = x_sm*x_sm + y_sm*y_sm;
-        } while (new_radius2 > (rCil+0.2)*(rCil+0.2) || new_radius2 < (rCil)*(rCil));
-        
-        do {
-            z_sm = z + rnd.Gaus(0, sigmaZ);
-        } while (abs(z_sm) > 13.5);
-        
-        new((*smeared)[i]) Point(x_sm, y_sm, z_sm);
+    const unsigned int nRand = 5; // Number of random points to add
+    int newArrSize = hits->GetSize() + nRand;
+
+    TClonesArray* recoData = new TClonesArray("Point", newArrSize);
+
+    for (int i = 0; i < newArrSize; ++i) {
+        if (i < hits->GetSize()) {
+            Point* point = (Point*)hits->At(i);
+            double x = point->GetX();
+            double y = point->GetY();
+            double z = point->GetZ();
+
+            double x_sm, y_sm, z_sm;
+            double new_radius2;
+
+            do {
+                x_sm = x + rnd.Gaus(0, sigmaXY);
+                y_sm = y + rnd.Gaus(0, sigmaXY);
+                new_radius2 = x_sm * x_sm + y_sm * y_sm;
+            } while (new_radius2 > (rCil + 0.2) * (rCil + 0.2) || new_radius2 < rCil * rCil);
+
+            do {
+                z_sm = z + rnd.Gaus(0, sigmaZ);
+            } while (fabs(z_sm) > 13.5);
+
+            new((*recoData)[i]) Point(x_sm, y_sm, z_sm);
+        } else {
+            double theta = rnd.Uniform(0, 2 * M_PI);
+            double x = rCil * cos(theta);
+            double y = rCil * sin(theta);
+            double z = rnd.Uniform(-13.5, 13.5);
+            new((*recoData)[i]) Point(x, y, z);
+        }
     }
-    
-    return smeared;
+
+    return recoData;
 }
 
 void reco() {
