@@ -9,80 +9,6 @@
 #include "../headers/HitPoint.h"
 #include "../headers/Point.h"
 
-
-/*
-void sim(int seed = 123, unsigned const int events = 1000000) {
-    TStopwatch stopwatch;
-    stopwatch.Start();
-
-    unsigned int m;
-    TClonesArray vertexArray("Point", 1); // TClonesArray to store the vertex as a Point
-    TClonesArray inHits("Point", 100);  
-    TClonesArray outHits("Point", 100); 
-
-    const int autoSaveSize = 100000;
-
-    string filename = "../data/sim" + to_string(events) + ".root";
-    TFile* file = TFile::Open(filename.c_str(), "RECREATE");
-
-    TTree* tree = new TTree("Events", "Simulated events");
-    tree->SetAutoSave(autoSaveSize);
-
-    tree->Branch("vertex", &vertexArray);
-    tree->Branch("inHits", &inHits);
-    tree->Branch("outHits", &outHits);
-    tree->Branch("multiplicity", &m);
-
-    Event e(seed);
-    Trajectory t(seed);
-    HitPoint hIn, hOut;
-
-    TH1F* thetaHist = t.LoadDistribution("heta2");
-
-    for (unsigned int i = 0; i < events; ++i) {
-        e.SetVertix(3);
-        e.SetMultiplicity("custom");
-        m = e.GetMultiplicity();
-
-        vertexArray.Clear();
-        Point* vertexPoint = new (vertexArray[0]) Point(e.GetVertix(0), e.GetVertix(1), e.GetVertix(2));
-
-        inHits.Clear();
-        outHits.Clear();
-
-        for (unsigned int j = 0; j < m; ++j) {
-            t.SetThetaNPhi(thetaHist);
-            t.SetParC(3);
-
-            hIn.SetDelta(e, t, 4.1);
-            hOut.SetDelta(e, t, 7.1);
-
-            hIn.SetT(e, t);
-            hOut.SetT(e, t);
-
-            hIn.SetPoint(e, t);
-            hOut.SetPoint(e, t);
-
-            if (abs(hIn.GetZ()) < 13.5) {
-                Point* pIn = new (inHits[inHits.GetEntriesFast()]) Point(hIn.GetX(), hIn.GetY(), hIn.GetZ());
-            }
-            if (abs(hOut.GetZ()) < 13.5) {
-                Point* pOut = new (outHits[outHits.GetEntriesFast()]) Point(hOut.GetX(), hOut.GetY(), hOut.GetZ());
-            }
-        }
-
-        tree->Fill();
-    }
-
-    file->Write();
-    file->Close();
-    delete file;
-
-    stopwatch.Stop();
-    stopwatch.Print();
-}
-
-*/
 void sim(int seed = 123, unsigned const int events = 1000000, bool MS=false) {
     TStopwatch stopwatch;
     stopwatch.Start();
@@ -115,7 +41,7 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS=false) {
     if (!MS){
       for (unsigned int i = 0; i < events; ++i) {
           e.SetVertix(3);
-          e.SetMultiplicity("custom");
+          e.SetMultiplicity("cusom");
           m = e.GetMultiplicity();
           vertex[0] = e.GetVertix(0);
           vertex[1] = e.GetVertix(1);
@@ -158,7 +84,7 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS=false) {
               
         for (unsigned int i = 0; i < events; ++i) {
           e.SetVertix(3);
-          e.SetMultiplicity("uni");
+          e.SetMultiplicity("custom");
           m = e.GetMultiplicity();
           vertex[0] = e.GetVertix(0);
           vertex[1] = e.GetVertix(1);
