@@ -125,17 +125,6 @@ void HitPoint::SetDelta_and_T(const Event &ev, const Trajectory &traj, const dou
     }
 }
 
-//void HitPoint::MSSetT(const HitPoint &h, const Trajectory &traj){
-//
-//  Ht = (-(h.GetX()*traj.GetParC(0)+h.GetY()*traj.GetParC(1))+sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
-//
-//     if(Ht<0){
-//        Ht=(-(h.GetX()*traj.GetParC(0)+h:GetY()*traj.GetParC(1))-sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
-//     }
-//  //cout<<"T="<<Ht<<endl;
-//  
-//}
-
  void HitPoint::PrintHit()const {
   
     cout<<"Discriminante dell'equazione Delta: "<<Hdelta<<endl;
@@ -151,10 +140,44 @@ void HitPoint::SetDelta_and_T(const Event &ev, const Trajectory &traj, const dou
 
  }
 
-// void HitPoint::MSSetPoint(const HitPoint &h,const Trajectory &traj){
-//    Hx=h.GetX()+traj.GetParC(0)*Ht;
-//    Hy=h.GetY()+traj.GetParC(1)*Ht;
-//    Hz=h.GetZ()+traj.GetParC(2)*Ht;
+//---------------------MULTIPLE SCATTERING-------------------------------------------------
+//void HitPoint::MSSetT(const HitPoint &h, const Trajectory &traj){
 //
+//  Ht = (-(h.GetX()*traj.GetParC(0)+h.GetY()*traj.GetParC(1))+sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
 //
-// }
+//     if(Ht<0){
+//        Ht=(-(h.GetX()*traj.GetParC(0)+h.GetY()*traj.GetParC(1))-sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
+//     }
+//  //cout<<"T="<<Ht<<endl;
+//  
+//}
+
+void HitPoint::MSSetDelta_and_T(const HitPoint &h, const Trajectory &traj, const double Rcil) {
+    // Cache commonly used values
+    const double pc0 = traj.GetParC(0);
+    const double pc1 = traj.GetParC(1);
+    const double h0 = h.GetX();
+    const double h1 = h.GetY();
+    
+    // Cache sum of squares and dot product - used in both calculations
+    const double pc_sum_sq = pc0*pc0 + pc1*pc1;
+    const double dot_prod = h0*pc0 + h1*pc1;
+    
+    // Calculate delta
+    Hdelta = dot_prod*dot_prod - 
+             pc_sum_sq*(h0*h0 + h1*h1 - Rcil*Rcil);
+             
+    // Calculate T using the cached values
+    Ht = (-dot_prod + sqrt(Hdelta))/pc_sum_sq;
+    if(Ht < 0) {
+        Ht = (-dot_prod - sqrt(Hdelta))/pc_sum_sq;
+    }
+}
+
+ void HitPoint::MSSetPoint(const HitPoint &h,const Trajectory &traj){
+    Hx=h.GetX()+traj.GetParC(0)*Ht;
+    Hy=h.GetY()+traj.GetParC(1)*Ht;
+    Hz=h.GetZ()+traj.GetParC(2)*Ht;
+
+
+ }

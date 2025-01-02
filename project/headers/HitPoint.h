@@ -24,6 +24,11 @@ class HitPoint : public Trajectory{
     double GetT()const{return Ht;}
     void PrintHit()const;//stampa le info sul punto di impatto
 
+    //------------------------------MS-------------------------------------------------------------------------------------
+
+    void MSSetPoint(const HitPoint &h,const Trajectory &traj);//crea le coordinate dei punti di impatto 
+    void MSSetDelta_and_T(const HitPoint &h, const Trajectory &traj, const double Rcil);
+
   private:
     double Hx;
     double Hy;
