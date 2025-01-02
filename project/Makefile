@@ -1,6 +1,8 @@
-.PHONY: list clean compile sim
+.PHONY: list clean compile sim reco
 
-
+SEED = 123
+EVENTS = 1000000
+MS = false
 
 
 clean:
@@ -25,9 +27,9 @@ compile:
 
 sim:
 	@echo "Running simulation..."
-	@bash -c 'cd macros/ && root -b -l -q sim.C+'
+	@bash -c 'cd macros/ && root -b -l -q "sim.C+($(SEED), $(EVENTS), $(MS))"'
 	@echo 'Simulation done.'
-	
+
 
 reco:
 	@echo "Running reconstruction..."
