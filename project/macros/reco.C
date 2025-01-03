@@ -7,7 +7,7 @@
 #include <cmath>
 #include "../headers/Point.h"
 
-void apply_smearing(TRandom3& rnd, TClonesArray* hits, double sigmaXY, double sigmaZ, unsigned int rCil) {
+void apply_smearing(TRandom3& rnd, TClonesArray* hits, double sigmaPhi, double sigmaZ, unsigned int rCil) {
     const unsigned int nRand = 5; // Number of random points to add
     int origSize = hits->GetEntriesFast();
     
@@ -19,15 +19,24 @@ void apply_smearing(TRandom3& rnd, TClonesArray* hits, double sigmaXY, double si
         double x = point->GetX();
         double y = point->GetY();
         double z = point->GetZ();
-        double x_sm, y_sm, z_sm;
+        double phi = asin(y/rCil);
+        double x_sm, y_sm, z_sm, phi_sm;
         double new_radius2;
         
+
+        phi_sm = phi + rnd.Gaus(0, sigmaPhi);
+        x_sm = rCil*cos(phi_sm);
+        y_sm = rCil*sin(phi_sm);
+
+        /*
         do {
+
             x_sm = x + rnd.Gaus(0, sigmaXY);
             y_sm = y + rnd.Gaus(0, sigmaXY);
             new_radius2 = x_sm * x_sm + y_sm * y_sm;
         } while (new_radius2 > (rCil + 0.2) * (rCil + 0.2) || new_radius2 < rCil * rCil);
-        
+        */
+
         do {
             z_sm = z + rnd.Gaus(0, sigmaZ);
         } while (abs(z_sm) > 13.5);
@@ -37,9 +46,9 @@ void apply_smearing(TRandom3& rnd, TClonesArray* hits, double sigmaXY, double si
     
     // Then add random points
     for (unsigned int i = 0; i < nRand; ++i) {  // Fixed sign comparison warning
-        double theta = rnd.Uniform(0, 2 * M_PI);
-        double x = rCil * cos(theta);
-        double y = rCil * sin(theta);
+        double phi = rnd.Uniform(0, 2 * M_PI);
+        double x = rCil * cos(phi);
+        double y = rCil * sin(phi);
         double z = rnd.Uniform(-13.5, 13.5);
         new((*hits)[hits->GetEntriesFast()]) Point(x, y, z);
     }

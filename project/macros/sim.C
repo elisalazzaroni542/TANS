@@ -55,8 +55,8 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS=false) {
               t.SetThetaNPhi(thetaHist);
               t.SetParC(3);
   
-              hIn.SetDelta_and_T(e, t, 4.1);
-              hOut.SetDelta_and_T(e, t, 7.1);
+              hIn.SetDelta_and_T(e, t, 4);
+              hOut.SetDelta_and_T(e, t, 7);
    
               hIn.SetPoint(e, t);
               hOut.SetPoint(e, t);
