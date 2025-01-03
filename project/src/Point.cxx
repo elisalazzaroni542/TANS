@@ -8,11 +8,16 @@ ClassImp(Point)
     // Standard constructor
     Point::Point(double X, double Y, double Z) : x(X), y(Y), z(Z) {}
 
+    // Destructor
+    Point::~Point() {}
+
+
     void Point::Set(double X, double Y, double Z) {
         x = X;
         y = Y;
         z = Z;
     }
 
-    // Destructor
-    Point::~Point() {}
+    double Point::getPhi(double rCil){
+        return asin(y/rCil);
+    }
