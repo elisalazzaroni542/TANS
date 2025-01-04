@@ -1,11 +1,4 @@
-#include <Riostream.h>
 #include "HitPoint.h"
-#include "Trajectory.h"
-#include "Event.h"
-#include <TRandom3.h>
-#include <TFile.h>
-#include <math.h>
-
 
 
 
@@ -19,8 +12,6 @@ ClassImp (HitPoint)
   Hdelta(0),
   Ht(0)
   {
-    //default constructor
-      //cout<<"DEFAULT CONSTR-THIS= "<<this<<endl;
   }
 
 
@@ -34,94 +25,36 @@ ClassImp (HitPoint)
     SetDelta_and_T(ev, traj, Rcil);
 
   }
-
-  //OLD IMPLEMENTATION
-  //HitPoint::HitPoint(const Event &ev,const Trajectory &traj,double Rcil):Trajectory(),
-  //Hx(0),
-  //Hy(0),
-  //Hz(0),
-  //Hdelta(pow(ev.GetVertix(0)*traj.GetParC(0)+ev.GetVertix(1)*traj.GetParC(1),2)-(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2))*(pow(ev.GetVertix(0),2)+pow(ev.GetVertix(1),2)-pow(Rcil,2))),
-  //Ht((-(ev.GetVertix(0)*traj.GetParC(0)+ev.GetVertix(1)*traj.GetParC(1))+sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2)))
-  //{
-  //  //standard constructor
-  //   //cout<<"std constr-this= "<<this<<endl;
-  //   if(Ht<0){
-  //     Ht=(-(ev.GetVertix(0)*traj.GetParC(0)+ev.GetVertix(1)*traj.GetParC(1))-sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
-  //   }
-  //}
   
   HitPoint::HitPoint (const HitPoint &source):
-   Trajectory(source),
-   Hx(source.Hx),
-   Hy(source.Hy),
-   Hz(source.Hz),
-   Hdelta(source.Hdelta),
-   Ht(source.Ht)
-  {//copy constructor
-    //cout<<"copy constructor-this= "<<this<<endl;
+    Trajectory(source),
+    Hx(source.Hx),
+    Hy(source.Hy),
+    Hz(source.Hz),
+    Hdelta(source.Hdelta),
+    Ht(source.Ht)
+  {
 
   }
 
   HitPoint::~HitPoint(){
-    //default destructor
-    //cout<<"destructor-this= "<<this<<endl;
-    
   }
-
- //------------------------IMPLEMENTAZIONE MEMBER FUNCTIONS-------------------------------------
-/*
-
- void HitPoint::SetT(const Event &ev,const Trajectory &traj,double Rcil){
-
-    Ht=(-(ev.GetVertix(1)*traj.GetParC(1)+ev.GetVertix(2)*traj.GetParC(2))+sqrt(Hdelta))/(pow(traj.GetParC(1),2)+pow(traj.GetParC(2),2));
-    if(Ht>=0){
-        cout<<"parametro t= "<<Ht<<endl;
-        } 
-    else {
-        Ht=(-(ev.GetVertix(1)*traj.GetParC(1)+ev.GetVertix(2)*traj.GetParC(2))-sqrt(Hdelta))/(pow(traj.GetParC(1),2)+pow(traj.GetParC(2),2));
-        cout<<"parametro t= "<<Ht<<endl;
-    } 
- }*/
-
-  void HitPoint::SetDelta(const Event &ev, const Trajectory &traj, const double Rcil){
-
-    double first = pow(ev.GetVertix(0)*traj.GetParC(0)+ev.GetVertix(1)*traj.GetParC(1),2);
-    double second = (pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2))*(pow(ev.GetVertix(0),2)+pow(ev.GetVertix(1),2)-pow(Rcil,2));
-
-    Hdelta = first - second;
-    //cout<<"Delta="<<Hdelta<<endl;
-  }
-
-  void HitPoint::SetT(const Event &ev, const Trajectory &traj){
-
-  Ht = (-(ev.GetVertix(0)*traj.GetParC(0)+ev.GetVertix(1)*traj.GetParC(1))+sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
-
-     if(Ht<0){
-        Ht=(-(ev.GetVertix(0)*traj.GetParC(0)+ev.GetVertix(1)*traj.GetParC(1))-sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
-     }
-  //cout<<"T="<<Ht<<endl;
-  
-}
 
 void HitPoint::SetDelta_and_T(const Event &ev, const Trajectory &traj, const double Rcil) {
-    // Cache commonly used values
     const double pc0 = traj.GetParC(0);
     const double pc1 = traj.GetParC(1);
     const double v0 = ev.GetVertix(0);
     const double v1 = ev.GetVertix(1);
     
-    // Cache sum of squares and dot product - used in both calculations
-    const double pc_sum_sq = pc0*pc0 + pc1*pc1;
-    const double dot_prod = v0*pc0 + v1*pc1;
+    const double sum_sq = pc0*pc0 + pc1*pc1;
+    const double prod = v0*pc0 + v1*pc1;
     
-    // Calculate delta
-    Hdelta = dot_prod*dot_prod - 
-             pc_sum_sq*(v0*v0 + v1*v1 - Rcil*Rcil);
+    Hdelta = prod*prod - 
+             sum_sq*(v0*v0 + v1*v1 - Rcil*Rcil);
              
-    // Calculate T using the cached values
-    Ht = (-dot_prod + sqrt(Hdelta))/pc_sum_sq;
+    Ht = (-prod + sqrt(Hdelta))/sum_sq;
     if(Ht < 0) {
-        Ht = (-dot_prod - sqrt(Hdelta))/pc_sum_sq;
+        Ht = (-prod - sqrt(Hdelta))/sum_sq;
     }
 }
 
@@ -141,36 +74,23 @@ void HitPoint::SetDelta_and_T(const Event &ev, const Trajectory &traj, const dou
  }
 
 //---------------------MULTIPLE SCATTERING-------------------------------------------------
-//void HitPoint::MSSetT(const HitPoint &h, const Trajectory &traj){
-//
-//  Ht = (-(h.GetX()*traj.GetParC(0)+h.GetY()*traj.GetParC(1))+sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
-//
-//     if(Ht<0){
-//        Ht=(-(h.GetX()*traj.GetParC(0)+h.GetY()*traj.GetParC(1))-sqrt(Hdelta))/(pow(traj.GetParC(0),2)+pow(traj.GetParC(1),2));
-//     }
-//  //cout<<"T="<<Ht<<endl;
-//  
-//}
+
 
 void HitPoint::MSSetDelta_and_T(const HitPoint &h, const Trajectory &traj, const double Rcil) {
-    // Cache commonly used values
     const double pc0 = traj.GetParC(0);
     const double pc1 = traj.GetParC(1);
     const double h0 = h.GetX();
     const double h1 = h.GetY();
     
-    // Cache sum of squares and dot product - used in both calculations
-    const double pc_sum_sq = pc0*pc0 + pc1*pc1;
-    const double dot_prod = h0*pc0 + h1*pc1;
+    const double sum_sq = pc0*pc0 + pc1*pc1;
+    const double prod = h0*pc0 + h1*pc1;
     
-    // Calculate delta
-    Hdelta = dot_prod*dot_prod - 
-             pc_sum_sq*(h0*h0 + h1*h1 - Rcil*Rcil);
+    Hdelta = prod*prod - 
+             sum_sq*(h0*h0 + h1*h1 - Rcil*Rcil);
              
-    // Calculate T using the cached values
-    Ht = (-dot_prod + sqrt(Hdelta))/pc_sum_sq;
+    Ht = (-prod + sqrt(Hdelta))/sum_sq;
     if(Ht < 0) {
-        Ht = (-dot_prod - sqrt(Hdelta))/pc_sum_sq;
+        Ht = (-prod - sqrt(Hdelta))/sum_sq;
     }
 }
 

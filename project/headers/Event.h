@@ -1,45 +1,47 @@
 #ifndef EVENT_H
 #define EVENT_H
 
-
+#include <Riostream.h>
 #include <TRandom3.h>
 #include <TH1F.h>
+#include <TFile.h>
+#include <string>
+
 
 
 class Event : public TRandom3{
-  //classe che avrà il compito di generare l'evento
+
   public:
-    Event(); //costruttore di default
-    Event(unsigned int seed); //costruttore standard
-    Event(const Event& source); //copy constructor (necessario perchè un data member (vertix) alloca memoria)
-    virtual ~Event();//distruttore di default
+    Event(); 
+    Event(unsigned int seed); 
+    Event(const Event& source); 
+    virtual ~Event();
 
     void ChangeSeed(unsigned int newseed){Eseed=newseed;};
 
-    //funzioni che estraggono secondo diverse distribuzioni//
+    // Function to extract random numbers based on different distributions //
 
     static TH1F* LoadDistribution(const char* histName);
 
-    double RndmGaus(double mean, double sigma); //funzione che estrae un numero a caso da una distribuzione gaussiana
-    double RndmUni(double min, double max);//funzione che estrae un numero secondo una distribuzione uniforme tra min e max
-    double RndmCustom(TH1F* customHist);//funzione che estrae un numero da una distribuzione qualsiasi selezionata dall'utente tramite importazione di un istogramma
+    double RndmGaus(double mean, double sigma); 
+    double RndmUni(double min, double max);
+    double RndmCustom(TH1F* customHist);
 
-    //funzioni di manipolazione risultati//
+    // Function to manipulate the extracted numbers //
 
-    double PickNCheckVertRndm (unsigned int numcoord); //funzione che estrae e controlla che il numero estratto rispetti delle condizioni
+    double PickNCheckVertRndm (unsigned int numcoord); 
     void SetVertix (unsigned int size=3);
     double GetVertix(unsigned int i) const;
     double GetMultiplicity() const{return Emult;}
-    void CheckMultiplicity (); //funzione che controlla che la molteplicità sia accettabile
-    void PrintEvent () const; //funzione che stampa le coordinate del vertice e la sua molteplicità
-    void SetMultiplicity (const string& distr);//funzione che inizializza la molteplicità dell'evento
-    //double GetEvent(RndmPick vertix, double mult) const;
+    void CheckMultiplicity (); 
+    void PrintEvent () const; 
+    void SetMultiplicity (const string& distr);
 
+    
   private:
     unsigned int Eseed;
-    //int EvertixSize;//dimensione del vettore vertix
-    vector<double> Evertix;//vettore con le coordinate del vertice
-    int Emult;//molteplicità dell'impatto
+    vector<double> Evertix;
+    int Emult;
    
 
 ClassDef (Event,1)

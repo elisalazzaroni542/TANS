@@ -7,7 +7,7 @@
 #include <cmath>
 #include "../headers/Point.h"
 
-void apply_smearing(TRandom3& rnd, TClonesArray* hits, double sigmaPhi, double sigmaZ, unsigned int rCil) {
+void apply_smearing_and_noise(TRandom3& rnd, TClonesArray* hits, double sigmaPhi, double sigmaZ, unsigned int rCil) {
     const unsigned int nRand = 5; // Number of random points to add
     int origSize = hits->GetEntriesFast();
     
@@ -19,6 +19,8 @@ void apply_smearing(TRandom3& rnd, TClonesArray* hits, double sigmaPhi, double s
         double x = point->GetX();
         double y = point->GetY();
         double z = point->GetZ();
+        unsigned int id = point->GetId();
+
         double phi = asin(y/rCil);
         double x_sm, y_sm, z_sm, phi_sm;
         double new_radius2;
@@ -41,7 +43,7 @@ void apply_smearing(TRandom3& rnd, TClonesArray* hits, double sigmaPhi, double s
             z_sm = z + rnd.Gaus(0, sigmaZ);
         } while (abs(z_sm) > 13.5);
         
-        point->Set(x_sm, y_sm, z_sm);
+        point->Set(x_sm, y_sm, z_sm, id);
     }
     
     // Then add random points
@@ -50,11 +52,11 @@ void apply_smearing(TRandom3& rnd, TClonesArray* hits, double sigmaPhi, double s
         double x = rCil * cos(phi);
         double y = rCil * sin(phi);
         double z = rnd.Uniform(-13.5, 13.5);
-        new((*hits)[hits->GetEntriesFast()]) Point(x, y, z);
+        new((*hits)[hits->GetEntriesFast()]) Point(x, y, z, id);
     }
 }
 
-void reco() {
+void detector_noise() {
     TStopwatch stopwatch;
     stopwatch.Start();
 
@@ -126,8 +128,8 @@ void reco() {
         multiplicity_out = multiplicity;
 
         // Apply smearing
-        apply_smearing(rnd, inHits, 0.003, 0.012, 4);
-        apply_smearing(rnd, outHits, 0.003, 0.012, 7);
+        apply_smearing_and_noise(rnd, inHits, 0.003, 0.012, 4);
+        apply_smearing_and_noise(rnd, outHits, 0.003, 0.012, 7);
 
         totalInHitsAfter += inHits->GetEntriesFast();
 

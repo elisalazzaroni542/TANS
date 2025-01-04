@@ -7,22 +7,25 @@
 class Point : public TObject {
 public:
     Point();
-    Point(double X, double Y, double Z);  
-    void Set(double X, double Y, double Z);
+    Point(double X, double Y, double Z, unsigned int ID);  
+    void Set(double X, double Y, double Z, unsigned int ID);
 
     double GetX() const { return x; }
     double GetY() const { return y; }
     double GetZ() const { return z; }
+    unsigned int GetId() const { return id; }
+    
     double getPhi(double rCil);
 
-    virtual ~Point();  // Destructor
+    virtual ~Point();
 
     ClassDef(Point, 1);
 
 private:
     double x;  
     double y;  
-    double z;  
+    double z; 
+    unsigned int id; 
 };
 
 #endif 

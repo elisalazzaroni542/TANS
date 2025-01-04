@@ -21,13 +21,7 @@ cat > rootlogon.C << EOF
         gSystem->Load("$SOURCE_DIR/Trajectory_cxx.so");
     }
     
-    if (!gSystem->AccessPathName("$SOURCE_DIR/HitPoint_cxx.so")) {
-        gSystem->Load("$SOURCE_DIR/HitPoint_cxx.so");
-    }
 
-    if (!gSystem->AccessPathName("$SOURCE_DIR/Point_cxx.so")) {
-        gSystem->Load("$SOURCE_DIR/Point_cxx.so");
-    }
 
 }
 EOF

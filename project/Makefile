@@ -1,4 +1,4 @@
-.PHONY: list clean compile sim reco
+.PHONY: list clean compile sim noise reco
 
 SEED = 123
 EVENTS = 1000000
@@ -12,6 +12,7 @@ clean:
 	@find $(TARGET_DIR) -type f -name '*.d' -delete -print
 	@find $(TARGET_DIR) -type f -name '*.so' -delete -print
 	@find $(TARGET_DIR) -type f -name '*.pcm' -delete -print
+	@find $(TARGET_DIR) -type f -name '*_ACLiC_*' -delete -print
 	@echo "Done."
 
 
@@ -29,6 +30,13 @@ sim:
 	@echo "Running simulation..."
 	@bash -c 'cd macros/ && root -b -l -q "sim.C+($(SEED), $(EVENTS), $(MS))"'
 	@echo 'Simulation done.'
+
+
+noise:
+	@echo "Running reconstruction..."
+	@bash -c 'cd macros/ && root -b -l -q detector_noise.C+'
+	@echo 'Reconstruction done.'
+
 
 
 reco:
