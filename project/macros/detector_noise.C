@@ -21,7 +21,7 @@ void apply_smearing_and_noise(TRandom3& rnd, TClonesArray* hits, double sigmaPhi
         double z = point->GetZ();
         unsigned int id = point->GetId();
 
-        double phi = asin(y/rCil);
+        double phi = point->GetPhi();
         double x_sm, y_sm, z_sm, phi_sm;
         double new_radius2;
         
@@ -56,7 +56,7 @@ void apply_smearing_and_noise(TRandom3& rnd, TClonesArray* hits, double sigmaPhi
     }
 }
 
-void detector_noise() {
+void detector_noise(unsigned int seed=123, const char* inputFileName = "../data/sim1000000.root", const char* outputFileName = "../data/sim1000000_smearing.root") {
     TStopwatch stopwatch;
     stopwatch.Start();
 
@@ -90,7 +90,7 @@ void detector_noise() {
     inputTree->SetBranchAddress("inHits", &inHits);
     inputTree->SetBranchAddress("outHits", &outHits);
     inputTree->SetBranchAddress("multiplicity", &multiplicity);
-
+    cout<<"Input Entries: "<<inputTree.GetEntriesFast()<<endl;
     // Create output file and tree
     TFile* outputFile = new TFile(outputFileName, "RECREATE");
     TTree* outputTree = new TTree(treeName, "Tree with smeared hits");
@@ -106,7 +106,7 @@ void detector_noise() {
     outputTree->Branch("multiplicity", &multiplicity_out);
 
     // Random number generator
-    TRandom3 rnd(0);
+    TRandom3 rnd(seed);
 
     // Variables to track total hits
     Long64_t totalInHitsBefore = 0;
