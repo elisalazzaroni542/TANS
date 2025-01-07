@@ -5,21 +5,21 @@ ClassImp (Event)
   Event::Event(): TRandom3(),
   Eseed(123),
   Emult(0),
-  Evertix({-999, -999, -999})
+  Evertex({-999, -999, -999})
   {
   }
 
   Event::Event(unsigned int seed):TRandom3(seed),
   Eseed(seed),
   Emult(0),
-  Evertix({-999, -999, -999})
+  Evertex({-999, -999, -999})
   {
   }
   
   Event::Event (const Event &source):
    TRandom3(source),
    Eseed(source.Eseed),
-   Evertix(source.Evertix)
+   Evertex(source.Evertex)
    {
    }
 
@@ -58,12 +58,9 @@ double Event::RndmCustom(TH1F* customHist) {
 }
 
 
-void Event::SetVertix(unsigned int size) {
-    if (size != Evertix.size()) {
-        Evertix.resize(size);
-    }
-    for (unsigned int i = 0; i < size; ++i) {
-        Evertix[i] = PickNCheckVertRndm(i);
+void Event::SetVertex() {
+    for (unsigned int i = 0; i < 3; ++i) {
+        Evertex[i] = PickNCheckVertRndm(i);
     }
 }
 
@@ -103,9 +100,9 @@ void Event::SetVertix(unsigned int size) {
     }
   }  
 
-  double Event::GetVertix(unsigned int i) const{
-    if(i< Evertix.size()){
-      return Evertix[i];
+  double Event::GetVertex(unsigned int i) const{
+    if(i< Evertex.size()){
+      return Evertex[i];
     }
     else{cout<<"invalid input"<<endl;
         return 0;
@@ -114,9 +111,9 @@ void Event::SetVertix(unsigned int size) {
 
   void Event::PrintEvent()const{
     cout<<"Coordinate del vertice generato: (x,y,z)= "<<endl;
-    if (Evertix.size()>0){
-      for(unsigned int i=0;i<Evertix.size();++i){
-        cout<<Evertix[i]<<" ,";
+    if (Evertex.size()>0){
+      for(unsigned int i=0;i<Evertex.size();++i){
+        cout<<Evertex[i]<<" ,";
       }
       cout<<endl;
     }

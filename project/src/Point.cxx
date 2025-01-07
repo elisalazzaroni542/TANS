@@ -19,6 +19,6 @@ ClassImp(Point)
         id = ID;
     }
 
-    double Point::getPhi(double rCil){
+    double Point::GetPhi(double rCil){
         return asin(y/rCil);
     }

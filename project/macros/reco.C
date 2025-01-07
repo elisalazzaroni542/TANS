@@ -28,10 +28,6 @@ point get_vertex(Point* pointIn, Point* PointOut){
 
 
 double phiDiff(double phi1, double phi2) {
-    // Keep angles in [0, 2π]
-    // phi1 = NormalizePhi(phi1);
-    // phi2 = NormalizePhi(phi2);
-    
     double diff1 = TMath::Abs(phi1 - phi2);
     double diff2 = 2*TMath::Pi() - diff1;
     return TMath::Min(diff1, diff2);
@@ -39,10 +35,51 @@ double phiDiff(double phi1, double phi2) {
 
 
 
-void reco(){
+void reco( string fInName = "sim1000000_noise.root", string fOutName = "sim1000000_reco.root"){
+    TStopwatch stopwatch;
+    stopwatch.Start();
+
+    string input = "../data/" + fInName;
+    const char* inputFileName = input.c_str();
+
+    string output = "../data/" + fOutName;
+    const char* outputFileName = output.c_str();
+
+
+    TFile* inputFile = new TFile(inputFileName, "READ");
+    if (!inputFile || inputFile->IsZombie()) {
+        printf("Error: Cannot open input file '%s'\n", inputFileName);
+        return;
+    }
+
+    TTree* inputTree = (TTree*)inputFile->Get(treeName);
+    if (!inputTree) {
+        printf("Error: TTree '%s' not found in file '%s'\n", treeName, inputFileName);
+        inputFile->Close();
+        delete inputFile;
+        return;
+    }
+
+    inputTree->SetBranchAddress("inHits", &inHits);
+    inputTree->SetBranchAddress("outHits", &outHits);
+
+
+
+    TClonesArray* genVertex = new TClonesArray("Point", 1000000);  // Initialize with class name
+    TClonesArray* recoVertex = new TClonesArray("Point", 1000000);  // Initialize with class name
+
+
+    TTree* outputTree = new TTree("Events", "Simulated and Reconstructed vertices");
 
 
 
 
-    
+    unsigned int event_id = 0;
+
+
+
 }
+
+
+
+

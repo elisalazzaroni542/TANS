@@ -33,8 +33,8 @@ sim:
 
 
 noise:
-	@echo "Running reconstruction..."
-	@bash -c 'cd macros/ && root -b -l -q detector_noise.C+'
+	@echo "Applying detector noise..."
+	@bash -c 'cd macros/ && root -b -l -q noise.C+'
 	@echo 'Reconstruction done.'
 
 

@@ -15,7 +15,7 @@ public:
     double GetZ() const { return z; }
     unsigned int GetId() const { return id; }
     
-    double getPhi(double rCil);
+    double GetPhi(double rCil);
 
     virtual ~Point();
 

@@ -30,8 +30,8 @@ class Event : public TRandom3{
     // Function to manipulate the extracted numbers //
 
     double PickNCheckVertRndm (unsigned int numcoord); 
-    void SetVertix (unsigned int size=3);
-    double GetVertix(unsigned int i) const;
+    void SetVertex ();
+    double GetVertex(unsigned int i) const;
     double GetMultiplicity() const{return Emult;}
     void CheckMultiplicity (); 
     void PrintEvent () const; 
@@ -40,7 +40,7 @@ class Event : public TRandom3{
     
   private:
     unsigned int Eseed;
-    vector<double> Evertix;
+    vector<double> Evertex;
     int Emult;
    
 

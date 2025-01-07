@@ -23,7 +23,6 @@ ClassImp (HitPoint)
   Ht(0)
   {
     SetDelta_and_T(ev, traj, Rcil);
-
   }
   
   HitPoint::HitPoint (const HitPoint &source):
@@ -43,8 +42,8 @@ ClassImp (HitPoint)
 void HitPoint::SetDelta_and_T(const Event &ev, const Trajectory &traj, const double Rcil) {
     const double pc0 = traj.GetParC(0);
     const double pc1 = traj.GetParC(1);
-    const double v0 = ev.GetVertix(0);
-    const double v1 = ev.GetVertix(1);
+    const double v0 = ev.GetVertex(0);
+    const double v1 = ev.GetVertex(1);
     
     const double sum_sq = pc0*pc0 + pc1*pc1;
     const double prod = v0*pc0 + v1*pc1;
@@ -66,9 +65,9 @@ void HitPoint::SetDelta_and_T(const Event &ev, const Trajectory &traj, const dou
  }
  
  void HitPoint::SetPoint(const Event &ev,const Trajectory &traj){
-    Hx=ev.GetVertix(0)+traj.GetParC(0)*Ht;
-    Hy=ev.GetVertix(1)+traj.GetParC(1)*Ht;
-    Hz=ev.GetVertix(2)+traj.GetParC(2)*Ht;
+    Hx=ev.GetVertex(0)+traj.GetParC(0)*Ht;
+    Hy=ev.GetVertex(1)+traj.GetParC(1)*Ht;
+    Hz=ev.GetVertex(2)+traj.GetParC(2)*Ht;
 
 
  }
