@@ -44,8 +44,8 @@ ClassImp (Trajectory)
     TparC[2]=(double)cos(Ttheta);
     //cout<<"c1= "<<TparC[0]<<" c2= "<<TparC[1]<<" c3= "<<TparC[2]<<endl;
   }
-*/
 
+*/
   double Trajectory::GetParC(unsigned const int i) const{
     if(i<TparC.size()){
       return TparC[i];
@@ -101,8 +101,8 @@ ClassImp (Trajectory)
       }
     }
   }  
-*/    
-
+    
+*/
 
 void Trajectory::SetThetaNPhi(TH1F* customHist) {
     double heta = RndmCustom(customHist);
@@ -112,15 +112,12 @@ void Trajectory::SetThetaNPhi(TH1F* customHist) {
 }
 
 void Trajectory::SetParC() {
-  
-  double  sinTheta = sin(Ttheta);
-  double  cosTheta = cos(Ttheta);
-  double  sinPhi = sin(Tphi);
-  double  cosPhi = cos(Tphi);
 
-  TparC[0] = sinTheta * cosPhi;
-  TparC[1] = sinTheta * sinPhi;
-  TparC[2] = cosTheta;
+  double  sinTheta = sin(Ttheta);
+
+  TparC[0] = sinTheta * cos(Tphi);
+  TparC[1] = sinTheta * sin(Tphi);
+  TparC[2] = cos(Ttheta);
 }
 
 void Trajectory::MSRotateParC(Trajectory &traj) {
@@ -157,8 +154,4 @@ void Trajectory::MSRotateParC(Trajectory &traj) {
     TparC[1] = m11 * newang1 + m12 * newang2 + m13 * newang3;
     TparC[2] = m23 * newang3;
 }
-
-  
-
-
 
