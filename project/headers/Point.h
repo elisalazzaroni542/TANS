@@ -10,6 +10,10 @@ public:
     Point(double X, double Y, double Z, unsigned int ID);  
     void Set(double X, double Y, double Z, unsigned int ID);
 
+//    Point(double X, double Y, double Z);  
+//    void Set(double X, double Y, double Z);
+
+
     double GetX() const { return x; }
     double GetY() const { return y; }
     double GetZ() const { return z; }

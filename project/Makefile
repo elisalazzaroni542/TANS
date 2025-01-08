@@ -7,18 +7,18 @@ MS = false
 
 clean:
 	@echo "Cleaning files..."
-	@find $(TARGET_DIR) -type f -name '*.o' -delete -print
-	@find $(TARGET_DIR) -type f -name '*.tmp' -delete -print
-	@find $(TARGET_DIR) -type f -name '*.d' -delete -print
-	@find $(TARGET_DIR) -type f -name '*.so' -delete -print
-	@find $(TARGET_DIR) -type f -name '*.pcm' -delete -print
-	@find $(TARGET_DIR) -type f -name '*_ACLiC_*' -delete -print
+	@find . -type f -name '*.o' -delete -print
+	@find . -type f -name '*.tmp' -delete -print
+	@find . -type f -name '*.d' -delete -print
+	@find . -type f -name '*.so' -delete -print
+	@find . -type f -name '*.pcm' -delete -print
+	@find . -type f -name '*_ACLiC_*' -delete -print
 	@echo "Done."
 
 
 list:
 	@echo "Available commands"
-	@grep -E '^[a-zA-Z_-]+:' Makefile | sed 's/:.*//' | sort
+	@grep -E '^[a-z]+:' Makefile | sed 's/:.*//' | sort
 
 
 compile:

@@ -7,7 +7,7 @@ ClassImp(Point)
 
     // Standard constructor
     Point::Point(double X, double Y, double Z, unsigned int ID) : x(X), y(Y), z(Z), id(ID) {}
-
+    //Point::Point(double X, double Y, double Z) : x(X), y(Y), z(Z) {}
     // Destructor
     Point::~Point() {}
 

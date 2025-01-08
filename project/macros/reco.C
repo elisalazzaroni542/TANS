@@ -60,6 +60,9 @@ void reco( string fInName = "sim1000000_noise.root", string fOutName = "sim10000
         return;
     }
 
+    TClonesArray* inHits = new TClonesArray("Point", 25000000);  // Initialize with class name
+    TClonesArray* outHits = new TClonesArray("Point", 25000000); // Initialize with class name
+
     inputTree->SetBranchAddress("inHits", &inHits);
     inputTree->SetBranchAddress("outHits", &outHits);
 
