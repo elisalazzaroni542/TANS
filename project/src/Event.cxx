@@ -44,17 +44,18 @@ ClassImp (Event)
 
 
   double Event::RndmGaus(double mean, double sigma){
-    double gausN=gRandom->Gaus(mean,sigma);
-    return gausN;
+//    double gausN=gRandom->Gaus(mean,sigma);
+    return Gaus(mean,sigma);
   }
 
   double Event::RndmUni(double min=1, double max=5){
-    double uniN=gRandom->Uniform(min,max);
-    return uniN;
+//   double uniN=gRandom->Uniform(min,max);
+   return Uniform(min,max);
+
   }
   
 double Event::RndmCustom(TH1F* customHist) {
-    return customHist->GetRandom();
+    return customHist->GetRandom(this);
 }
 
 
@@ -67,7 +68,7 @@ void Event::SetVertex() {
   void Event::SetMultiplicity(const string& distr){
     if(distr=="gaus"){
 
-     double mean,sigma;
+     double mean, sigma;
       do{
        Emult=(int)RndmGaus(mean=20,sigma=5);
         }

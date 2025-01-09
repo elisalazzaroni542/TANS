@@ -12,15 +12,41 @@
 //double wrap_phi(double phi){
 //
 //    //cout<<phi<<endl;
-//    //cout<<fmod(phi, 2*M_PI)<<endl;
+//    //cout<<fmod(phi, 2*M_PI)<<endl;    point1->GetY();    point1->GetY();    point1-->->->->->->->->->->->->->->->->>GetY();
 //
 //    return fmod(phi, 2*M_PI); // Returns the rest of the division
 //}
 
-point get_vertex(Point* pointIn, Point* PointOut){
 
-    unsigned int id = pointIn->GetId();
 
+void findAngle(double M1, double M2)
+{
+    // Store the tan value  of the angle
+    double angle = abs((M2 - M1)
+                       / (1 + M1 * M2));
+ 
+    // Calculate tan inverse of the angle
+    double ret = atan(angle);
+ 
+    // Convert the angle from
+    // radian to degree
+    double val = (ret * 180) / M_PI;
+ 
+    // Print the result
+    // cout << val;
+}
+
+
+
+
+point get_vertex(Point* point1, Point* point2){
+
+    unsigned int id = point2->GetId();
+    
+    double y1 point1->GetY();
+    double z1 point1->GetZ();
+    point1->GetY();
+    return z1 - y1/(point2->GetY() - y1) * (poin2.GetZ() - z1);
     
 
 
@@ -35,14 +61,14 @@ double phiDiff(double phi1, double phi2) {
 
 
 
-void reco( string fInName = "sim1000000_noise.root", string fOutName = "sim1000000_reco.root"){
+void reco(unsigned int events=1000000){
     TStopwatch stopwatch;
     stopwatch.Start();
 
-    string input = "../data/" + fInName;
+    string input = "../data/sim" +to_string(events)+ ".root";
     const char* inputFileName = input.c_str();
 
-    string output = "../data/" + fOutName;
+    string output = "../data/reco" + to_string(events) + ".root";
     const char* outputFileName = output.c_str();
 
 
@@ -60,28 +86,50 @@ void reco( string fInName = "sim1000000_noise.root", string fOutName = "sim10000
         return;
     }
 
-    TClonesArray* inHits = new TClonesArray("Point", 25000000);  // Initialize with class name
-    TClonesArray* outHits = new TClonesArray("Point", 25000000); // Initialize with class name
+    TFile* outputFile = new TFile(outputFileName, "RECREATE");
+    if (!outputFile || outputFile->IsZombie()) {
+        printf("Error: Cannot create output file '%s'\n", outputFileName);
+        inputFile->Close();
+        delete inputFile;
+        return;
+    }
 
+
+    Point genVertex;
+    Point recoVertex;
+    TClonesArray inHits("Point", 80);  
+    TClonesArray outHits("Point", 80); 
+    unsigned int genMult;
+    inputTree->SetBranchAddress("vertex", &genVertex);
     inputTree->SetBranchAddress("inHits", &inHits);
     inputTree->SetBranchAddress("outHits", &outHits);
+    inputTree->SetBranchAddress("multiplicity", &genMult);
 
-
-
-    TClonesArray* genVertex = new TClonesArray("Point", 1000000);  // Initialize with class name
-    TClonesArray* recoVertex = new TClonesArray("Point", 1000000);  // Initialize with class name
+    TClonesArray* zReco = new TClonesArray("Point", 50);  // Around 25% of events lost due to eta, some more lost to smearing and noise
 
 
     TTree* outputTree = new TTree("Events", "Simulated and Reconstructed vertices");
+    outputTree->Branch("genVertex", &genVertex);
+    outputTree->Branch("recoVertex", &recoVertex);
+    outputTree->Branch("genMultiplicity", &genMult);
 
 
-
+    Point pIn, pOut, pVert
 
     unsigned int event_id = 0;
 
+    for(event_id, event_id<events, ++event_id){
 
+        inputTree->GetEntry();
+
+        
+
+    }
+    stopwatch.Stop();
+    stopwatch.Print();
 
 }
+
 
 
 

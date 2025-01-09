@@ -55,12 +55,11 @@ void apply_smearing(TRandom3& rnd, TClonesArray* hits, double sigmaPhi, double s
     }
 }
 
-void noise(unsigned int seed=123, const char* inputFileName = "../data/sim1000000.root", const char* outputFileName = "../data/sim1000000_smearing.root") {
+void noise(unsigned int seed=123, const char* inputFileName = "../data/sim1000000.root") {
     TStopwatch stopwatch;
     stopwatch.Start();
 
-//    const char* inputFileName = "../data/sim1000000.root";
-//    const char* outputFileName = "../data/sim1000000_smearing.root";
+    const char* outputFileName = "../data/reco1000000.root"
     const char* treeName = "Events";
 
     // Open input file and get tree

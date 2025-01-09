@@ -3,7 +3,7 @@
 SEED = 123
 EVENTS = 1000000
 MS = true
-SMEARING = true
+NOISE = true
 
 
 clean:
@@ -29,7 +29,7 @@ compile:
 
 sim:
 	@echo "Running simulation..."
-	@bash -c 'cd macros/ && root -b -l -q "sim.C+($(SEED), $(EVENTS), $(MS), $(SMEARING))"'
+	@bash -c 'cd macros/ && root -b -l -q "sim.C+($(SEED), $(EVENTS), $(MS), $(NOISE))"'
 	@echo 'Simulation done.'
 
 

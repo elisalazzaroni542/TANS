@@ -4,6 +4,7 @@
 #include <TTree.h>
 #include <TSystem.h>
 #include <TClonesArray.h>
+#include <TMath.h>
 #include "../headers/Event.h"         // TODO: remove relative paths
 #include "../headers/Trajectory.h"
 #include "../headers/HitPoint.h"
@@ -11,20 +12,62 @@
 
 
 
-void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bool smearing = true) {
+/*
+double findAngle(double M1, double M2)
+{
+    // Store the tan value  of the angle
+    double angle = abs((M2 - M1)
+                       / (1 + M1 * M2));
+ 
+    // Calculate tan inverse of the angle
+    double ret = atan(angle);
+ 
+    // Convert the angle from
+    // radian to degree
+    //double val = (ret * 180) / M_PI;
+ 
+    // Print the result
+    // cout << val;
+    return ret;
+}
+*/
+
+double findAngle(double x, double y) {
+    double dotProduct = x;
+    double magnitudeProduct = TMath::Sqrt(x*x + y*y);
+    
+    double cosTheta = dotProduct / magnitudeProduct;
+    cosTheta = TMath::Max(-1.0, TMath::Min(1.0, cosTheta));
+    
+    double theta = TMath::ACos(cosTheta);
+    if (y < 0) {
+        theta = 2 * M_PI - theta;
+    }
+    return theta;
+}
+
+
+
+void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bool noise = true) {
     TStopwatch stopwatch;
     stopwatch.Start();
 
     TRandom3 rnd(seed);
 
     unsigned int m;
-    std::vector<double> vertex(3);
+    vector<double> vertex(3);
+    //Point vertex;
     TClonesArray inHits("Point", 80);  
     TClonesArray outHits("Point", 80); 
 
     const int autoSaveSize = 100000;
+    string filename;
+    if (noise){
+        filename = "../data/sim" + to_string(events) + "_noise.root";
+    } else {
+        filename = "../data/sim" + to_string(events) + ".root";
+    }
 
-    string filename = "../data/sim" + to_string(events) + ".root";
     TFile* file = TFile::Open(filename.c_str(), "RECREATE");
 
     TTree* tree = new TTree("Events", "Simulated events");
@@ -55,7 +98,7 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
     const double noiseProb = 0.1; 
     const double maxNoisePoints = 3; // per layer 
 
-    if(!smearing){
+    if(!noise){
         const double sigmaZ = 0.00;
         const double sigmaPhi = 0.00;
     }
@@ -67,6 +110,8 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
         vertex[0] = e.GetVertex(0);
         vertex[1] = e.GetVertex(1);
         vertex[2] = e.GetVertex(2);
+
+        //vertex.Set(e.GetVertex(0),e.GetVertex(1), e.GetVertex(2), i);
 
         inHits.Clear();
         outHits.Clear();
@@ -123,13 +168,16 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
             zIn_sm = hIn.GetZ() + rnd.Gaus(0, sigmaZ);
             zOut_sm = hOut.GetZ() + rnd.Gaus(0, sigmaZ);
             
+            
             if (abs(zIn_sm) < 13.5) {
-                phiIn = asin(hIn.GetY()/4) + rnd.Gaus(0, sigmaPhi);
+                phiIn = findAngle(hIn.GetY(), hIn.GetX()) + rnd.Gaus(0, sigmaPhi);
+                //phiIn = atan2(hIn.GetY(), hIn.GetX()) + rnd.Gaus(0, sigmaPhi);
                 new (inHits[inCounter]) Point(4*cos(phiIn), 4*sin(phiIn), zIn_sm, i);
                 ++inCounter;
                 
                 if (abs(zOut_sm) < 13.5) {
-                    phiOut = asin(hOut.GetY()/7) + rnd.Gaus(0, sigmaPhi);
+                    phiOut = findAngle(hOut.GetY(), hOut.GetX()) + rnd.Gaus(0, sigmaPhi);
+                    //phiOut = atan2(hOut.GetY(), hOut.GetX()) + rnd.Gaus(0, sigmaPhi);
                     new (outHits[outCounter]) Point(7*cos(phiOut), 7*sin(phiOut), zOut_sm, i);
                     ++outCounter;
                 }
@@ -148,3 +196,4 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
     stopwatch.Stop();
     stopwatch.Print();
 }
+
