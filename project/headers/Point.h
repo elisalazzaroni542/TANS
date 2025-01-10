@@ -7,8 +7,8 @@
 class Point : public TObject {
 public:
     Point();
-    Point(double X, double Y, double Z, unsigned int ID);  
-    void Set(double X, double Y, double Z, unsigned int ID);
+    Point(double X, double Y, double Z, int ID);  
+    void Set(double X, double Y, double Z, int ID);
 
 //    Point(double X, double Y, double Z);  
 //    void Set(double X, double Y, double Z);
@@ -29,7 +29,7 @@ private:
     double x;  
     double y;  
     double z; 
-    unsigned int id; 
+    int id; 
 };
 
 #endif 

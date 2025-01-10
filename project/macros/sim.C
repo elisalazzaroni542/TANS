@@ -55,12 +55,12 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
     TRandom3 rnd(seed);
 
     unsigned int m;
-    vector<double> vertex(3);
-    //Point vertex;
+    //vector<double> vertex(3);
+    Point vertex;
     TClonesArray inHits("Point", 80);  
     TClonesArray outHits("Point", 80); 
 
-    const int autoSaveSize = 100000;
+//    const int autoSaveSize = 100000;
     string filename;
     if (noise){
         filename = "../data/sim" + to_string(events) + "_noise.root";
@@ -71,7 +71,7 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
     TFile* file = TFile::Open(filename.c_str(), "RECREATE");
 
     TTree* tree = new TTree("Events", "Simulated events");
-    tree->SetAutoSave(autoSaveSize);
+    tree->SetAutoSave(0);
 
     tree->Branch("vertex", &vertex);
     tree->Branch("inHits", &inHits);
@@ -102,16 +102,19 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
         const double sigmaZ = 0.00;
         const double sigmaPhi = 0.00;
     }
-
+    int processedEvents = 0;
+    int eventsWithHits = 0;
+    bool hasHits = false;
     for (unsigned int i = 0; i < events; ++i) {
+        processedEvents++;
         e.SetVertex();
         e.SetMultiplicity("custom");
         m = e.GetMultiplicity();
-        vertex[0] = e.GetVertex(0);
-        vertex[1] = e.GetVertex(1);
-        vertex[2] = e.GetVertex(2);
+        //vertex[0] = e.GetVertex(0);
+        //vertex[1] = e.GetVertex(1);
+        //vertex[2] = e.GetVertex(2);
 
-        //vertex.Set(e.GetVertex(0),e.GetVertex(1), e.GetVertex(2), i);
+        vertex.Set(e.GetVertex(0),e.GetVertex(1), e.GetVertex(2), i);
 
         inHits.Clear();
         outHits.Clear();
@@ -170,6 +173,7 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
             
             
             if (abs(zIn_sm) < 13.5) {
+                hasHits=true;
                 phiIn = findAngle(hIn.GetY(), hIn.GetX()) + rnd.Gaus(0, sigmaPhi);
                 //phiIn = atan2(hIn.GetY(), hIn.GetX()) + rnd.Gaus(0, sigmaPhi);
                 new (inHits[inCounter]) Point(4*cos(phiIn), 4*sin(phiIn), zIn_sm, i);
@@ -183,7 +187,10 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
                 }
             }
         }
-
+        if(hasHits){
+            ++eventsWithHits;
+            hasHits = false;
+        }
 
 
         tree->Fill();
@@ -192,6 +199,9 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
     file->Write();
     file->Close();
     delete file;
+
+    cout << "Total events: " << processedEvents << endl;
+    cout << "Total events with hits: " << eventsWithHits << endl;
 
     stopwatch.Stop();
     stopwatch.Print();
