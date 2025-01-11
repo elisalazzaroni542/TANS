@@ -80,15 +80,18 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
 
     Event e(seed);
     Trajectory t(seed);
-    HitPoint hIn, hOut;
-    HitPoint hB; // used only for MS
+    HitPoint hIn(noise), hOut(noise);
+    HitPoint hB(noise); // used only for MS
 
     TH1F* thetaHist = t.LoadDistribution("heta2");
     
     unsigned int inCounter = 0;
     unsigned int outCounter = 0;
 
-    // Variables for smearing
+    // Variables for for later
+    const double rCilIn = 4.1;
+    const double rCilOut = 7.1;
+    const double rB = 3.1;
     double phiIn = 0.0;
     double phiOut = 0.0;    
     double zIn_sm = 0.0;
@@ -98,10 +101,6 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
     const double noiseProb = 0.1; 
     const double maxNoisePoints = 3; // per layer 
 
-    if(!noise){
-        const double sigmaZ = 0.00;
-        const double sigmaPhi = 0.00;
-    }
     int processedEvents = 0;
     int eventsWithHits = 0;
     bool hasHits = false;
@@ -148,41 +147,41 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
             t.SetParC();
 
             if (MS) {
-                // Multiple scattering path
-                hB.SetDelta_and_T(e, t, 3.1);
+
+                hB.SetDelta_and_T(e, t, rB);
                 hB.SetPoint(e, t);
                 t.MSRotateParC(t);
                 
-                hIn.MSSetDelta_and_T(hB, t, 4.1);
-                hIn.MSSetPoint(hB, t);
+                hIn.SetDelta_and_T(hB, t, rCilIn);
+                hIn.SetPoint(hB, t, rCilIn);
                 t.MSRotateParC(t);
 
-                hOut.MSSetDelta_and_T(hIn, t, 7.1);
-                hOut.MSSetPoint(hIn, t);
+                hOut.SetDelta_and_T(hIn, t, rCilOut);
+                hOut.SetPoint(hIn, t, rCilOut);
             } else {
-                // Direct path
-                hIn.SetDelta_and_T(e, t, 4.1);
-                hOut.SetDelta_and_T(e, t, 7.1);
-                hIn.SetPoint(e, t);
-                hOut.SetPoint(e, t);
+
+                hIn.SetDelta_and_T(e, t, rCilIn);
+                hOut.SetDelta_and_T(e, t, rCilOut);
+                hIn.SetPoint(e, t, rCilIn);
+                hOut.SetPoint(e, t, rCilOut);
             }
 
             // Common hit recording logic
-            zIn_sm = hIn.GetZ() + rnd.Gaus(0, sigmaZ);
-            zOut_sm = hOut.GetZ() + rnd.Gaus(0, sigmaZ);
+            //zIn_sm = hIn.GetZ() + rnd.Gaus(0, sigmaZ);
+            //zOut_sm = hOut.GetZ() + rnd.Gaus(0, sigmaZ);
             
             
-            if (abs(zIn_sm) < 13.5) {
+            if (abs(hIn.GetZ()) < 13.5) {
                 hasHits=true;
-                phiIn = findAngle(hIn.GetY(), hIn.GetX()) + rnd.Gaus(0, sigmaPhi);
+                //phiIn = findAngle(hIn.GetY(), hIn.GetX()) + rnd.Gaus(0, sigmaPhi);
                 //phiIn = atan2(hIn.GetY(), hIn.GetX()) + rnd.Gaus(0, sigmaPhi);
-                new (inHits[inCounter]) Point(4*cos(phiIn), 4*sin(phiIn), zIn_sm, i);
+                new (inHits[inCounter]) Point(hIn.GetX(), hIn.GetY(), hIn.GetZ(), hIn.GetPhi(), i);
                 ++inCounter;
                 
-                if (abs(zOut_sm) < 13.5) {
-                    phiOut = findAngle(hOut.GetY(), hOut.GetX()) + rnd.Gaus(0, sigmaPhi);
+                if (abs(hOut.GetZ()) < 13.5) {
+                    //phiOut = findAngle(hOut.GetY(), hOut.GetX()) + rnd.Gaus(0, sigmaPhi);
                     //phiOut = atan2(hOut.GetY(), hOut.GetX()) + rnd.Gaus(0, sigmaPhi);
-                    new (outHits[outCounter]) Point(7*cos(phiOut), 7*sin(phiOut), zOut_sm, i);
+                    new (outHits[outCounter]) Point(hOut.GetX(), hOut.GetY(), hOut.GetZ(), hOut.GetPhi(), i);
                     ++outCounter;
                 }
             }

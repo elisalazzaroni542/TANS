@@ -12,8 +12,8 @@ class Trajectory : public Event{
     virtual ~Trajectory();
      
     void SetThetaNPhi(TH1F* customHist);
-    float GetTheta(){return Ttheta;};
-    float GetPhi(){return Tphi;};
+    float GetTheta() const {return Ttheta;};
+    float GetPhi() const {return Tphi;};
     void SetParC();
     double GetParC(const unsigned int i) const;
     void PrintTrajectory() const;
