@@ -31,6 +31,8 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
     TStopwatch stopwatch;
     stopwatch.Start();
 
+    cout<<"Done, running simulation..."<<endl;
+
     TRandom3 rnd(seed);
 
     unsigned int m;
@@ -165,6 +167,7 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
 
     cout << "Total events: " << processedEvents << endl;
     cout << "Total events with hits: " << eventsWithHits << endl;
+    cout << "Done."<< endl;
 
     stopwatch.Stop();
     stopwatch.Print();

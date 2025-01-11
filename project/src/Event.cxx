@@ -90,7 +90,6 @@ void Event::SetVertex() {
                                            // But it's limited to it's scope, so it needs to be initialized outside of the if condition  
       if (!customHist) {  
         customHist = LoadDistribution("hm"); 
-        cout<<"customHistDefined"<<endl; 
       }
       do{
        Emult=(int)RndmCustom(customHist); // Typecast since RndCustom returns a double

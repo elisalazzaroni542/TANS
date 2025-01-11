@@ -9,6 +9,7 @@
         "testnoise.C": "cpp",
         "noice.C": "cpp",
         "detector_noise.C": "cpp",
-        "test.C": "cpp"
+        "test.C": "cpp",
+        "analysis.C": "cpp"
     }
 }

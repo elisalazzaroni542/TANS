@@ -1,6 +1,3 @@
-
-
-
 #include <TFile.h>
 #include <TStopwatch.h>
 #include <TTree.h>
@@ -65,6 +62,8 @@ double phiDiff(double phi1, double phi2) {
 void reco(unsigned int events=1000000, double phiCut=0.01, double windowSize=0.2){
     TStopwatch stopwatch;
     stopwatch.Start();
+    cout<<""<<endl;
+    cout<<"Done, running reconstruction..."<<endl;
 
     string input = "../data/sim" +to_string(events)+ "_noise.root";
     const char* inputFileName = input.c_str();
@@ -114,10 +113,10 @@ void reco(unsigned int events=1000000, double phiCut=0.01, double windowSize=0.2
 
 
     Point *pIn, *pOut;
-    int maxHits = 0;
+    unsigned int maxHits = 0;
     vector<double> zCollection;
     zCollection.reserve(80);
-    
+
     for(int i=0; i < inputTree->GetEntriesFast(); ++i){
         inputTree->GetEntry(i);
         zCollection.clear();
@@ -155,6 +154,7 @@ void reco(unsigned int events=1000000, double phiCut=0.01, double windowSize=0.2
     delete inHits;
     delete outHits;
     cout<<"Max reco vertices: "<<maxHits<<endl;
+    cout<<"Done."<<endl;
     stopwatch.Stop();
     stopwatch.Print();
 }
