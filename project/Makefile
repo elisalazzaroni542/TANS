@@ -1,4 +1,4 @@
-.PHONY: list clean compile sim noise reco
+.PHONY: list clean compile sim noise reco analysis
 
 SEED = 123
 EVENTS = 1000000
@@ -45,6 +45,11 @@ reco:
 	@bash -c 'cd macros/ && root -b -l -q reco.C+'
 	@echo 'Reconstruction done.'
 
+
+analysis:
+	@echo "Creating plots..."
+	@bash -c 'cd macros/ && root -b -l -q "analysis.C+($(EVENTS))"'
+	@echo 'Plots done.'
 
 
 #Explanation of Each Part:
