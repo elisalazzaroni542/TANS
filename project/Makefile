@@ -1,10 +1,11 @@
-.PHONY: list clean compile sim noise reco analysis
+.PHONY: list clean compile sim reco analysis
 
 SEED = 123
 EVENTS = 1000000
 MS = true
 NOISE = true
-
+PHICUT = 0.01
+WSIZE = 0.5
 
 clean:
 	@echo "Cleaning files..."
@@ -18,31 +19,23 @@ clean:
 
 
 list:
-	@echo "Available commands"
+	@echo "Available commands:"
 	@grep -E '^[a-z]+:' Makefile | sed 's/:.*//' | sort
 
 
 compile:
 	@echo "Compiling simulation files..."
-	-@bash ./bash/compile.sh 
+	@bash ./bash/compile.sh 
 	@echo 'Done.'
 
 sim:
-	@echo "Running simulation..."
 	@bash -c 'cd macros/ && root -b -l -q "sim.C+($(SEED), $(EVENTS), $(MS), $(NOISE))"'
 	@echo 'Simulation done.'
 
 
-noise:
-	@echo "Applying detector noise..."
-	@bash -c 'cd macros/ && root -b -l -q noise.C+'
-	@echo 'Reconstruction done.'
-
-
 
 reco:
-	@echo "Running reconstruction..."
-	@bash -c 'cd macros/ && root -b -l -q reco.C+'
+	@bash -c 'cd macros/ && root -b -l -q "reco.C+($(EVENTS), $(PHICUT), $(WSIZE))"'
 	@echo 'Reconstruction done.'
 
 

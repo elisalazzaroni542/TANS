@@ -13,62 +13,43 @@
 #include "../headers/Point.h"
 
 
-double runningWindow(const vector<double>& zCollection, double window_size = 0.7) {
+double runningWindow(const vector<double>& zCollection, double window_size = 0.5) {
     
     double z_min = -13.5;
     double z_max = 13.5;
     
-    size_t maxCount = 0;
+    unsigned maxCount = 0;
     double bestZ = 0.0;
     
-    // Slide window through the range with step size = window_size
     for (double windowStart = z_min; windowStart <= z_max - window_size; windowStart += window_size) {
         double windowEnd = windowStart + window_size;
         
-        // Count points in current window
-        size_t count = 0;
+        unsigned int count = 0;
         for (double z : zCollection) {
             if (z >= windowStart && z < windowEnd) {
                 count++;
             }
         }
-        
-        // Update if this window has more points
+
         if (count > maxCount) {
             maxCount = count;
-            bestZ = windowStart + window_size/2; // Center of the window
+            bestZ = windowStart + window_size/2;
         }
     }
     
     return bestZ;
 }
-double findAngle(double x, double y) {
-    double dotProduct = x;
-    double magnitudeProduct = TMath::Sqrt(x*x + y*y);
-    
-    double cosTheta = dotProduct / magnitudeProduct;
-    cosTheta = TMath::Max(-1.0, TMath::Min(1.0, cosTheta));
-    
-    double theta = TMath::ACos(cosTheta);
-    if (y < 0) {
-        theta = 2 * M_PI - theta;
-    }
-    return theta;
-}
 
 
 
 
 
-double recoZ(Point* point1, Point* point2){
+double recoZ(Point* point1, Point* point2){   
 
-    
     double y1 = point1->GetY();
     double z1 = point1->GetZ();
     point1->GetY();
     return z1 - y1/(point2->GetY() - y1) * (point2->GetZ() - z1);
-    
-
 
 }
 
@@ -115,7 +96,7 @@ void reco(unsigned int events=1000000, double phiCut=0.01, double windowSize=0.2
     }
 
     Point* genVertex = new Point();
-    Point* recoVertex = new Point(0., 0., 0., 0); // Initialize with zeros
+    Point* recoVertex = new Point();
     TClonesArray* inHits = new TClonesArray("Point", 80);
     TClonesArray* outHits = new TClonesArray("Point", 80);
     unsigned int genMult;
@@ -133,14 +114,14 @@ void reco(unsigned int events=1000000, double phiCut=0.01, double windowSize=0.2
 
 
     Point *pIn, *pOut;
+    int maxHits = 0;
     vector<double> zCollection;
-    zCollection.reserve(50);
-
+    zCollection.reserve(80);
+    
     for(int i=0; i < inputTree->GetEntriesFast(); ++i){
         inputTree->GetEntry(i);
         zCollection.clear();
 
-        // Collect z positions from matching hits
         for(int j=0; j < outHits->GetEntriesFast(); ++j){
             pOut = (Point*)outHits->At(j);
             double angleOut = pOut->GetPhi();            
@@ -153,12 +134,12 @@ void reco(unsigned int events=1000000, double phiCut=0.01, double windowSize=0.2
             }
         }
 
-        // Find vertex using running window
         if (!zCollection.empty()) {
+            maxHits = zCollection.size() > maxHits ? zCollection.size() : maxHits;
             double vertexZ = runningWindow(zCollection, windowSize);
             recoVertex->Set(0., 0., vertexZ, i);
         } else {
-            recoVertex->Set(0., 0., -20, -1); // No vertex found
+            recoVertex->Set(0., 0., -20, -1); // No vertex reconstructed
         }
         outputTree->Fill();
 
@@ -173,7 +154,7 @@ void reco(unsigned int events=1000000, double phiCut=0.01, double windowSize=0.2
     delete recoVertex;
     delete inHits;
     delete outHits;
-    
+    cout<<"Max reco vertices: "<<maxHits<<endl;
     stopwatch.Stop();
     stopwatch.Print();
 }

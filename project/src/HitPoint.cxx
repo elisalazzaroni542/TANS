@@ -78,17 +78,11 @@ void HitPoint::SetDelta_and_T(const Event &ev, const Trajectory &traj, const dou
 
  void HitPoint::PrintHit()const {
   
-    cout<<"Discriminante dell'equazione Delta: "<<Hdelta<<endl;
-    cout<<"Parametro t: "<<Ht<<endl;
-    cout<<"Coordinate punto di impatto: "<<Hx<<", "<<Hy<<", "<<Hz<<endl;
+    cout<<"Delta: "<<Hdelta<<endl;
+    cout<<"t: "<<Ht<<endl;
+    cout<<"Hit point coordinates: "<<Hx<<", "<<Hy<<", "<<Hz<<endl;
  }
  
-// void HitPoint::SetPoint(const Event &ev,const Trajectory &traj){
-//    Hx=ev.GetVertex(0)+traj.GetParC(0)*Ht;
-//    Hy=ev.GetVertex(1)+traj.GetParC(1)*Ht;
-//    Hz=ev.GetVertex(2)+traj.GetParC(2)*Ht;
-//
-// }
 
 void HitPoint::SetPoint(const Event &ev, const Trajectory &traj, double rCil) {
     
@@ -104,7 +98,7 @@ void HitPoint::SetPoint(const Event &ev, const Trajectory &traj, double rCil) {
 
 
 
-void HitPoint::SetPoint(const Event &ev, const Trajectory &traj) { // Mainly for the beam pipe hit
+void HitPoint::SetPoint(const Event &ev, const Trajectory &traj) { // Used for the beam pipe hit
 
     Hx = ev.GetVertex(0) + traj.GetParC(0) * Ht;
     Hy = ev.GetVertex(1) + traj.GetParC(1) * Ht;

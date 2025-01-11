@@ -32,8 +32,7 @@ class Event : public TRandom3{
     double PickNCheckVertRndm (unsigned int numcoord); 
     void SetVertex ();
     double GetVertex(unsigned int i) const;
-    double GetMultiplicity() const{return Emult;}
-    void CheckMultiplicity (); 
+    unsigned int GetMultiplicity() const{return Emult;} 
     void PrintEvent () const; 
     void SetMultiplicity (const string& distr);
 

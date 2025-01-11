@@ -12,9 +12,6 @@ public:
     void Set(double X, double Y, double Z, double Phi, int ID);
     void Set(double X, double Y, double Z, int ID);
 
-//    Point(double X, double Y, double Z);  
-//    void Set(double X, double Y, double Z);
-
 
     double GetX() const { return x; }
     double GetY() const { return y; }

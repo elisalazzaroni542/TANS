@@ -27,7 +27,6 @@ class HitPoint : public Trajectory{
 
     //------------------------------MS-------------------------------------------------------------------------------------
 
-//    void SetPoint(const HitPoint &h,const Trajectory &traj); 
     void SetPoint(const HitPoint &h,const Trajectory &traj, double rCil);
 
     void SetDelta_and_T(const HitPoint &h, const Trajectory &traj, const double rCil);

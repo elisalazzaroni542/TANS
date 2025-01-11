@@ -18,6 +18,7 @@ class Trajectory : public Event{
     double GetParC(const unsigned int i) const;
     void PrintTrajectory() const;
      
+    //For mutiple scattering use only
     void MSRotateParC(Trajectory &traj);
    
    private:

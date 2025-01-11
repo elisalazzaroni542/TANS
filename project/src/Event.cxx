@@ -36,7 +36,7 @@ ClassImp (Event)
       TH1F* h = (TH1F*)f.Get(histName);
       if (h) {
           h = (TH1F*)h->Clone("hCustomDist");
-          h->SetDirectory(0); // R
+          h->SetDirectory(0); // Detach h from the file object
       }
       f.Close();
       return h;
@@ -44,18 +44,17 @@ ClassImp (Event)
 
 
   double Event::RndmGaus(double mean, double sigma){
-//    double gausN=gRandom->Gaus(mean,sigma);
     return Gaus(mean,sigma);
   }
 
   double Event::RndmUni(double min=1, double max=5){
-//   double uniN=gRandom->Uniform(min,max);
    return Uniform(min,max);
 
   }
   
 double Event::RndmCustom(TH1F* customHist) {
-    return customHist->GetRandom(this);
+    static TRandom3 rnd(Eseed);
+    return customHist->GetRandom(&rnd);
 }
 
 
@@ -72,18 +71,17 @@ void Event::SetVertex() {
       do{
        Emult=(int)RndmGaus(mean=20,sigma=5);
         }
-      while(Emult<0);
+      while(Emult<1);
     }
 
 
     else if(distr=="uni"){
      double min=1;
-     double max=5;
+     double max=20;
 
-      do{
-       Emult=(int)RndmUni(min,max);
-        }
-      while(Emult<0);
+      
+      Emult=(int)RndmUni(min,max);
+       
     }
 
 
@@ -111,7 +109,7 @@ void Event::SetVertex() {
   }
 
   void Event::PrintEvent()const{
-    cout<<"Coordinate del vertice generato: (x,y,z)= "<<endl;
+    cout<<"Generated vertex coordinates (x,y,z): "<<endl;
     if (Evertex.size()>0){
       for(unsigned int i=0;i<Evertex.size();++i){
         cout<<Evertex[i]<<" ,";
@@ -119,9 +117,9 @@ void Event::SetVertex() {
       cout<<endl;
     }
     else{
-      cout<<"Nessun vertice trovato"<<endl;
+      cout<<"No vertex found"<<endl;
     }
-    if (Emult>=0) cout<<"Molteplicità: "<<Emult<<endl;
+    if (Emult>=0) cout<<"Multiplicity: "<<Emult<<endl;
   }
 
     

@@ -5,32 +5,11 @@
 #include <TSystem.h>
 #include <TClonesArray.h>
 #include <TMath.h>
-#include "../headers/Event.h"         // TODO: remove relative paths
+#include "../headers/Event.h"
 #include "../headers/Trajectory.h"
 #include "../headers/HitPoint.h"
 #include "../headers/Point.h"
 
-
-
-/*
-double findAngle(double M1, double M2)
-{
-    // Store the tan value  of the angle
-    double angle = abs((M2 - M1)
-                       / (1 + M1 * M2));
- 
-    // Calculate tan inverse of the angle
-    double ret = atan(angle);
- 
-    // Convert the angle from
-    // radian to degree
-    //double val = (ret * 180) / M_PI;
- 
-    // Print the result
-    // cout << val;
-    return ret;
-}
-*/
 
 double findAngle(double x, double y) {
     double dotProduct = x;
@@ -55,12 +34,10 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
     TRandom3 rnd(seed);
 
     unsigned int m;
-    //vector<double> vertex(3);
     Point vertex;
     TClonesArray inHits("Point", 80);  
     TClonesArray outHits("Point", 80); 
 
-//    const int autoSaveSize = 100000;
     string filename;
     if (noise){
         filename = "../data/sim" + to_string(events) + "_noise.root";
@@ -109,9 +86,6 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
         e.SetVertex();
         e.SetMultiplicity("custom");
         m = e.GetMultiplicity();
-        //vertex[0] = e.GetVertex(0);
-        //vertex[1] = e.GetVertex(1);
-        //vertex[2] = e.GetVertex(2);
 
         vertex.Set(e.GetVertex(0),e.GetVertex(1), e.GetVertex(2), i);
 
@@ -121,21 +95,20 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
         outCounter = 0;
 
 
-        while (rnd.Uniform() < noiseProb && inCounter < maxNoisePoints) {
+        while (rnd.Uniform() < noiseProb && inCounter < maxNoisePoints && noise) {
             double z = rnd.Uniform(-13.5, 13.5);
             double phi = rnd.Uniform(0, 2 * M_PI);
-            double x = 4 * cos(phi);  // radius = 4 for inner layer
-            double y = 4 * sin(phi);
+            double x = rCilIn * cos(phi);
+            double y = rCilIn * sin(phi);
             new (inHits[inCounter]) Point(x, y, z, i);
             ++inCounter;
         }
 
-        // Outer layer noise
-        while (rnd.Uniform() < noiseProb && outCounter < maxNoisePoints) {
+        while (rnd.Uniform() < noiseProb && outCounter < maxNoisePoints && noise) {
             double z = rnd.Uniform(-13.5, 13.5);
             double phi = rnd.Uniform(0, 2 * M_PI);
-            double x = 7 * cos(phi);  // radius = 7 for outer layer
-            double y = 7 * sin(phi);
+            double x = rCilOut * cos(phi); 
+            double y = rCilOut * sin(phi);
             new (outHits[outCounter]) Point(x, y, z, i);
             ++outCounter;
         }
@@ -164,23 +137,14 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
                 hOut.SetDelta_and_T(e, t, rCilOut);
                 hIn.SetPoint(e, t, rCilIn);
                 hOut.SetPoint(e, t, rCilOut);
-            }
-
-            // Common hit recording logic
-            //zIn_sm = hIn.GetZ() + rnd.Gaus(0, sigmaZ);
-            //zOut_sm = hOut.GetZ() + rnd.Gaus(0, sigmaZ);
-            
+            }            
             
             if (abs(hIn.GetZ()) < 13.5) {
                 hasHits=true;
-                //phiIn = findAngle(hIn.GetY(), hIn.GetX()) + rnd.Gaus(0, sigmaPhi);
-                //phiIn = atan2(hIn.GetY(), hIn.GetX()) + rnd.Gaus(0, sigmaPhi);
                 new (inHits[inCounter]) Point(hIn.GetX(), hIn.GetY(), hIn.GetZ(), hIn.GetPhi(), i);
                 ++inCounter;
                 
                 if (abs(hOut.GetZ()) < 13.5) {
-                    //phiOut = findAngle(hOut.GetY(), hOut.GetX()) + rnd.Gaus(0, sigmaPhi);
-                    //phiOut = atan2(hOut.GetY(), hOut.GetX()) + rnd.Gaus(0, sigmaPhi);
                     new (outHits[outCounter]) Point(hOut.GetX(), hOut.GetY(), hOut.GetZ(), hOut.GetPhi(), i);
                     ++outCounter;
                 }
