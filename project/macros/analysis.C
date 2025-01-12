@@ -1,4 +1,5 @@
 #include <TGraph.h>
+#include <TGraphErrors.h>
 #include <TFile.h>
 #include <TStopwatch.h>
 #include <TTree.h>
@@ -70,9 +71,21 @@ void analysis(unsigned int events = 1000000) {
     inputTree->SetBranchAddress("genMultiplicity", &genMult);
 
     // Create histograms for residuals and multiplicities
-    TH1D* histRes = new TH1D("Residuals", "Z Residuals;Z Difference (reco - gen) [mm];Entries", 100, -0.5, 0.5);
+    TH1D* histRes = new TH1D("Residuals", "Z Residuals;|Z Difference (reco - gen)| [mm];Entries", 100, 0, 0.5);
     TH1D* histMultTotal = new TH1D("MultTotal", "Multiplicity Distribution;Multiplicity;Entries", 75, 0, 75);
     TH1D* histMultValid = new TH1D("MultValid", "Valid Events Multiplicity;Multiplicity;Entries", 75, 0, 75);
+    
+    // Create vectors for multiplicity vs z-difference
+    vector<double> mult_bins(75);
+    vector<double> zDiff_means(75, 0.0);
+    vector<double> zDiff_errors(75, 0.0);
+    vector<double> mult_counts(75, 0.0);
+    vector<double> mult_errors(75);
+    
+    // Initialize multiplicity bins
+    for(int i = 0; i < 75; ++i) {
+        mult_bins[i] = i + 0.5;  // Center of each bin
+    }
     
     histRes->Sumw2();
     histMultTotal->Sumw2();
@@ -94,19 +107,53 @@ void analysis(unsigned int events = 1000000) {
         if (recoVertex->GetId() != -1) {
             double zGen = genVertex->GetZ();
             double zReco = recoVertex->GetZ();
-            double zDiff = zReco - zGen;
+            double zDiff = fabs(zReco - zGen);
 
             histRes->Fill(zDiff);
             
+            // Accumulate absolute z-differences for each multiplicity bin
+            if(genMult < 75) {
+                zDiff_means[genMult] += zDiff;
+                mult_counts[genMult] += 1;
+            }
+            
             // Fill valid multiplicity histogram if within resolution
-            if (fabs(zDiff) < 3 * (histRes->GetStdDev())) {
+            if (zDiff < 3 * (histRes->GetStdDev())) {
                 histMultValid->Fill(genMult);
             }
         }
     }
 
-    // Calculate standard deviation of total multiplicity
+    // Calculate means and errors for z-differences
+    vector<double> valid_mult;
+    vector<double> valid_zdiff;
+    vector<double> valid_zdiff_errors;
+    vector<double> valid_mult_errors;
+
+    for(int i = 0; i < 75; ++i) {
+        if(mult_counts[i] > 0) {
+            valid_mult.push_back(mult_bins[i]);
+            valid_zdiff.push_back(zDiff_means[i] / mult_counts[i]);
+            valid_zdiff_errors.push_back(histRes->GetRMS() / sqrt(mult_counts[i]));
+            // Calculate multiplicity error as sqrt(N)
+            valid_mult_errors.push_back(sqrt(mult_bins[i]));
+        }
+    }
+
+    // Create TGraphErrors for multiplicity vs z-difference
+    TGraphErrors* graphZDiff = new TGraphErrors(
+        valid_mult.size(),
+        valid_mult.data(),
+        valid_zdiff.data(),
+        valid_mult_errors.data(),
+        valid_zdiff_errors.data()
+    );
     
+    graphZDiff->SetTitle("Absolute Z Difference vs. Multiplicity;Multiplicity;Mean |Z Difference| [mm]");
+    graphZDiff->SetMarkerStyle(20);
+    graphZDiff->SetMarkerSize(0.8);
+    graphZDiff->SetMarkerColor(kBlue);
+    graphZDiff->SetLineColor(kBlue);
 
     // Create vectors for efficiency graph
     vector<double> multiplicities;
@@ -122,7 +169,7 @@ void analysis(unsigned int events = 1000000) {
         if (totalEvents > 0) {  // Only process bins with entries
             int validEvents = histMultValid->GetBinContent(bin);
             double mult = histMultTotal->GetBinCenter(bin);
-            double errmult= sqrt(mult);
+            double errmult = sqrt(mult);
             double efficiency, errorLow, errorHigh;
             calculateErrors(validEvents, totalEvents, efficiency, errorLow, errorHigh);
 
@@ -139,8 +186,8 @@ void analysis(unsigned int events = 1000000) {
         multiplicities.size(),
         multiplicities.data(),
         efficiencies.data(),
-        errorLowsX.data(),   // X low errors
-        errorHighsX.data(),   // X high errors
+        errorLowsX.data(),
+        errorHighsX.data(),
         errorLows.data(),
         errorHighs.data()
     );
@@ -168,7 +215,7 @@ void analysis(unsigned int events = 1000000) {
     // Draw efficiency plot
     TCanvas* canvasGraph = new TCanvas("canvasGraph", "Efficiency vs. Multiplicity", 800, 600);
     graphEff->Draw("AP");
-    graphEff->GetYaxis()->SetRangeUser(0.7, 1.5);
+    graphEff->GetYaxis()->SetRangeUser(0.7, 1.1);
     canvasGraph->SaveAs("../plots/Efficiency_vs_Multiplicity.png");
 
     // Draw residuals
@@ -176,12 +223,18 @@ void analysis(unsigned int events = 1000000) {
     histRes->Draw("E1 P");
     canvasHist->SaveAs("../plots/ZResiduals.png");
 
+    // Draw multiplicity vs z-difference plot
+    TCanvas* canvasMultZDiff = new TCanvas("canvasMultZDiff", "Absolute Z Difference vs Multiplicity", 800, 600);
+    graphZDiff->Draw("AP");
+    canvasMultZDiff->SaveAs("../plots/ZDiff_vs_Multiplicity.png");
+
     // Save everything to output file
     outputFile->cd();
     histRes->Write();
     histMultTotal->Write();
     histMultValid->Write();
     graphEff->Write();
+    graphZDiff->Write();
     
     outputFile->Close();
     inputFile->Close();
