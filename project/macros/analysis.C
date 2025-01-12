@@ -1,3 +1,4 @@
+#include <TGraph.h>
 #include <TFile.h>
 #include <TStopwatch.h>
 #include <TTree.h>
@@ -9,12 +10,25 @@
 #include <Riostream.h>
 #include <TH1D.h>
 #include <TCanvas.h>
-#include <TGraphErrors.h>
+#include <TGraphAsymmErrors.h>
+#include <TLegend.h>
 #include "../headers/Point.h"
 
+void calculateErrors(int rec, int gen, double& efficiency, double& errorLow, double& errorHigh) {
+    if (gen == 0) {
+        efficiency = 0;
+        errorLow = 0;
+        errorHigh = 0;
+        return;
+    }
 
+    efficiency = static_cast<double>(rec) / gen;
+    double error = sqrt(efficiency * (1 - efficiency) / gen);
+    errorLow = std::min(efficiency, error);
+    errorHigh = std::min(1.0 - efficiency, error);
+}
 
-void analysis(unsigned int events=1000000){
+void analysis(unsigned int events = 1000000) {
     TStopwatch stopwatch;
     stopwatch.Start();
 
@@ -48,159 +62,133 @@ void analysis(unsigned int events=1000000){
     }
 
     Point* genVertex = new Point();
-    Point* recoVertex = new Point(0., 0., 0., 0); // Initialize with zeros
+    Point* recoVertex = new Point(0., 0., 0., 0);
     unsigned int genMult;
-    
+
     inputTree->SetBranchAddress("genVertex", &genVertex);
     inputTree->SetBranchAddress("recoVertex", &recoVertex);
     inputTree->SetBranchAddress("genMultiplicity", &genMult);
-    
-    TH1D* histRes = new TH1D("Residuals", "Z Residuals;Z Difference (reco - gen) [mm];Entries", 100, -0.5, 0.5);
-    histRes->Sumw2();    
-   // TTree* outputTree = new TTree("Plots", "Performace plots");
-    //outputTree->Branch("histRes", &histRes);
-    //outputTree->Branch("effVSmult", &effVSmult);
-    //outputTree->Branch("resVSmult", &resVSmult);
 
-    Point *pTrue, *pRec;
+    // Create histograms for residuals and multiplicities
+    TH1D* histRes = new TH1D("Residuals", "Z Residuals;Z Difference (reco - gen) [mm];Entries", 100, -0.5, 0.5);
+    TH1D* histMultTotal = new TH1D("MultTotal", "Multiplicity Distribution;Multiplicity;Entries", 75, 0, 75);
+    TH1D* histMultValid = new TH1D("MultValid", "Valid Events Multiplicity;Multiplicity;Entries", 75, 0, 75);
     
-     // Process entries in the input tree
+    histRes->Sumw2();
+    histMultTotal->Sumw2();
+    histMultValid->Sumw2();
+
+    // Set histogram styles
+    histMultTotal->SetLineColor(kBlue);
+    histMultTotal->SetLineWidth(2);
+    histMultValid->SetLineColor(kRed);
+    histMultValid->SetLineWidth(2);
+
+    // Process entries in the input tree
     for (int i = 0; i < inputTree->GetEntriesFast(); ++i) {
         inputTree->GetEntry(i);
-        // Check if pointers are valid
-     if (!genVertex || !recoVertex) continue;
-       
-         // Calculate the difference between reco and gen Z coordinates
-         double zGen = genVertex->GetZ();
-         double zReco = recoVertex->GetZ();
-         double zDiff = zReco - zGen;
-         
-         // Fill the histogram
-         histRes->Fill(zDiff);
-       
-    }
-    // Customize marker style, size, and color
-    histRes->SetMarkerStyle(20);  // Full circle
-    histRes->SetMarkerSize(0.1);   // Bigger markers
-    histRes->SetMarkerColor(kRed); // Red markers
-     
-    
-    TCanvas* canvas = new TCanvas("canvas", "Z Residuals", 800, 600);
-    histRes->Draw("E1 P");
-    canvas->SaveAs("../plots/ZResiduals.png");
-    
-     
+        
+        // Fill total multiplicity histogram
+        histMultTotal->Fill(genMult);
 
+        if (recoVertex->GetId() != -1) {
+            double zGen = genVertex->GetZ();
+            double zReco = recoVertex->GetZ();
+            double zDiff = zReco - zGen;
+
+            histRes->Fill(zDiff);
+            
+            // Fill valid multiplicity histogram if within resolution
+            if (fabs(zDiff) < 3 * (histRes->GetStdDev())) {
+                histMultValid->Fill(genMult);
+            }
+        }
+    }
+
+    // Calculate standard deviation of total multiplicity
+    
+
+    // Create vectors for efficiency graph
+    vector<double> multiplicities;
+    vector<double> efficiencies;
+    vector<double> errorLows;
+    vector<double> errorHighs;
+    vector<double> errorLowsX;
+    vector<double> errorHighsX;
+
+    // Loop over histogram bins
+    for (int bin = 1; bin <= histMultTotal->GetNbinsX(); ++bin) {
+        int totalEvents = histMultTotal->GetBinContent(bin);
+        if (totalEvents > 0) {  // Only process bins with entries
+            int validEvents = histMultValid->GetBinContent(bin);
+            double mult = histMultTotal->GetBinCenter(bin);
+            double errmult= sqrt(mult);
+            double efficiency, errorLow, errorHigh;
+            calculateErrors(validEvents, totalEvents, efficiency, errorLow, errorHigh);
+
+            multiplicities.push_back(mult);
+            efficiencies.push_back(efficiency);
+            errorLows.push_back(errorLow);
+            errorHighs.push_back(errorHigh);
+            errorLowsX.push_back(errmult);
+            errorHighsX.push_back(errmult);
+        }
+    }
+
+    TGraphAsymmErrors* graphEff = new TGraphAsymmErrors(
+        multiplicities.size(),
+        multiplicities.data(),
+        efficiencies.data(),
+        errorLowsX.data(),   // X low errors
+        errorHighsX.data(),   // X high errors
+        errorLows.data(),
+        errorHighs.data()
+    );
+
+    graphEff->SetTitle("Efficiency vs. Multiplicity;Multiplicity;Efficiency");
+    graphEff->SetMarkerStyle(20);
+    graphEff->SetMarkerSize(0.5);
+    graphEff->SetMarkerColor(kBlue);
+
+    // Draw multiplicity distributions together
+    TCanvas* canvasMult = new TCanvas("canvasMult", "Multiplicity Distributions", 800, 600);
+    
+    // Create legend
+    TLegend* legend = new TLegend(0.65, 0.75, 0.85, 0.85);
+    legend->AddEntry(histMultTotal, "Total Events", "l");
+    legend->AddEntry(histMultValid, "Valid Events", "l");
+    
+    // Draw histograms
+    histMultTotal->Draw("HIST");
+    histMultValid->Draw("HIST SAME");
+    legend->Draw();
+    
+    canvasMult->SaveAs("../plots/MultiplicityDistributions.png");
+
+    // Draw efficiency plot
+    TCanvas* canvasGraph = new TCanvas("canvasGraph", "Efficiency vs. Multiplicity", 800, 600);
+    graphEff->Draw("AP");
+    graphEff->GetYaxis()->SetRangeUser(0.7, 1.5);
+    canvasGraph->SaveAs("../plots/Efficiency_vs_Multiplicity.png");
+
+    // Draw residuals
+    TCanvas* canvasHist = new TCanvas("canvasHist", "Z Residuals", 800, 600);
+    histRes->Draw("E1 P");
+    canvasHist->SaveAs("../plots/ZResiduals.png");
+
+    // Save everything to output file
     outputFile->cd();
+    histRes->Write();
+    histMultTotal->Write();
+    histMultValid->Write();
+    graphEff->Write();
+    
     outputFile->Close();
     inputFile->Close();
 
     delete genVertex;
     delete recoVertex;
-    
-    
+
     stopwatch.Stop();
     stopwatch.Print();
 }
-
-
-
-/*
-void reco(unsigned int events=1000000, double phiCut=0.01){
-    TStopwatch stopwatch;
-    stopwatch.Start();
-
-    string input = "../data/sim" +to_string(events)+ "_noise.root";
-    const char* inputFileName = input.c_str();
-
-    string output = "../data/reco" + to_string(events) + ".root";
-    const char* outputFileName = output.c_str();
-
-
-    TFile* inputFile = new TFile(inputFileName, "READ");
-    if (!inputFile || inputFile->IsZombie()) {
-        printf("Error: Cannot open input file '%s'\n", inputFileName);
-        return;
-    }
-
-    const char* treeName = "Events";
-    TTree* inputTree = (TTree*)inputFile->Get(treeName);
-    if (!inputTree) {
-        printf("Error: TTree '%s' not found in file '%s'\n", treeName, inputFileName);
-        inputFile->Close();
-        delete inputFile;
-        return;
-    }
-
-    TFile* outputFile = new TFile(outputFileName, "RECREATE");
-    if (!outputFile || outputFile->IsZombie()) {
-        printf("Error: Cannot create output file '%s'\n", outputFileName);
-        inputFile->Close();
-        delete inputFile;
-        return;
-    }
-
-
-    Point* genVertex = new Point();
-    Point* recoVertex = new Point();
-    TClonesArray* inHits = new TClonesArray("Point", 80);
-    TClonesArray* outHits = new TClonesArray("Point", 80);
-    unsigned int genMult;
-    inputTree->SetBranchAddress("vertex", &genVertex);
-    inputTree->SetBranchAddress("inHits", &inHits);
-    inputTree->SetBranchAddress("outHits", &outHits);
-    inputTree->SetBranchAddress("multiplicity", &genMult);
-
-    TClonesArray* zReco = new TClonesArray("Point", 50);  // Around 25% of events lost due to eta, some more lost to smearing
-
-
-    TTree* outputTree = new TTree("Events", "Simulated and Reconstructed vertices");
-    outputTree->Branch("genVertex", &genVertex);
-    outputTree->Branch("recoVertex", &recoVertex);
-    outputTree->Branch("genMultiplicity", &genMult);
-
-
-    Point *pIn, *pOut, *pVert;
-
-    unsigned int event_id = 0;
-    unsigned int ith_entry = 0;
-    double angleIn;
-    double angleOut;
-    vector<double> zCollection;
-    zCollection.reserve(50);
-    cout<<inputTree->GetEntriesFast()<<endl;
-    for(int i=0; i<inputTree->GetEntriesFast(); ++i){
-
-        inputTree->GetEntry(i);
-
-        for(int j=0; j<outHits->GetEntriesFast(); ++j){
-            zCollection.clear();
-            pOut = (Point*)outHits->At(j);
-            angleOut = findAngle(pOut->GetX(), pOut->GetY());            
-            for(int k=0; k<inHits->GetEntriesFast(); ++k){
-                pIn = (Point*)inHits->At(k);
-
-                if (abs(angleOut - findAngle(pIn->GetX(), pIn->GetY())) < phiCut){
-                    zCollection.push_back(recoZ(pIn, pOut));
-                }
-
-
-            }
-
-        }
-
-
-    }
-    delete genVertex;
-    delete recoVertex;
-    delete inHits;
-    delete outHits;
-    stopwatch.Stop();
-    stopwatch.Print();
-
-}
-
-
-*/
-
-
