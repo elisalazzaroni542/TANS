@@ -75,7 +75,7 @@ void analysis(unsigned int events = 1000000) {
     const double ResMin = -0.5;  // Adjust range based on your data
     const double ResMax =0.5;
     
-    const int nMultBins = 50;
+    const int nMultBins = 20;
     const double MultMin = 0;  // Adjust range based on your data
     const double MultMax = 75;
     
@@ -160,6 +160,7 @@ void analysis(unsigned int events = 1000000) {
             double zDiff = zReco - zGen;
 
             histRes->Fill(zDiff);
+
             
             // Accumulate absolute z-differences for each multiplicity bin
             if(genMult < nMultBins) {
@@ -170,6 +171,7 @@ void analysis(unsigned int events = 1000000) {
             // Add values for zDiff vs zGen graph
             zgen_positions.push_back(zGen);
             zdiff_values.push_back(zDiff);
+//            zdiff_values.push_back(zDiff/zGen);
             zdiff_errors.push_back(histRes->GetRMS());  // Using the same error as other graphs
             zero_xerrors.push_back(0);  // No error on x-axis
             
@@ -283,10 +285,17 @@ void analysis(unsigned int events = 1000000) {
        zgen_positions.data(),
        zdiff_values.data(),
        zero_xerrors.data(),
-       zdiff_errors.data()
+       zdiff_errors.data()       
+//       zgen_positions.size(),
+//       zdiff_values.data(),
+//       zgen_positions.data(),
+//       zdiff_errors.data(),
+//       zero_xerrors.data()
+
      );
 
-    graphZDiffGen->SetTitle("Z Difference vs. Generated Z Position;Z_{gen} [mm];Z_{reco} - Z_{gen} [mm]");
+    graphZDiffGen->SetTitle("Z Difference vs. Generated Z Position; #frac{Z_{reco} - Z_{gen}}{Z_{gen}}; Z_{gen} [mm]");
+    graphZDiffGen->GetXaxis()->SetRangeUser(-1.5, 1.5);
     graphZDiffGen->SetMarkerStyle(20);
     graphZDiffGen->SetMarkerSize(0.8);
     graphZDiffGen->SetMarkerColor(kBlue);
@@ -311,6 +320,8 @@ void analysis(unsigned int events = 1000000) {
     // Draw histograms
     histMultTotal->Draw("HIST");
     histMultValid->Draw("HIST SAME");
+    histMultTotal->SetStats(0);
+    histMultValid->SetStats(0);
     legend->Draw();
     
     canvasMult->SaveAs("../plots/MultiplicityDistributions.png");
