@@ -71,7 +71,7 @@ void analysis(unsigned int events = 1000000) {
     inputTree->SetBranchAddress("genMultiplicity", &genMult);
     
     
-    const int nResBins = 100;
+    const int nResBins = 250;
     const double ResMin = -0.5;  // Adjust range based on your data
     const double ResMax =0.5;
     
@@ -85,11 +85,11 @@ void analysis(unsigned int events = 1000000) {
     const double zMax = 20;
 
     // Create histograms for residuals and multiplicities
-    TH1D* histRes = new TH1D("Residuals", "Z Residuals;|Z Difference (reco - gen)| [mm];Entries", nResBins, ResMin, ResMax);
+    TH1D* histRes = new TH1D("Residuals", "Z Residuals;|Z Difference (reco - gen)| [cm];Entries", nResBins, ResMin, ResMax);
     TH1D* histMultTotal = new TH1D("MultTotal", "Multiplicity Distribution;Multiplicity;Entries", nMultBins, MultMin, MultMax);
     TH1D* histMultValid = new TH1D("MultValid", "Valid Events Multiplicity;Multiplicity;Entries", nMultBins, MultMin, MultMax);  
-    TH1D* histZTotal = new TH1D("ZTotal", "Total Events vs Z;Z_{gen} [mm];Entries", nZBins, zMin, zMax);
-    TH1D* histZValid = new TH1D("ZValid", "Valid Events vs Z;Z_{gen} [mm];Entries", nZBins, zMin, zMax);
+    TH1D* histZTotal = new TH1D("ZTotal", "Total Events vs Z;Z_{gen} [cm];Entries", nZBins, zMin, zMax);
+    TH1D* histZValid = new TH1D("ZValid", "Valid Events vs Z;Z_{gen} [cm];Entries", nZBins, zMin, zMax);
     
     histZTotal->Sumw2();
     histZValid->Sumw2();
@@ -170,7 +170,7 @@ void analysis(unsigned int events = 1000000) {
             
             // Add values for zDiff vs zGen graph
             zgen_positions.push_back(zGen);
-            zdiff_values.push_back(zDiff);
+            zdiff_values.push_back(fabs(zDiff));
 //            zdiff_values.push_back(zDiff/zGen);
             zdiff_errors.push_back(histRes->GetRMS());  // Using the same error as other graphs
             zero_xerrors.push_back(0);  // No error on x-axis
