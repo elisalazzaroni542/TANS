@@ -1,11 +1,5 @@
 {
     "files.associations": {
-        "rootlogon.C": "cpp",
-        "sim.C": "cpp",
-        "*.tcc": "cpp",
-        "deque": "cpp",
-        "forward_list": "cpp",
-        "string": "cpp",
-        "vector": "cpp"
+        "analysis.C": "cpp"
     }
 }

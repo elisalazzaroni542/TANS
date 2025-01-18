@@ -365,6 +365,8 @@ void analysis(unsigned int events = 1000000) {
     delete genVertex;
     delete recoVertex;
 
+    cout<<"Done."<<endl;
+
     stopwatch.Stop();
     stopwatch.Print();
 }

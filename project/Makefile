@@ -30,19 +30,15 @@ compile:
 
 sim:
 	@bash -c 'cd macros/ && root -b -l -q "sim.C+($(SEED), $(EVENTS), $(MS), $(NOISE))"'
-	@echo 'Simulation done.'
 
 
 
 reco:
 	@bash -c 'cd macros/ && root -b -l -q "reco.C+($(EVENTS), $(PHICUT), $(WSIZE))"'
-	@echo 'Reconstruction done.'
 
 
 analysis:
-	@echo "Creating plots..."
 	@bash -c 'cd macros/ && root -b -l -q "analysis.C+($(EVENTS))"'
-	@echo 'Plots done.'
 
 
 #Explanation of Each Part:
