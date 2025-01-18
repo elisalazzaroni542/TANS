@@ -103,6 +103,7 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
             double x = rCilIn * cos(phi);
             double y = rCilIn * sin(phi);
             new (inHits[inCounter]) Point(x, y, z, i);
+            hasHits=true;
             ++inCounter;
         }
 
@@ -113,6 +114,7 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
             double y = rCilOut * sin(phi);
             new (outHits[outCounter]) Point(x, y, z, i);
             ++outCounter;
+            hasHits=true;
         }
 
 

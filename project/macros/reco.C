@@ -9,34 +9,37 @@
 #include <Riostream.h>
 #include "../headers/Point.h"
 
-
 double runningWindow(const vector<double>& zCollection, double window_size = 0.5) {
-    
     double z_min = -13.5;
     double z_max = 13.5;
-    
     unsigned maxCount = 0;
-    double bestZ = 0.0;
+    double bestWindowStart = 0.0;
     
     for (double windowStart = z_min; windowStart <= z_max - window_size; windowStart += window_size) {
         double windowEnd = windowStart + window_size;
-        
         unsigned int count = 0;
         for (double z : zCollection) {
             if (z >= windowStart && z < windowEnd) {
                 count++;
             }
         }
-
         if (count > maxCount) {
             maxCount = count;
-            bestZ = windowStart + window_size/2;
+            bestWindowStart = windowStart;
         }
     }
     
-    return bestZ;
+    double sum = 0.0;
+    unsigned int count = 0;
+    for (double z : zCollection) {
+        if (z >= bestWindowStart && z < bestWindowStart + window_size) {
+            sum += z;
+            count++;
+        }
+    }
+    
+    return count > 0 ? sum / count : bestWindowStart + window_size/2;
 }
-
 
 
 
