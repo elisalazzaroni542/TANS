@@ -1,11 +1,15 @@
-.PHONY: list clean compile sim reco analysis
+.PHONY: list clean compile sim reco analysis all show
 
 SEED = 123
 EVENTS = 1000000
 MS = true
 NOISE = true
+DISTR = custom
 PHICUT = 0.01
 WSIZE = 0.5
+
+
+MAKEFLAGS += --no-print-directory
 
 clean:
 	@echo "Cleaning files..."
@@ -29,17 +33,32 @@ compile:
 	@echo 'Done.'
 
 sim:
-	@bash -c 'cd macros/ && root -b -l -q "sim.C+($(SEED), $(EVENTS), $(MS), $(NOISE))"'
-
+	@bash -c 'cd macros/ && root -b -l -q "sim.C+($(SEED), $(EVENTS), $(MS), $(NOISE), \"$(DISTR)\")"'
 
 
 reco:
-	@bash -c 'cd macros/ && root -b -l -q "reco.C+($(EVENTS), $(PHICUT), $(WSIZE))"'
+	@bash -c 'cd macros/ && root -b -l -q "reco.C+($(EVENTS), $(PHICUT), $(WSIZE), $(NOISE))"'
 
 
 analysis:
 	@bash -c 'cd macros/ && root -b -l -q "analysis.C+($(EVENTS))"'
 
+all:
+	@make clean
+	@make compile
+	@make sim
+	@make reco
+	@make analysis
+	@make show
+
+run:
+	@make sim
+	@make reco
+	@make analysis
+	@make show
+
+show:
+	@xdg-open $(shell find plots -type f -name '*.png' | sort | head -n 1)
 
 #Explanation of Each Part:
 #

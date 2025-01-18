@@ -86,15 +86,26 @@ void HitPoint::SetDelta_and_T(const Event &ev, const Trajectory &traj, const dou
 
 void HitPoint::SetPoint(const Event &ev, const Trajectory &traj, double rCil) {
     
-    double smear = Hsmearing * RndmGaus(0, 0.003);
-    double newPhi = smear/rCil + traj.GetPhi();
+    double zSmear=0;
+    double phiSmear = Hsmearing * RndmGaus(0, 0.003);
+    double newPhi = phiSmear/rCil + traj.GetPhi();
     int notSmearing = 1 - Hsmearing;
 
     Hx = notSmearing * (ev.GetVertex(0) + traj.GetParC(0) * Ht) + Hsmearing * rCil * cos(newPhi);
     Hy = notSmearing * (ev.GetVertex(1) + traj.GetParC(1) * Ht) + Hsmearing * rCil * sin(newPhi);
-    Hz = ev.GetVertex(2) + traj.GetParC(2) * Ht + Hsmearing * RndmGaus(0, 0.012);
-    Hphi = newPhi;
+    Hz = ev.GetVertex(2) + traj.GetParC(2) * Ht;
+
+    if (Hz < 13.5 && Hz > -13.5 && Hsmearing){
+
+        do{
+            zSmear = Hsmearing * RndmGaus(0, 0.012);
+        } while ((Hz + zSmear) > 13.5 || (Hz + zSmear) < -13.5);
+
+    }
+    Hz = Hz + zSmear;
+    Hphi = newPhi;    Hphi = newPhi;
 }
+
 
 
 
@@ -129,13 +140,25 @@ void HitPoint::SetDelta_and_T(const HitPoint &h, const Trajectory &traj, const d
 
 void HitPoint::SetPoint(const HitPoint &h, const Trajectory &traj, const double rCil) {
 
-    double smear = Hsmearing * RndmGaus(0, 0.003);
-    double newPhi = smear/rCil + traj.GetPhi();
+    double zSmear=0.0;
+    double phiSmear = Hsmearing * RndmGaus(0, 0.003);
+    double newPhi = phiSmear/rCil + traj.GetPhi();
     int notSmearing = 1 - Hsmearing;
 
     Hx = notSmearing * (h.GetX() + traj.GetParC(0) * Ht) + Hsmearing * rCil * cos(newPhi);
     Hy = notSmearing * (h.GetY() + traj.GetParC(1) * Ht) + Hsmearing * rCil * sin(newPhi);
-    Hz = h.GetZ() + traj.GetParC(2) * Ht + Hsmearing * RndmGaus(0, 0.012);
+    Hz = h.GetZ() + traj.GetParC(2) * Ht;
+
+    if (Hz < 13.5 & Hz > -13.5 && Hsmearing){
+
+        do{
+            zSmear = Hsmearing * RndmGaus(0, 0.012);
+        } while ((Hz + zSmear) > 13.5 || (Hz + zSmear) < -13.5);
+
+
+    }
+    Hz = Hz + zSmear;
+
     Hphi = newPhi;
 
 }

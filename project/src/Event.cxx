@@ -69,14 +69,14 @@ void Event::SetVertex() {
 
      double mean, sigma;
       do{
-       Emult=(int)RndmGaus(mean=20,sigma=5);
+       Emult=(int)RndmGaus(mean=5,sigma=1.5);
         }
       while(Emult<1);
     }
 
 
     else if(distr=="uni"){
-     double min=1;
+     double min=10;
      double max=20;
 
       
@@ -136,7 +136,7 @@ void Event::SetVertex() {
       do {
         rndmN=RndmGaus(0,5.3);
       }
-      while (rndmN>=13.5||rndmN<=-13.5);
+      while (rndmN>13.5||rndmN<-13.5);
     } 
     return rndmN;  
   }

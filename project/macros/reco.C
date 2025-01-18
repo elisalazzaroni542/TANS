@@ -19,7 +19,7 @@ double runningWindow(const vector<double>& zCollection, double window_size = 0.5
         double windowEnd = windowStart + window_size;
         unsigned int count = 0;
         for (double z : zCollection) {
-            if (z >= windowStart && z < windowEnd) {
+            if ((z >= windowStart && z < windowEnd)) {
                 count++;
             }
         }
@@ -46,11 +46,27 @@ double runningWindow(const vector<double>& zCollection, double window_size = 0.5
 
 double recoZ(Point* point1, Point* point2){   
 
+
+
+    double x1 = point1->GetX();
     double y1 = point1->GetY();
     double z1 = point1->GetZ();
-    point1->GetY();
-    return z1 - y1/(point2->GetY() - y1) * (point2->GetZ() - z1);
 
+    double tx = - x1/(point2->GetX() - x1);
+    double ty = - y1/(point2->GetY() - y1);
+
+    double t = (tx + ty)/2;
+
+    return z1 + t * (point2->GetZ() - z1);
+
+
+/*
+    double y1 = point1->GetX();
+    double z1 = point1->GetZ();
+
+    
+    return z1 - y1/(point2->GetX() - y1) * (point2->GetZ() - z1);
+*/
 }
 
 
@@ -62,14 +78,22 @@ double phiDiff(double phi1, double phi2) {
 
 
 
-void reco(unsigned int events=1000000, double phiCut=0.01, double windowSize=0.2){
+void reco(unsigned int events=1000000, double phiCut=0.01, double windowSize=0.2, bool noise=true){
     TStopwatch stopwatch;
     stopwatch.Start();
     cout<<""<<endl;
     cout<<"Done, running reconstruction..."<<endl;
 
-    string input = "../data/sim" +to_string(events)+ "_noise.root";
-    const char* inputFileName = input.c_str();
+    string input;
+    const char* inputFileName;
+
+    if (noise){
+        input = "../data/sim" +to_string(events)+ "_noise.root";
+        inputFileName = input.c_str();
+    } else {
+        input = "../data/sim" +to_string(events)+ ".root";
+        inputFileName = input.c_str();
+    }
 
     string output = "../data/reco" + to_string(events) + ".root";
     const char* outputFileName = output.c_str();

@@ -11,23 +11,10 @@
 #include "../headers/Point.h"
 
 
-double findAngle(double x, double y) {
-    double dotProduct = x;
-    double magnitudeProduct = TMath::Sqrt(x*x + y*y);
-    
-    double cosTheta = dotProduct / magnitudeProduct;
-    cosTheta = TMath::Max(-1.0, TMath::Min(1.0, cosTheta));
-    
-    double theta = TMath::ACos(cosTheta);
-    if (y < 0) {
-        theta = 2 * M_PI - theta;
-    }
-    return theta;
-}
 
 
 
-void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bool noise = true) {
+void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bool noise = true, string distr="custom") {
     TStopwatch stopwatch;
     stopwatch.Start();
 
@@ -86,7 +73,7 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
     for (unsigned int i = 0; i < events; ++i) {
         processedEvents++;
         e.SetVertex();
-        e.SetMultiplicity("custom");
+        e.SetMultiplicity(distr);
         m = e.GetMultiplicity();
 
         vertex.Set(e.GetVertex(0),e.GetVertex(1), e.GetVertex(2), i);
