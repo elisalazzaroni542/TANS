@@ -69,7 +69,7 @@ void Event::SetVertex() {
 
      double mean, sigma;
       do{
-       Emult=(int)RndmGaus(mean=5,sigma=1.5);
+       Emult=(int)RndmGaus(mean=20,sigma=10);
         }
       while(Emult<1);
     }
