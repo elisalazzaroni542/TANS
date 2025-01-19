@@ -27,6 +27,10 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
     TClonesArray inHits("Point", 80);  
     TClonesArray outHits("Point", 80); 
 
+    if (gSystem->AccessPathName("../data/")) {
+        gSystem->MakeDirectory("../data/");
+    }
+
     string filename;
     if (noise){
         filename = "../data/sim" + to_string(events) + "_noise.root";
