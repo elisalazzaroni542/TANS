@@ -163,7 +163,7 @@ void analysis(unsigned int events = 1000000) {
             double zDiff = zReco - zGen;
 
             histRes->Fill(zDiff);
-            profileZDiffGen->Fill(zGen, abs(zDiff));
+            profileZDiffGen->Fill(zGen, fabs(zDiff));
             
             if(genMult < nMultBins) {
                 zDiff_means[genMult] += fabs(zDiff);
