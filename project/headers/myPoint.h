@@ -1,14 +1,14 @@
-#ifndef POINT_H
-#define POINT_H
+#ifndef MYPOINT_H
+#define MYPOINT_H
 
 #include <TObject.h>
 #include <math.h>
 
-class Point : public TObject {
+class myPoint : public TObject {
 public:
-    Point();
-    Point(double X, double Y, double Z, int ID);  
-    Point(double X, double Y, double Z, double Phi, int ID);  
+    myPoint();
+    myPoint(double X, double Y, double Z, int ID);  
+    myPoint(double X, double Y, double Z, double Phi, int ID);  
     void Set(double X, double Y, double Z, double Phi, int ID);
     void Set(double X, double Y, double Z, int ID);
 
@@ -19,9 +19,9 @@ public:
     double GetPhi() const { return phi; }
     int GetId() const { return id; }
     
-    virtual ~Point();
+    virtual ~myPoint();
 
-    ClassDef(Point, 1);
+    ClassDef(myPoint, 1);
 
 private:
     double x;  

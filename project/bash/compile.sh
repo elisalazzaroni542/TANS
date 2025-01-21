@@ -24,7 +24,7 @@ EOF
 root -b -l -q "$SOURCE_DIR/Event.cxx+" || true
 root -b -l -q "$SOURCE_DIR/Trajectory.cxx+" || true
 root -b -l -q "$SOURCE_DIR/HitPoint.cxx+" || true
-root -b -l -q "$SOURCE_DIR/Point.cxx+" || true
+root -b -l -q "$SOURCE_DIR/myPoint.cxx+" || true
 
 rm rootlogon.C
 

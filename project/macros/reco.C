@@ -7,7 +7,7 @@
 #include <cmath>
 #include <TMath.h>
 #include <Riostream.h>
-#include "../headers/Point.h"
+#include "../headers/myPoint.h"
 
 double runningWindow(const vector<double>& zCollection, double window_size = 0.5) {
     double z_min = -13.5;
@@ -44,7 +44,7 @@ double runningWindow(const vector<double>& zCollection, double window_size = 0.5
 
 
 
-double recoZ(Point* point1, Point* point2){   
+double recoZ(myPoint* point1, myPoint* point2){   
 
 
 
@@ -121,10 +121,10 @@ void reco(unsigned int events=1000000, double phiCut=0.01, double windowSize=0.2
         return;
     }
 
-    Point* genVertex = new Point();
-    Point* recoVertex = new Point();
-    TClonesArray* inHits = new TClonesArray("Point", 80);
-    TClonesArray* outHits = new TClonesArray("Point", 80);
+    myPoint* genVertex = new myPoint();
+    myPoint* recoVertex = new myPoint();
+    TClonesArray* inHits = new TClonesArray("myPoint", 80);
+    TClonesArray* outHits = new TClonesArray("myPoint", 80);
     unsigned int genMult;
     
     inputTree->SetBranchAddress("vertex", &genVertex);
@@ -139,7 +139,7 @@ void reco(unsigned int events=1000000, double phiCut=0.01, double windowSize=0.2
     outputTree->SetAutoSave(0);
 
 
-    Point *pIn, *pOut;
+    myPoint *pIn, *pOut;
     unsigned int maxHits = 0;
     vector<double> zCollection;
     zCollection.reserve(80);
@@ -149,11 +149,11 @@ void reco(unsigned int events=1000000, double phiCut=0.01, double windowSize=0.2
         zCollection.clear();
 
         for(int j=0; j < outHits->GetEntriesFast(); ++j){
-            pOut = (Point*)outHits->At(j);
+            pOut = (myPoint*)outHits->At(j);
             double angleOut = pOut->GetPhi();            
             
             for(int k=0; k < inHits->GetEntriesFast(); ++k){
-                pIn = (Point*)inHits->At(k);
+                pIn = (myPoint*)inHits->At(k);
                 if (abs(angleOut - pIn->GetPhi()) < phiCut){
                     zCollection.push_back(recoZ(pIn, pOut));
                 }

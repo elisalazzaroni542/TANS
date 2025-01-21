@@ -13,7 +13,7 @@
 #include <TCanvas.h>
 #include <TGraphAsymmErrors.h>
 #include <TLegend.h>
-#include "../headers/Point.h"
+#include "../headers/myPoint.h"
 #include <TProfile.h>
 
 
@@ -64,8 +64,8 @@ void analysis(unsigned int events = 1000000) {
         return;
     }
 
-    Point* genVertex = new Point();
-    Point* recoVertex = new Point(0., 0., 0., 0);
+    myPoint* genVertex = new myPoint();
+    myPoint* recoVertex = new myPoint(0., 0., 0., 0);
     unsigned int genMult;
 
     inputTree->SetBranchAddress("genVertex", &genVertex);

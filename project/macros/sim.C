@@ -8,7 +8,7 @@
 #include "../headers/Event.h"
 #include "../headers/Trajectory.h"
 #include "../headers/HitPoint.h"
-#include "../headers/Point.h"
+#include "../headers/myPoint.h"
 
 
 
@@ -23,9 +23,9 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
     TRandom3 rnd(seed);
 
     unsigned int m;
-    Point vertex;
-    TClonesArray inHits("Point", 80);  
-    TClonesArray outHits("Point", 80); 
+    myPoint vertex;
+    TClonesArray inHits("myPoint", 80);  
+    TClonesArray outHits("myPoint", 80); 
 
     if (gSystem->AccessPathName("../data/")) {
         gSystem->MakeDirectory("../data/");
@@ -93,7 +93,7 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
             double phi = rnd.Uniform(0, 2 * M_PI);
             double x = rCilIn * cos(phi);
             double y = rCilIn * sin(phi);
-            new (inHits[inCounter]) Point(x, y, z, i);
+            new (inHits[inCounter]) myPoint(x, y, z, i);
             hasHits=true;
             ++inCounter;
         }
@@ -103,7 +103,7 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
             double phi = rnd.Uniform(0, 2 * M_PI);
             double x = rCilOut * cos(phi); 
             double y = rCilOut * sin(phi);
-            new (outHits[outCounter]) Point(x, y, z, i);
+            new (outHits[outCounter]) myPoint(x, y, z, i);
             ++outCounter;
             hasHits=true;
         }
@@ -136,11 +136,11 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
             
             if (abs(hIn.GetZ()) < 13.5) {
                 hasHits=true;
-                new (inHits[inCounter]) Point(hIn.GetX(), hIn.GetY(), hIn.GetZ(), hIn.GetPhi(), i);
+                new (inHits[inCounter]) myPoint(hIn.GetX(), hIn.GetY(), hIn.GetZ(), hIn.GetPhi(), i);
                 ++inCounter;
                 
                 if (abs(hOut.GetZ()) < 13.5) {
-                    new (outHits[outCounter]) Point(hOut.GetX(), hOut.GetY(), hOut.GetZ(), hOut.GetPhi(), i);
+                    new (outHits[outCounter]) myPoint(hOut.GetX(), hOut.GetY(), hOut.GetZ(), hOut.GetPhi(), i);
                     ++outCounter;
                 }
             }

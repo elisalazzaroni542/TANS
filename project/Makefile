@@ -28,11 +28,11 @@ list:
 
 
 compile:
-	@echo "Compiling simulation files..."
+	@echo "Compiling files..."
 	@bash ./bash/compile.sh 
 	@echo 'Done.'
 
-sim:
+sim: 
 	@bash -c 'cd macros/ && root -b -l -q "sim.C+($(SEED), $(EVENTS), $(MS), $(NOISE), \"$(DISTR)\")"'
 
 
