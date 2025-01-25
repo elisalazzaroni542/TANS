@@ -27,11 +27,11 @@ void calculateErrors(int rec, int gen, double& efficiency, double& errorLow, dou
 
     efficiency = static_cast<double>(rec) / gen;
     double error = sqrt(efficiency * (1 - efficiency) / gen);
-    errorLow = std::min(efficiency, error);
-    errorHigh = std::min(1.0 - efficiency, error);
+    errorLow = min(efficiency, error);
+    errorHigh = min(1.0 - efficiency, error);
 }
 
-void analysis(unsigned int events = 1000000) {
+void analysis(unsigned int events = 1000000, string distr="custom") {
     TStopwatch stopwatch;
     stopwatch.Start();
 
@@ -77,10 +77,6 @@ void analysis(unsigned int events = 1000000) {
     const double ResMin = -0.05;
     const double ResMax = 0.05;
     
-    const int nMultBins = 13;
-    const double MultMin = 1; 
-    const double MultMax = 70;
-    
     const int nZBins = 50;
     const double zMin = -20; 
     const double zMax = 20;
@@ -89,6 +85,30 @@ void analysis(unsigned int events = 1000000) {
     const int nZProfileBins = 11;
     const double zProfileMin = -13.5;  
     const double zProfileMax = 13.5;
+    
+    unsigned int nMultBins=0;
+    double MultMin=0; 
+    double MultMax=0;
+    
+    if(distr=="custom"){
+      nMultBins = 70;
+      MultMin = 1; 
+      MultMax = 70;
+    
+     }
+     else if( distr=="uni"){
+      nMultBins = 10;
+      MultMin = 10; 
+      MultMax = 20;
+     
+     }
+     else if(distr=="gaus"){
+      nMultBins = 40;
+      MultMin = 1; 
+      MultMax = 41;     
+     
+     }
+    
 
     TProfile* profileZDiffGen = new TProfile("profileZDiffGen", 
         "Z Difference vs. Generated Z Position;Z_{gen} [cm];|Z_{reco} - Z_{gen}| [cm]", 
@@ -140,7 +160,7 @@ void analysis(unsigned int events = 1000000) {
     
     
     
-    for(int i = 0; i < nMultBins; ++i) {
+    for(unsigned int i = 0; i < nMultBins; ++i) {
         mult_bins[i] = histMultValid->GetBinCenter(i);  // Center of each bin
     }
     
@@ -181,7 +201,7 @@ void analysis(unsigned int events = 1000000) {
     }
 
    
-
+// EFFICIENCY VS Z POSITION---------------------------------------------------------------------------------------------------------------------
     for (int bin = 1; bin <= nZBins; ++bin) {
         int totalEvents = histZTotal->GetBinContent(bin);
         if (totalEvents > 0) {
@@ -211,14 +231,17 @@ void analysis(unsigned int events = 1000000) {
     graphEffZ->SetMarkerColor(kBlue);
     graphEffZ->SetLineColor(kBlue);
     
-
-    for(int i = 0; i < nMultBins; ++i) {
+// Z DIFFERENCE VS MULTIPLICITY-------------------------------------------------------------------------------------------------------
+    int step=1;
+    for(unsigned int i = 0; i < nMultBins; i+=step) {
         if(mult_counts[i] > 0) {
             valid_mult.push_back(mult_bins[i]);
             valid_zdiff.push_back(zDiff_means[i] / mult_counts[i]);
             valid_zdiff_errors.push_back(histRes->GetRMS() / sqrt(mult_counts[i]));
             valid_mult_errors.push_back(sqrt(mult_bins[i]));
+            if (i>10){step=7;}
         }
+        
     }
 
     TGraphErrors* graphZDiff = new TGraphErrors(
@@ -235,9 +258,9 @@ void analysis(unsigned int events = 1000000) {
     graphZDiff->SetMarkerColor(kBlue);
     graphZDiff->SetLineColor(kBlue);
 
-    
-
-    for (int bin = 1; bin <= histMultTotal->GetNbinsX(); ++bin) {
+//EFFICIENCY VS MULTIPLICITY-----------------------------------------------------------------------------------------------------------------------------  
+    step=1;
+    for (int bin = 1; bin <= histMultTotal->GetNbinsX(); bin+= step) {
         int totalEvents = histMultTotal->GetBinContent(bin);
         if (totalEvents > 0) {  
             int validEvents = histMultValid->GetBinContent(bin);
@@ -252,6 +275,7 @@ void analysis(unsigned int events = 1000000) {
             errorHighs.push_back(errorHigh);
             errorLowsX.push_back(errmult);
             errorHighsX.push_back(errmult);
+            if (bin>7){step=7;}
         }
     }
 
@@ -270,54 +294,83 @@ void analysis(unsigned int events = 1000000) {
     graphEff->SetMarkerSize(0.5);
     graphEff->SetMarkerColor(kBlue);
     
-    TCanvas* canvasZDiffGen = new TCanvas("canvasZDiffGen", "Z Difference vs Generated Z", 1800, 1200);
-    canvasZDiffGen->SetTicks(1, 1);
-    canvasZDiffGen->SetGrid();
-    profileZDiffGen->GetYaxis()->SetRangeUser(0, 0.075);
-    profileZDiffGen->SetStats(0);
-    profileZDiffGen->Draw();
-    canvasZDiffGen->SaveAs("../plots/ZDiff_vs_ZGen.png");
-    profileZDiffGen->Write();
-
-    TCanvas* canvasMult = new TCanvas("canvasMult", "Multiplicity Distributions", 1800, 1200);
+// CANVASES-----------------------------------------------------------------------------------------------------------------------------   
+ 
+    TCanvas* canvasMult = new TCanvas("canvasMult", "Multiplicity Distributions", 900, 600);
     canvasMult->SetTicks(1, 1);
     canvasMult->SetGrid();
     TLegend* legend = new TLegend(0.65, 0.75, 0.85, 0.85);
-    legend->AddEntry(histMultTotal, "Total Vertices", "l");
-    legend->AddEntry(histMultValid, "Reco Vertices", "l");
+    legend->AddEntry(histMultTotal, "Total Events", "l");
+    legend->AddEntry(histMultValid, "Valid Events", "l");
     histMultTotal->Draw("HIST");
     histMultValid->Draw("HIST SAME");
     histMultTotal->SetStats(0);
     histMultValid->SetStats(0);
     legend->Draw();
     canvasMult->SaveAs("../plots/MultiplicityDistributions.png");
-
-    TCanvas* canvasGraph = new TCanvas("canvasGraph", "Efficiency vs. Multiplicity", 1800, 1200);
-    canvasGraph->SetTicks(1, 1);
-    canvasGraph->SetGrid();
-    graphEff->Draw("AP");
-    graphEff->GetYaxis()->SetRangeUser(0.85, 1.001);
-    canvasGraph->SaveAs("../plots/Efficiency_vs_Multiplicity.png");
-
-    TCanvas* canvasHist = new TCanvas("canvasHist", "Z Residuals", 1800, 1200);
+    
+    TCanvas* canvasHist = new TCanvas("canvasHist", "Z Residuals", 900, 600);
     canvasHist->SetTicks(1, 1);
     canvasHist->SetGrid();
     histRes->Draw("E1 P");
-    canvasHist->SaveAs("../plots/ZResiduals.png");
+    canvasHist->SaveAs("../plots/ZResiduals.png");   
+    
+    
+// SET RANGES-------------------------------------
 
-    TCanvas* canvasMultZDiff = new TCanvas("canvasMultZDiff", "Absolute Z Difference vs Multiplicity", 1800, 1200);
+  if (distr=="custom"){
+    profileZDiffGen->GetYaxis()->SetRangeUser(0, 0.1);
+    graphEff->GetYaxis()->SetRangeUser(0.85, 1.001);
+    graphZDiff->GetYaxis()->SetRangeUser(0, 0.08);
+    graphEffZ->GetYaxis()->SetRangeUser(0.8, 1.001);
+  
+  }
+  else if( distr=="uni"){
+    profileZDiffGen->GetYaxis()->SetRangeUser(0, 0.04);
+    graphEff->GetYaxis()->SetRangeUser(0.95, 1.001);
+    graphZDiff->GetYaxis()->SetRangeUser(0, 0.02);
+    graphEffZ->GetYaxis()->SetRangeUser(0.9, 1.001);
+  
+  
+  }
+  else if (distr=="gaus"){
+    profileZDiffGen->GetYaxis()->SetRangeUser(0, 0.03);
+    graphEff->GetYaxis()->SetRangeUser(0.85, 1.001);
+    graphZDiff->GetYaxis()->SetRangeUser(0, 0.08);
+    graphEffZ->GetYaxis()->SetRangeUser(0.8, 1.001);
+  
+  }
+    
+    
+    
+//GENERAL CANVASES-------------------------------------------------------------------------------------------------------------    
+    
+    TCanvas* canvasZDiffGen = new TCanvas("canvasZDiffGen", "Z Difference vs Generated Z", 900, 600);
+    canvasZDiffGen->SetTicks(1, 1);
+    canvasZDiffGen->SetGrid();
+    profileZDiffGen->SetStats(0);
+    profileZDiffGen->Draw();
+    canvasZDiffGen->SaveAs("../plots/ZDiff_vs_ZGen.png");
+    profileZDiffGen->Write();
+
+    TCanvas* canvasGraph = new TCanvas("canvasGraph", "Efficiency vs. Multiplicity", 900, 600);
+    canvasGraph->SetTicks(1, 1);
+    canvasGraph->SetGrid();
+    graphEff->Draw("AP");
+    canvasGraph->SaveAs("../plots/Efficiency_vs_Multiplicity.png");
+
+    TCanvas* canvasMultZDiff = new TCanvas("canvasMultZDiff", "Absolute Z Difference vs Multiplicity", 800, 600);
     canvasMultZDiff->SetTicks(1, 1);
     canvasMultZDiff->SetGrid();
-    graphZDiff->GetYaxis()->SetRangeUser(0, 0.08);
     graphZDiff->Draw("AP");
     canvasMultZDiff->SaveAs("../plots/ZDiff_vs_Multiplicity.png");
 
-    TCanvas* canvasEffZ = new TCanvas("canvasEffZ", "Efficiency vs Z Position", 1800, 1200);
+    TCanvas* canvasEffZ = new TCanvas("canvasEffZ", "Efficiency vs Z Position", 900, 600);
     canvasEffZ->SetTicks(1, 1);
     canvasEffZ->SetGrid();
     graphEffZ->Draw("AP");
-    graphEffZ->GetYaxis()->SetRangeUser(0.8, 1.001);
     canvasEffZ->SaveAs("../plots/Efficiency_vs_Z.png");
+    
 
 
     outputFile->cd();
@@ -339,3 +392,4 @@ void analysis(unsigned int events = 1000000) {
     stopwatch.Stop();
     stopwatch.Print();
 }
+

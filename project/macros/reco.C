@@ -31,6 +31,7 @@ double runningWindow(const vector<double>& zCollection, double window_size=0.5) 
         if (count > maxCount) {
             maxCount = count;
             bestWindowStart = windowStart;
+            bestWindowEnd = windowEnd;
         }
 
         if ((count!=0) && (count==maxCount)){

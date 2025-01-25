@@ -41,7 +41,7 @@ reco:
 
 
 analysis:
-	@bash -c 'cd macros/ && root -b -l -q "analysis.C+($(EVENTS))"'
+	@bash -c 'cd macros/ && root -b -l -q "analysis.C+($(EVENTS), \"$(DISTR)\")"'
 	@make show
 
 all:
