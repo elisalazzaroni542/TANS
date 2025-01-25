@@ -45,7 +45,7 @@ An empty output indicates no compilation files were generated yet.
 
 ### Compilation
 
-To manually compile the project, use:
+To manually compile the project, use `make compile`:
 ```
 $ make compile
 Compiling simulation files...
@@ -54,7 +54,7 @@ A full compilation output example is provided at the end of the document.
 
 ### Running the Simulation
 
-Run the simulation using:
+Run the simulation using `make sim`:
 ```
 $ make sim
 Processing sim.C+(123, 1000000, true, true, "custom")...
@@ -65,9 +65,9 @@ Done.
 Real time 0:00:35, CP time 35.360
 Simulation done.
 ```
-Customizing Simulation Parameters
+### Customizing Simulation Parameters
 
-The make sim command accepts the following arguments:
+The `make sim` command accepts the following arguments:
 
 *SEED*: Specifies the seed for random processes (default: 123).
 
@@ -104,7 +104,7 @@ Reconstruction done.
 ```
 ### Reconstruction Parameters
 
-The make reco command accepts the following arguments:
+The `make reco` command accepts the following arguments:
 
 *EVENTS*: Specifies which file to reconstruct based on the number of simulated events (default: 1M).
 
@@ -116,7 +116,7 @@ The make reco command accepts the following arguments:
 
 ### Analysis
 
-Run the analysis step with:
+Run the analysis step with `make analysis`:
 ```
 $ make analysis
 Processing analysis.C+(1000000)...
@@ -128,7 +128,7 @@ Real time 0:00:02, CP time 2.180
 
 ### Display Results
 
-To display the generated results, use:
+To display the generated results, use `make show`:
 ```
 $ make show
 ```
