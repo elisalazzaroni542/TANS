@@ -9,30 +9,40 @@
 #include <Riostream.h>
 #include "../headers/myPoint.h"
 
-double runningWindow(const vector<double>& zCollection, double window_size = 0.5) {
+double runningWindow(const vector<double>& zCollection, double window_size=0.5) {
     double z_min = -13.5;
     double z_max = 13.5;
     unsigned maxCount = 0;
-    double bestWindowStart = 0.0;
-    
+    double bestWindowStart = -13.5;
+    double bestWindowEnd = 13.5;
+
     for (double windowStart = z_min; windowStart <= z_max - window_size; windowStart += window_size) {
         double windowEnd = windowStart + window_size;
         unsigned int count = 0;
         for (double z : zCollection) {
+
             if ((z >= windowStart && z < windowEnd)) {
                 count++;
             }
         }
+
+
+
         if (count > maxCount) {
             maxCount = count;
             bestWindowStart = windowStart;
         }
+
+        if ((count!=0) && (count==maxCount)){
+            bestWindowEnd = windowEnd;
+        }
+
     }
     
     double sum = 0.0;
     unsigned int count = 0;
     for (double z : zCollection) {
-        if (z >= bestWindowStart && z < bestWindowStart + window_size) {
+        if (z >= bestWindowStart && z < bestWindowEnd) {
             sum += z;
             count++;
         }
@@ -40,6 +50,46 @@ double runningWindow(const vector<double>& zCollection, double window_size = 0.5
     return sum / count;
 }
 
+
+
+/*
+double runningWindow(const vector<double>& zCollection, double window_size=0.5) {
+    double z_min = -13.5;
+    double z_max = 13.5;
+    unsigned maxCount = 0;
+    double bestWindowEnd = 0.0;
+    int i = 0;
+    for (double windowEnd = z_max; windowEnd >= z_min + window_size; windowEnd -= window_size) {
+        //cout<<windowEnd<<endl;
+        double windowStart = windowEnd - window_size;
+        unsigned int count = 0;
+        ++i;
+        for (double z : zCollection) {
+            if (z > windowStart && z <= windowEnd) {
+                count++;
+            }
+        }
+        
+        if (count > maxCount) {
+            maxCount = count;
+            bestWindowEnd = windowEnd;
+        }
+    }
+    //cout<<i<<endl;
+    
+    double sum = 0.0;
+    unsigned int count = 0;
+    
+    for (double z : zCollection) {
+        if (z > bestWindowEnd - window_size && z <= bestWindowEnd) {
+            sum += z;
+            count++;
+        }
+    }
+    
+    return sum / count;
+}
+*/
 
 
 
@@ -60,7 +110,7 @@ double recoZ(myPoint* point1, myPoint* point2){
 
 
 
-void reco(unsigned int events=1000000, double phiCut=0.01, double windowSize=0.2, bool noise=true){
+void reco(unsigned int events=1000000, double phiCut=0.01, double windowSize=0.5, bool noise=true){
     TStopwatch stopwatch;
     stopwatch.Start();
     cout<<""<<endl;
