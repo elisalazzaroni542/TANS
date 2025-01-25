@@ -20,8 +20,6 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
 
     cout<<"Done, running simulation..."<<endl;
 
-    TRandom3 rnd(seed);
-
     unsigned int m;
     myPoint vertex;
     TClonesArray inHits("myPoint", 80);  
@@ -88,9 +86,9 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
         outCounter = 0;
 
 
-        while (rnd.Uniform() < noiseProb && inCounter < maxNoisePoints && noise) {
-            double z = rnd.Uniform(-13.5, 13.5);
-            double phi = rnd.Uniform(0, 2 * M_PI);
+        while (e.RndmUni(0,1) < noiseProb && inCounter < maxNoisePoints && noise) {
+            double z = e.RndmUni(-13.5, 13.5);
+            double phi = e.RndmUni(0, 2 * M_PI);
             double x = rCilIn * cos(phi);
             double y = rCilIn * sin(phi);
             new (inHits[inCounter]) myPoint(x, y, z, i);
@@ -98,9 +96,9 @@ void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bo
             ++inCounter;
         }
 
-        while (rnd.Uniform() < noiseProb && outCounter < maxNoisePoints && noise) {
-            double z = rnd.Uniform(-13.5, 13.5);
-            double phi = rnd.Uniform(0, 2 * M_PI);
+        while (e.RndmUni(0,1)  < noiseProb && outCounter < maxNoisePoints && noise) {
+            double z = e.RndmUni(-13.5, 13.5);
+            double phi = e.RndmUni(0, 2 * M_PI);
             double x = rCilOut * cos(phi); 
             double y = rCilOut * sin(phi);
             new (outHits[outCounter]) myPoint(x, y, z, i);

@@ -42,6 +42,7 @@ reco:
 
 analysis:
 	@bash -c 'cd macros/ && root -b -l -q "analysis.C+($(EVENTS))"'
+	@make show
 
 all:
 	@make clean
@@ -49,13 +50,11 @@ all:
 	@make sim
 	@make reco
 	@make analysis
-	@make show
 
 run:
 	@make sim
 	@make reco
 	@make analysis
-	@make show
 
 show:
-	@xdg-open $(shell find plots -type f -name '*.png' | sort | head -n 1) || open -a preview $(shell find plots -type f -name '*.png' | sort | head -n 1)
+	@open -a preview ./plots/* || xdg-open $(shell find plots -type f -name '*.png' | sort | head -n 1) 

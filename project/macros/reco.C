@@ -37,16 +37,13 @@ double runningWindow(const vector<double>& zCollection, double window_size = 0.5
             count++;
         }
     }
-    
-    return count > 0 ? sum / count : bestWindowStart + window_size/2;
+    return sum / count;
 }
 
 
 
 
 double recoZ(myPoint* point1, myPoint* point2){   
-
-
 
     double x1 = point1->GetX();
     double y1 = point1->GetY();
@@ -58,23 +55,8 @@ double recoZ(myPoint* point1, myPoint* point2){
     double t = (tx + ty)/2;
 
     return z1 + t * (point2->GetZ() - z1);
-
-
-/*
-    double y1 = point1->GetX();
-    double z1 = point1->GetZ();
-
-    
-    return z1 - y1/(point2->GetX() - y1) * (point2->GetZ() - z1);
-*/
 }
 
-
-double phiDiff(double phi1, double phi2) {
-    double diff1 = TMath::Abs(phi1 - phi2);
-    double diff2 = 2*TMath::Pi() - diff1;
-    return TMath::Min(diff1, diff2);
-}
 
 
 
@@ -123,8 +105,8 @@ void reco(unsigned int events=1000000, double phiCut=0.01, double windowSize=0.2
 
     myPoint* genVertex = new myPoint();
     myPoint* recoVertex = new myPoint();
-    TClonesArray* inHits = new TClonesArray("myPoint", 80);
-    TClonesArray* outHits = new TClonesArray("myPoint", 80);
+    TClonesArray* inHits = new TClonesArray("myPoint", 100);
+    TClonesArray* outHits = new TClonesArray("myPoint", 100);
     unsigned int genMult;
     
     inputTree->SetBranchAddress("vertex", &genVertex);
@@ -140,10 +122,11 @@ void reco(unsigned int events=1000000, double phiCut=0.01, double windowSize=0.2
 
 
     myPoint *pIn, *pOut;
-    unsigned int maxHits = 0;
+    unsigned int maxTracklets = 0;
     vector<double> zCollection;
     zCollection.reserve(80);
-
+    double zReco = 0;
+    int outOfBounds = 0;
     for(int i=0; i < inputTree->GetEntriesFast(); ++i){
         inputTree->GetEntry(i);
         zCollection.clear();
@@ -155,13 +138,16 @@ void reco(unsigned int events=1000000, double phiCut=0.01, double windowSize=0.2
             for(int k=0; k < inHits->GetEntriesFast(); ++k){
                 pIn = (myPoint*)inHits->At(k);
                 if (abs(angleOut - pIn->GetPhi()) < phiCut){
-                    zCollection.push_back(recoZ(pIn, pOut));
+                    zReco = recoZ(pIn, pOut);
+                    if (zReco <13.5 && zReco>-13.5){
+                        zCollection.push_back(zReco);
+                    }
                 }
             }
         }
 
         if (!zCollection.empty()) {
-            maxHits = zCollection.size() > maxHits ? zCollection.size() : maxHits;
+            maxTracklets = zCollection.size() > maxTracklets ? zCollection.size() : maxTracklets;
             double vertexZ = runningWindow(zCollection, windowSize);
             recoVertex->Set(0., 0., vertexZ, i);
         } else {
@@ -180,7 +166,7 @@ void reco(unsigned int events=1000000, double phiCut=0.01, double windowSize=0.2
     delete recoVertex;
     delete inHits;
     delete outHits;
-    cout<<"Max reco vertices: "<<maxHits<<endl;
+    cout<<"Max tracklets: "<<maxTracklets<<endl;
     cout<<"Done."<<endl;
     stopwatch.Stop();
     stopwatch.Print();

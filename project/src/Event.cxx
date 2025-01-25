@@ -47,7 +47,7 @@ ClassImp (Event)
     return Gaus(mean,sigma);
   }
 
-  double Event::RndmUni(double min=1, double max=5){
+  double Event::RndmUni(double min, double max){
    return Uniform(min,max);
 
   }
