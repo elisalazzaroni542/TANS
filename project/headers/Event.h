@@ -17,7 +17,6 @@ class Event : public TRandom3{
     Event(const Event& source); 
     virtual ~Event();
 
-    void ChangeSeed(unsigned int newseed){Eseed=newseed;};
 
     // Function to extract random numbers based on different distributions //
 

@@ -53,8 +53,8 @@ ClassImp (Event)
   }
   
 double Event::RndmCustom(TH1F* customHist) {
-    static TRandom3 rnd(Eseed);
-    return customHist->GetRandom(&rnd);
+    
+    return customHist->GetRandom(this);
 }
 
 

@@ -77,7 +77,7 @@ void analysis(unsigned int events = 1000000) {
     const double ResMin = -0.05;
     const double ResMax = 0.05;
     
-    const int nMultBins = 70;
+    const int nMultBins = 13;
     const double MultMin = 1; 
     const double MultMax = 70;
     
@@ -86,7 +86,7 @@ void analysis(unsigned int events = 1000000) {
     const double zMax = 20;
 
 
-    const int nZProfileBins = 54;
+    const int nZProfileBins = 10;
     const double zProfileMin = -13.5;  
     const double zProfileMax = 13.5;
 
@@ -141,7 +141,7 @@ void analysis(unsigned int events = 1000000) {
     
     
     for(int i = 0; i < nMultBins; ++i) {
-        mult_bins[i] = i + 0.5;  // Center of each bin
+        mult_bins[i] = histMultValid->GetBinCenter(i);  // Center of each bin
     }
     
     
@@ -296,7 +296,7 @@ void analysis(unsigned int events = 1000000) {
     canvasGraph->SetTicks(1, 1);
     canvasGraph->SetGrid();
     graphEff->Draw("AP");
-    graphEff->GetYaxis()->SetRangeUser(0.85, 1.05);
+    graphEff->GetYaxis()->SetRangeUser(0.85, 1.001);
     canvasGraph->SaveAs("../plots/Efficiency_vs_Multiplicity.png");
 
     TCanvas* canvasHist = new TCanvas("canvasHist", "Z Residuals", 900, 600);
@@ -308,6 +308,7 @@ void analysis(unsigned int events = 1000000) {
     TCanvas* canvasMultZDiff = new TCanvas("canvasMultZDiff", "Absolute Z Difference vs Multiplicity", 800, 600);
     canvasMultZDiff->SetTicks(1, 1);
     canvasMultZDiff->SetGrid();
+    graphZDiff->GetYaxis()->SetRangeUser(0, 0.08);
     graphZDiff->Draw("AP");
     canvasMultZDiff->SaveAs("../plots/ZDiff_vs_Multiplicity.png");
 
@@ -315,7 +316,7 @@ void analysis(unsigned int events = 1000000) {
     canvasEffZ->SetTicks(1, 1);
     canvasEffZ->SetGrid();
     graphEffZ->Draw("AP");
-    graphEffZ->GetYaxis()->SetRangeUser(0.75, 1.05);
+    graphEffZ->GetYaxis()->SetRangeUser(0.8, 1.001);
     canvasEffZ->SaveAs("../plots/Efficiency_vs_Z.png");
 
 
