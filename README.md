@@ -6,7 +6,7 @@ To compile the program from scratch and test the simulation, navigate to the pro
 $ cd project
 $ make all
 ```
-This will compile the classes and execute the macros. For subsequent runs, you can use the command make run, which will skip recompilation of the classes:
+This will compile the classes and execute the macros. For subsequent runs, you can use the command `make run`, which will skip recompilation of the classes:
 
 ```bash
 $ make run
