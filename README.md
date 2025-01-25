@@ -14,7 +14,7 @@ $ make run
 
 # Detailed Instructions
 
-## Overview of Commands
+### Overview of Commands
 
 The `make all` and `make run` commands internally invoke other commands defined in the makefile. These commands can be listed using:
 
@@ -32,7 +32,7 @@ show
 sim
 ```
 
-## Cleaning the Project
+### Cleaning the Project
 
 To clean the project of compilation files, dependencies, and ACLiC dictionaries, use the `make clean` command:
 
@@ -43,7 +43,7 @@ done.
 
 An empty output indicates no compilation files were generated yet.
 
-## Compilation
+### Compilation
 
 To manually compile the project, use:
 ```
@@ -52,7 +52,7 @@ Compiling simulation files...
 ```
 A full compilation output example is provided at the end of the document.
 
-## Running the Simulation
+### Running the Simulation
 
 Run the simulation using:
 ```
@@ -90,7 +90,7 @@ Total events with hits: 999979
 Done.
 Real time 0:00:27, CP time 27.680
 ```
-## Reconstruction
+### Reconstruction
 
 Run the reconstruction step with:
 ```
@@ -102,7 +102,7 @@ Done.
 Real time 0:00:13, CP time 13.250
 Reconstruction done.
 ```
-## Reconstruction Parameters
+### Reconstruction Parameters
 
 The make reco command accepts the following arguments:
 
@@ -114,7 +114,7 @@ The make reco command accepts the following arguments:
 
 *NOISE*: Enables/disables reconstruction with noise (default: true).
 
-## Analysis
+### Analysis
 
 Run the analysis step with:
 ```
@@ -126,7 +126,7 @@ Info in <TCanvas::Print>: png file ../plots/MultiplicityDistributions.png has be
 Real time 0:00:02, CP time 2.180
 ```
 
-## Display Results
+### Display Results
 
 To display the generated results, use:
 ```
