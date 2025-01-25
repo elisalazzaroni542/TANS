@@ -92,7 +92,7 @@ Real time 0:00:27, CP time 27.680
 ```
 ### Reconstruction
 
-Run the reconstruction step with:
+Run the reconstruction step with `make reco`:
 ```
 $ make reco
 Processing reco.C+(1000000, 0.01, 0.5)...
