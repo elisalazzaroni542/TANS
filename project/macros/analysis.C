@@ -90,24 +90,22 @@ void analysis(unsigned int events = 1000000, string distr="custom") {
     double MultMin=0; 
     double MultMax=0;
     
-    if(distr=="custom"){
-      nMultBins = 70;
-      MultMin = 1; 
-      MultMax = 70;
-    
-     }
-     else if( distr=="uni"){
+    if( distr=="uni"){
       nMultBins = 10;
       MultMin = 10; 
       MultMax = 20;
      
-     }
-     else if(distr=="gaus"){
+    } else if(distr=="gaus"){
       nMultBins = 40;
       MultMin = 1; 
-      MultMax = 41;     
-     
-     }
+      MultMax = 41;         
+    
+    } else { // Custom
+      nMultBins = 70;
+      MultMin = 1; 
+      MultMax = 70;
+    
+    }
     
 
     TProfile* profileZDiffGen = new TProfile("profileZDiffGen", 
@@ -318,23 +316,22 @@ void analysis(unsigned int events = 1000000, string distr="custom") {
     
 // SET RANGES-------------------------------------
 
-  if (distr=="custom"){
-    profileZDiffGen->GetYaxis()->SetRangeUser(0, 0.1);
-    graphEff->GetYaxis()->SetRangeUser(0.85, 1.001);
-    graphZDiff->GetYaxis()->SetRangeUser(0, 0.08);
-    graphEffZ->GetYaxis()->SetRangeUser(0.8, 1.001);
-  
-  }
-  else if( distr=="uni"){
+  if( distr=="uni"){
     profileZDiffGen->GetYaxis()->SetRangeUser(0, 0.04);
     graphEff->GetYaxis()->SetRangeUser(0.95, 1.001);
     graphZDiff->GetYaxis()->SetRangeUser(0, 0.02);
     graphEffZ->GetYaxis()->SetRangeUser(0.9, 1.001);
   
   
-  }
-  else if (distr=="gaus"){
+  } else if (distr=="gaus"){
     profileZDiffGen->GetYaxis()->SetRangeUser(0, 0.03);
+    graphEff->GetYaxis()->SetRangeUser(0.85, 1.001);
+    graphZDiff->GetYaxis()->SetRangeUser(0, 0.08);
+    graphEffZ->GetYaxis()->SetRangeUser(0.8, 1.001);
+  
+  } else { // custom
+    profileZDiffGen->GetYaxis()->SetRangeUser(0.005, 0.03);
+    profileZDiffGen->GetYaxis()->SetTitleOffset(1.51);
     graphEff->GetYaxis()->SetRangeUser(0.85, 1.001);
     graphZDiff->GetYaxis()->SetRangeUser(0, 0.08);
     graphEffZ->GetYaxis()->SetRangeUser(0.8, 1.001);
@@ -343,9 +340,9 @@ void analysis(unsigned int events = 1000000, string distr="custom") {
     
     
     
-//GENERAL CANVASES-------------------------------------------------------------------------------------------------------------    
+//GENERAL CANVASES--------------------------------------------------il range-----------------------------------------------------------    
     
-    TCanvas* canvasZDiffGen = new TCanvas("canvasZDiffGen", "Z Difference vs Generated Z", 900, 600);
+    TCanvas* canvasZDiffGen = new TCanvas("canvasZDiffGen", "Z Difference vs Generated Z", 1600, 1300);
     canvasZDiffGen->SetTicks(1, 1);
     canvasZDiffGen->SetGrid();
     profileZDiffGen->SetStats(0);
@@ -353,19 +350,19 @@ void analysis(unsigned int events = 1000000, string distr="custom") {
     canvasZDiffGen->SaveAs("../plots/ZDiff_vs_ZGen.png");
     profileZDiffGen->Write();
 
-    TCanvas* canvasGraph = new TCanvas("canvasGraph", "Efficiency vs. Multiplicity", 900, 600);
+    TCanvas* canvasGraph = new TCanvas("canvasGraph", "Efficiency vs. Multiplicity", 1600, 1300);
     canvasGraph->SetTicks(1, 1);
     canvasGraph->SetGrid();
     graphEff->Draw("AP");
     canvasGraph->SaveAs("../plots/Efficiency_vs_Multiplicity.png");
 
-    TCanvas* canvasMultZDiff = new TCanvas("canvasMultZDiff", "Absolute Z Difference vs Multiplicity", 800, 600);
+    TCanvas* canvasMultZDiff = new TCanvas("canvasMultZDiff", "Absolute Z Difference vs Multiplicity", 1600, 1300);
     canvasMultZDiff->SetTicks(1, 1);
     canvasMultZDiff->SetGrid();
     graphZDiff->Draw("AP");
     canvasMultZDiff->SaveAs("../plots/ZDiff_vs_Multiplicity.png");
 
-    TCanvas* canvasEffZ = new TCanvas("canvasEffZ", "Efficiency vs Z Position", 900, 600);
+    TCanvas* canvasEffZ = new TCanvas("canvasEffZ", "Efficiency vs Z Position", 1600, 1300);
     canvasEffZ->SetTicks(1, 1);
     canvasEffZ->SetGrid();
     graphEffZ->Draw("AP");

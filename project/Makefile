@@ -44,6 +44,7 @@ analysis:
 	@bash -c 'cd macros/ && root -b -l -q "analysis.C+($(EVENTS), \"$(DISTR)\")"'
 	@make show
 
+	
 all:
 	@make clean
 	@make compile
@@ -51,10 +52,14 @@ all:
 	@make reco
 	@make analysis
 
+
 run:
 	@make sim
 	@make reco
 	@make analysis
 
+
+
 show:
-	@open -a preview ./plots/* || xdg-open $(shell find plots -type f -name '*.png' | sort | head -n 1) 
+	@open -a preview ./plots/* || xdg-open  $(shell find ./plots -type f -name '*.png' | sort | head -n 1)
+
