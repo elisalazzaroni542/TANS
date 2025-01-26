@@ -291,12 +291,14 @@ void analysis(unsigned int events = 1000000, string distr="custom") {
     
 // CANVASES-----------------------------------------------------------------------------------------------------------------------------   
  
-    TCanvas* canvasMult = new TCanvas("canvasMult", "Multiplicity Distributions", 900, 600);
+    TCanvas* canvasMult = new TCanvas("canvasMult", "Multiplicity Distributions", 1600, 1300);
     canvasMult->SetTicks(1, 1);
     canvasMult->SetGrid();
     TLegend* legend = new TLegend(0.65, 0.75, 0.85, 0.85);
     legend->AddEntry(histMultTotal, "Total vertices", "l");
     legend->AddEntry(histMultValid, "Reco vertices", "l");
+    histMultTotal->GetYaxis()->SetMaxDigits(3);
+    histMultValid->GetYaxis()->SetMaxDigits(3);
     histMultTotal->Draw("HIST");
     histMultValid->Draw("HIST SAME");
     histMultTotal->SetStats(0);
@@ -304,10 +306,11 @@ void analysis(unsigned int events = 1000000, string distr="custom") {
     legend->Draw();
     canvasMult->SaveAs("../plots/MultiplicityDistributions.png");
     
-    TCanvas* canvasHist = new TCanvas("canvasHist", "Z Residuals", 900, 600);
+    TCanvas* canvasHist = new TCanvas("canvasHist", "Z Residuals", 1600, 1300);
     canvasHist->SetTicks(1, 1);
     canvasHist->SetGrid();
     histRes->Draw("E1 P");
+    histRes->GetYaxis()->SetMaxDigits(3);
     canvasHist->SaveAs("../plots/ZResiduals.png");   
     
     
