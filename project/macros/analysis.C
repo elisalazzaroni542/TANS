@@ -91,9 +91,9 @@ void analysis(unsigned int events = 1000000, string distr="custom") {
     double MultMax=0;
     
     if( distr=="uni"){
-      nMultBins = 10;
-      MultMin = 10; 
-      MultMax = 20;
+      nMultBins = 30;
+      MultMin = 0; 
+      MultMax = 30;
      
     } else if(distr=="gaus"){
       nMultBins = 40;
@@ -120,8 +120,8 @@ void analysis(unsigned int events = 1000000, string distr="custom") {
     TH1D* histRes = new TH1D("Residuals", "Z Residuals;Z Difference (reco - gen) [cm];Entries", nResBins, ResMin, ResMax);
     TH1D* histMultTotal = new TH1D("MultTotal", "Multiplicity Distribution;Multiplicity;Entries", nMultBins, MultMin, MultMax);
     TH1D* histMultValid = new TH1D("MultValid", "Valid Events Multiplicity;Multiplicity;Entries", nMultBins, MultMin, MultMax);  
-    TH1D* histZTotal = new TH1D("ZTotal", "Total Events vs Z;Z_{gen} [cm];Entries", nZBins, zMin, zMax);
-    TH1D* histZValid = new TH1D("ZValid", "Valid Events vs Z;Z_{gen} [cm];Entries", nZBins, zMin, zMax);
+    TH1D* histZTotal = new TH1D("ZTotal", "Total Vertices vs Z;Z_{gen} [cm];Entries", nZBins, zMin, zMax);
+    TH1D* histZValid = new TH1D("ZValid", "Reco Vertices vs Z;Z_{gen} [cm];Entries", nZBins, zMin, zMax);
     
     histZTotal->Sumw2();
     histZValid->Sumw2();
@@ -318,6 +318,8 @@ void analysis(unsigned int events = 1000000, string distr="custom") {
 
   if( distr=="uni"){
     profileZDiffGen->GetYaxis()->SetRangeUser(0, 0.04);
+    profileZDiffGen->GetYaxis()->SetMaxDigits(2);
+    profileZDiffGen->GetYaxis()->SetTitleOffset(1.2);
     graphEff->GetYaxis()->SetRangeUser(0.95, 1.001);
     graphZDiff->GetYaxis()->SetRangeUser(0, 0.02);
     graphEffZ->GetYaxis()->SetRangeUser(0.9, 1.001);
@@ -325,13 +327,16 @@ void analysis(unsigned int events = 1000000, string distr="custom") {
   
   } else if (distr=="gaus"){
     profileZDiffGen->GetYaxis()->SetRangeUser(0, 0.03);
+    profileZDiffGen->GetYaxis()->SetMaxDigits(2);
+    profileZDiffGen->GetYaxis()->SetTitleOffset(1.2);
     graphEff->GetYaxis()->SetRangeUser(0.85, 1.001);
     graphZDiff->GetYaxis()->SetRangeUser(0, 0.08);
     graphEffZ->GetYaxis()->SetRangeUser(0.8, 1.001);
   
   } else { // custom
     profileZDiffGen->GetYaxis()->SetRangeUser(0.005, 0.03);
-    profileZDiffGen->GetYaxis()->SetTitleOffset(1.51);
+    profileZDiffGen->GetYaxis()->SetMaxDigits(2);
+    profileZDiffGen->GetYaxis()->SetTitleOffset(1.2);
     graphEff->GetYaxis()->SetRangeUser(0.85, 1.001);
     graphZDiff->GetYaxis()->SetRangeUser(0, 0.08);
     graphEffZ->GetYaxis()->SetRangeUser(0.8, 1.001);
