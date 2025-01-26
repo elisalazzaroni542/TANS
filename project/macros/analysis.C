@@ -114,20 +114,15 @@ void analysis(unsigned int events = 1000000, string distr="custom") {
 
     profileZDiffGen->SetMarkerStyle(20);
     profileZDiffGen->SetMarkerSize(0.8);
-    profileZDiffGen->SetMarkerColor(kBlue);
-    profileZDiffGen->SetLineColor(kBlue);    
+    profileZDiffGen->SetMarkerColor(kBlue+2);
+    profileZDiffGen->SetLineColor(kBlue+2);    
 
     TH1D* histRes = new TH1D("Residuals", "Z Residuals;Z Difference (reco - gen) [cm];Entries", nResBins, ResMin, ResMax);
     TH1D* histMultTotal = new TH1D("MultTotal", "Multiplicity Distribution;Multiplicity;Entries", nMultBins, MultMin, MultMax);
     TH1D* histMultValid = new TH1D("MultValid", "Valid Events Multiplicity;Multiplicity;Entries", nMultBins, MultMin, MultMax);  
     TH1D* histZTotal = new TH1D("ZTotal", "Total Vertices vs Z;Z_{gen} [cm];Entries", nZBins, zMin, zMax);
     TH1D* histZValid = new TH1D("ZValid", "Reco Vertices vs Z;Z_{gen} [cm];Entries", nZBins, zMin, zMax);
-    
-    histZTotal->Sumw2();
-    histZValid->Sumw2();
-    histRes->Sumw2();
-    histMultTotal->Sumw2();
-    histMultValid->Sumw2();
+ 
     
     vector<double> mult_bins(nMultBins);
     vector<double> zDiff_means(nMultBins, 0.0);
@@ -162,7 +157,8 @@ void analysis(unsigned int events = 1000000, string distr="custom") {
         mult_bins[i] = histMultValid->GetBinCenter(i);  // Center of each bin
     }
     
-    
+    histRes->SetMarkerColor(kBlue+2);
+    histRes->SetLineColor(kBlue+2);
     histMultTotal->SetLineColor(kBlue);
     histMultTotal->SetLineWidth(2);
     histMultValid->SetLineColor(kRed);
@@ -226,8 +222,8 @@ void analysis(unsigned int events = 1000000, string distr="custom") {
     graphEffZ->SetTitle("Efficiency vs. Z Position;Z_{gen} [cm];Efficiency");
     graphEffZ->SetMarkerStyle(20);
     graphEffZ->SetMarkerSize(0.4);
-    graphEffZ->SetMarkerColor(kBlue);
-    graphEffZ->SetLineColor(kBlue);
+    graphEffZ->SetMarkerColor(kBlue+2);
+    graphEffZ->SetLineColor(kBlue+2);
     
 // Z DIFFERENCE VS MULTIPLICITY-------------------------------------------------------------------------------------------------------
     int step=1;
@@ -237,7 +233,7 @@ void analysis(unsigned int events = 1000000, string distr="custom") {
             valid_zdiff.push_back(zDiff_means[i] / mult_counts[i]);
             valid_zdiff_errors.push_back(histRes->GetRMS() / sqrt(mult_counts[i]));
             valid_mult_errors.push_back(sqrt(mult_bins[i]));
-            if (i>10){step=7;}
+            if (distr!="uni"&& i>7){step=7;}
         }
         
     }
@@ -253,8 +249,8 @@ void analysis(unsigned int events = 1000000, string distr="custom") {
     graphZDiff->SetTitle("Absolute Z Difference vs. Multiplicity;Multiplicity;Mean |Z Difference| [cm]");
     graphZDiff->SetMarkerStyle(20);
     graphZDiff->SetMarkerSize(0.8);
-    graphZDiff->SetMarkerColor(kBlue);
-    graphZDiff->SetLineColor(kBlue);
+    graphZDiff->SetMarkerColor(kBlue+2);
+    graphZDiff->SetLineColor(kBlue+2);
 
 //EFFICIENCY VS MULTIPLICITY-----------------------------------------------------------------------------------------------------------------------------  
     step=1;
@@ -273,7 +269,7 @@ void analysis(unsigned int events = 1000000, string distr="custom") {
             errorHighs.push_back(errorHigh);
             errorLowsX.push_back(errmult);
             errorHighsX.push_back(errmult);
-            if (bin>7){step=7;}
+            if (distr!="uni"&&bin>7){step=7;}
         }
     }
 
@@ -290,7 +286,8 @@ void analysis(unsigned int events = 1000000, string distr="custom") {
     graphEff->SetTitle("Efficiency vs. Multiplicity;Multiplicity;Efficiency");
     graphEff->SetMarkerStyle(20);
     graphEff->SetMarkerSize(0.5);
-    graphEff->SetMarkerColor(kBlue);
+    graphEff->SetMarkerColor(kBlue+2);
+    graphEff->SetLineColor(kBlue+2);
     
 // CANVASES-----------------------------------------------------------------------------------------------------------------------------   
  
@@ -298,8 +295,8 @@ void analysis(unsigned int events = 1000000, string distr="custom") {
     canvasMult->SetTicks(1, 1);
     canvasMult->SetGrid();
     TLegend* legend = new TLegend(0.65, 0.75, 0.85, 0.85);
-    legend->AddEntry(histMultTotal, "Total Events", "l");
-    legend->AddEntry(histMultValid, "Valid Events", "l");
+    legend->AddEntry(histMultTotal, "Total vertices", "l");
+    legend->AddEntry(histMultValid, "Reco vertices", "l");
     histMultTotal->Draw("HIST");
     histMultValid->Draw("HIST SAME");
     histMultTotal->SetStats(0);
@@ -314,38 +311,39 @@ void analysis(unsigned int events = 1000000, string distr="custom") {
     canvasHist->SaveAs("../plots/ZResiduals.png");   
     
     
-// SET RANGES-------------------------------------
+// SET RANGES---------------------------------------------------------------------------------------------------------------
 
   if( distr=="uni"){
-    profileZDiffGen->GetYaxis()->SetRangeUser(0, 0.04);
+    profileZDiffGen->GetYaxis()->SetRangeUser(0.010, 0.016);
     profileZDiffGen->GetYaxis()->SetMaxDigits(2);
     profileZDiffGen->GetYaxis()->SetTitleOffset(1.2);
     graphEff->GetYaxis()->SetRangeUser(0.95, 1.001);
-    graphZDiff->GetYaxis()->SetRangeUser(0, 0.02);
+    graphZDiff->GetYaxis()->SetRangeUser(0.009, 0.014);
+    graphZDiff->GetYaxis()->SetMaxDigits(2);
     graphEffZ->GetYaxis()->SetRangeUser(0.9, 1.001);
   
   
   } else if (distr=="gaus"){
-    profileZDiffGen->GetYaxis()->SetRangeUser(0, 0.03);
+    profileZDiffGen->GetYaxis()->SetRangeUser(0.010, 0.018);
     profileZDiffGen->GetYaxis()->SetMaxDigits(2);
     profileZDiffGen->GetYaxis()->SetTitleOffset(1.2);
     graphEff->GetYaxis()->SetRangeUser(0.85, 1.001);
     graphZDiff->GetYaxis()->SetRangeUser(0, 0.08);
-    graphEffZ->GetYaxis()->SetRangeUser(0.8, 1.001);
+    graphEffZ->GetYaxis()->SetRangeUser(0.9, 1.001);
   
   } else { // custom
-    profileZDiffGen->GetYaxis()->SetRangeUser(0.005, 0.03);
+    profileZDiffGen->GetYaxis()->SetRangeUser(0.012, 0.023);
     profileZDiffGen->GetYaxis()->SetMaxDigits(2);
     profileZDiffGen->GetYaxis()->SetTitleOffset(1.2);
-    graphEff->GetYaxis()->SetRangeUser(0.85, 1.001);
+    graphEff->GetYaxis()->SetRangeUser(0.84, 1.001);
     graphZDiff->GetYaxis()->SetRangeUser(0, 0.08);
-    graphEffZ->GetYaxis()->SetRangeUser(0.8, 1.001);
+    graphEffZ->GetYaxis()->SetRangeUser(0.84, 1.001);
   
   }
     
     
     
-//GENERAL CANVASES--------------------------------------------------il range-----------------------------------------------------------    
+//GENERAL CANVASES-------------------------------------------------------------------------------------------------------------    
     
     TCanvas* canvasZDiffGen = new TCanvas("canvasZDiffGen", "Z Difference vs Generated Z", 1600, 1300);
     canvasZDiffGen->SetTicks(1, 1);

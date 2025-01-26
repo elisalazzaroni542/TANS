@@ -103,7 +103,7 @@ void HitPoint::SetPoint(const Event &ev, const Trajectory &traj, double rCil) {
 
     }
     Hz = Hz + zSmear;
-    Hphi = newPhi;    Hphi = newPhi;
+    Hphi = newPhi;    
 }
 
 

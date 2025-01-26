@@ -1,6 +1,6 @@
 .PHONY: list clean compile sim reco analysis all show
 
-SEED = 123
+SEED = 987
 EVENTS = 1000000
 MS = true
 NOISE = true

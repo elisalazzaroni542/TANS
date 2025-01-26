@@ -14,7 +14,7 @@
 
 
 
-void sim(int seed = 123, unsigned const int events = 1000000, bool MS = true, bool noise = true, string distr="custom") {
+void sim(int seed = 987, unsigned const int events = 1000000, bool MS = true, bool noise = true, string distr="custom") {
     TStopwatch stopwatch;
     stopwatch.Start();
 

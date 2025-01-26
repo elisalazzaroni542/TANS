@@ -3,7 +3,7 @@
 ClassImp (Event)
 
   Event::Event(): TRandom3(),
-  Eseed(123),
+  Eseed(987),
   Emult(0),
   Evertex({-999, -999, -999})
   {
