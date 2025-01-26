@@ -57,7 +57,7 @@ A full compilation output example is provided at the end of the document.
 Run the simulation using `make sim`:
 ```
 $ make sim
-Processing sim.C+(123, 1000000, true, true, "custom")...
+Processing sim.C+(987, 1000000, true, true, "custom")...
 Done, running simulation...
 Total events: 1000000
 Total events with hits: 998755
@@ -69,7 +69,7 @@ Simulation done.
 
 The `make sim` command accepts the following arguments:
 
-*SEED*: Specifies the seed for random processes (default: 123).
+*SEED*: Specifies the seed for random processes (default: 987).
 
 *EVENTS*: Specifies the number of events to simulate (default: 1M).
 
@@ -83,7 +83,7 @@ Example with custom arguments:
 
 ```
 $ make sim MS=false NOISE=false DISTR=gaus
-Processing sim.C+(123, 1000000, false, false, "gaus")...
+Processing sim.C+(987, 1000000, false, false, "gaus")...
 Done, running simulation...
 Total events: 1000000
 Total events with hits: 999979
